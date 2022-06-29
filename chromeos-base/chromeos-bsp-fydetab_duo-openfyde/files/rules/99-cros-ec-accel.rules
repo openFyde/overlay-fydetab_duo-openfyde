@@ -1,0 +1,2 @@
+ACTION=="add", SUBSYSTEM=="iio", ATTR{name}=="lis2dw12", RUN+="/lib/udev/accelerometer-init.sh %k"
+ACTION=="add", SUBSYSTEM=="iio", ATTR{name}=="lis2dw12", RUN+="/lib/udev/lis2dw12-init.sh %k"
