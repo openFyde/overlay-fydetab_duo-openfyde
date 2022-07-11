@@ -25,13 +25,13 @@ S=${FILESDIR}
 
 src_install() {
   insinto /etc/init
-  doins init_himax_touchscreen.conf
-  doins init_hall_sensor.conf
-  doins brcm_bt_patchrom.override
+  doins init/*
   insinto /lib/udev/rules.d
   doins rules/*
-  insinto "/usr/share/power_manager/board_specific"
+  insinto /usr/share/power_manager/board_specific
   doins powerd_prefs/*
   exeinto /lib/udev
   doexe lis2dw12-init.sh
+  insinto /etc/camera
+  doins camera/*
 }
