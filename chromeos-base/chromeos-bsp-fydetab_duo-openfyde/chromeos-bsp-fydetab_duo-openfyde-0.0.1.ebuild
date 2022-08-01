@@ -16,9 +16,8 @@ RDEPEND="
   chromeos-base/chromeos-accelerometer-init
   chromeos-base/chromeos-bsp-inaugural
   chromeos-base/fydeos-power-daemon-go
+  chromeos-base/vpd
 "
-#  chromeos-base/detachable-emulator
-
 #  chromeos-base/fydeos-adbd
 DEPEND="${RDEPEND}"
 S=${FILESDIR}
@@ -34,4 +33,8 @@ src_install() {
   doexe lis2dw12-init.sh
   insinto /etc/camera
   doins camera/*
+  exeinto /usr/share/cros/init
+  doexe script/*
+  insinto /usr/share/chromeos-assets/text/boot_messages
+  doins -r boot_messages/*
 }

@@ -1,0 +1,3 @@
+Set battery to Shipping Mode...
+
+The battery will set to shipping mode, that means you can't start the device by pressing power button without pluging AC power. The system will set to shipping mode in 3 seconds, please unplay AC power if it pluged.
