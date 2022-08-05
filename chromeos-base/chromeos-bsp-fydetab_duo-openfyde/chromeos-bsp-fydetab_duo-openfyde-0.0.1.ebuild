@@ -37,4 +37,6 @@ src_install() {
   doexe script/*
   insinto /usr/share/chromeos-assets/text/boot_messages
   doins -r boot_messages/*
+  insinto /etc/powerd/board
+  doins board/*
 }
