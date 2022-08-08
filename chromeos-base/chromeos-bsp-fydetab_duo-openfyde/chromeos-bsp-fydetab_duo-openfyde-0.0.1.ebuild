@@ -26,7 +26,7 @@ src_install() {
   insinto /etc/init
   doins init/*
   insinto /lib/udev/rules.d
-  doins rules/*
+  doins rules/*.rules
   insinto /usr/share/power_manager/board_specific
   doins powerd_prefs/*
   exeinto /lib/udev
@@ -39,4 +39,6 @@ src_install() {
   doins -r boot_messages/*
   insinto /etc/powerd/board
   doins board/*
+  insinto /lib/firmware
+  doins firmware/*
 }

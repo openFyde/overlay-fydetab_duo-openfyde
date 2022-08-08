@@ -1,0 +1,1 @@
+ACTION=="add", KERNEL=="cdc-wdm0", SUBSYSTEM=="usbmisc", RUN+="/sbin/runuser -u modem -g modem -- /usr/bin/quectel-CM"

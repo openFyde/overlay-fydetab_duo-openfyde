@@ -1,0 +1,14 @@
+# Copyright 2016 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+[Unit]
+PartOf=system-services.target
+After=system-services.target
+
+[Service]
+Type=forking
+Restart=on-failure
+Environment=MM_LOGLEVEL=INFO
+ExecStart=/sbin/minijail0 -u modem -g modem -c 0x200000 -n -i -- \
+	/usr/sbin/ModemManager --log-level="${MM_LOGLEVEL}"
