@@ -1,2 +1,3 @@
 env BRCM_BT_ROM_FILE="/lib/firmware/BCM4362A2.hcd"
 env BRCM_BT_TTY="/dev/ttyS9"
+env BRCM_BD_ADDR=97:9E:B8:88:95:F9

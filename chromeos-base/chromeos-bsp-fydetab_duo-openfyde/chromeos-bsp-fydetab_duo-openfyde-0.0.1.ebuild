@@ -41,4 +41,6 @@ src_install() {
   doins board/*
   insinto /lib/firmware
   doins firmware/*
+  insinto /etc/modprobe.d
+  doins modprobe.d/*
 }
