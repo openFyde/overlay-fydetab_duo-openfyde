@@ -17,6 +17,7 @@ RDEPEND="
   chromeos-base/chromeos-bsp-inaugural
   chromeos-base/fydeos-power-daemon-go
   chromeos-base/vpd
+  chromeos-base/fydeos-adbd
 "
 #  chromeos-base/fydeos-adbd
 DEPEND="${RDEPEND}"
