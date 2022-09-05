@@ -12,7 +12,6 @@ KEYWORDS="*"
 IUSE=""
 
 RDEPEND="
-  net-misc/quectel-cm
   chromeos-base/chromeos-accelerometer-init
   chromeos-base/chromeos-bsp-inaugural
   chromeos-base/fydeos-power-daemon-go
