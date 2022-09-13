@@ -3,6 +3,8 @@
 # Based on gentoo's modemmanager ebuild
 
 EAPI=6
+CROS_WORKON_COMMIT="a4a93403fe61a7ad431d6afac61800eda67b2875"
+CROS_WORKON_TREE="3d359bd6fc229693cc75faebf032ed608e7ad284"
 CROS_WORKON_PROJECT="chromiumos/third_party/modemmanager-next"
 CROS_WORKON_EGIT_BRANCH="master"
 
@@ -17,7 +19,7 @@ HOMEPAGE="http://mail.gnome.org/archives/networkmanager-list/2008-July/msg00274.
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~*"
+KEYWORDS="*"
 IUSE="doc mbim systemd qmi qrtr"
 
 RDEPEND=">=dev-libs/glib-2.36
@@ -123,6 +125,7 @@ src_install() {
 		huawei
 		longcheer
 		novatel-lte
+    quectel
 		samsung
 		telit
 		zte

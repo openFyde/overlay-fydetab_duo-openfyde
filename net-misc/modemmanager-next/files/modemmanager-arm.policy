@@ -83,6 +83,7 @@ ARM_set_tls: 1
 set_tid_address: 1
 ugetrlimit: 1
 getuid32: 1
+getuid: 1
 _llseek: 1
 listen: 1
 restart_syscall: 1

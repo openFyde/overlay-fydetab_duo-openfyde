@@ -46,6 +46,7 @@ nanosleep: 1
 clock_nanosleep: 1
 geteuid: 1
 getegid: 1
+getuid: 1
 gettimeofday: 1
 madvise: 1
 mmap: arg2 in ~PROT_EXEC || arg2 in ~PROT_WRITE
