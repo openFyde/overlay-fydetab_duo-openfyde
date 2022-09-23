@@ -8,7 +8,7 @@ CROS_WORKON_TREE="3d359bd6fc229693cc75faebf032ed608e7ad284"
 CROS_WORKON_PROJECT="chromiumos/third_party/modemmanager-next"
 CROS_WORKON_EGIT_BRANCH="master"
 
-inherit eutils autotools cros-sanitizers cros-workon flag-o-matic systemd udev user
+inherit eutils autotools cros-sanitizers cros-workon flag-o-matic systemd udev user fcaps
 
 # ModemManager likes itself with capital letters
 MY_P=${P/modemmanager/ModemManager}
@@ -176,3 +176,7 @@ pkg_preinst() {
 	enewuser "modem"
 	enewgroup "modem"
 }
+
+FILECAPS=(
+  cap_net_admin+ep usr/sbin/ModemManager
+)
