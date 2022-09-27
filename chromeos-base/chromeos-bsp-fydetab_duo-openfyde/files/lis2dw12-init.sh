@@ -16,7 +16,7 @@ main() {
   set_sysfs_entry ${IIO_DEVICE_PATH}/sampling_frequency 50
   chmod 666 /dev/${DEVICE}
   mkdir /dev/cros-ec-accel
-  ln -s ../${DEVICE} /dev/cros-ec-accel/${DEVICE: -1}
+  ln -sf ../${DEVICE} /dev/cros-ec-accel/${DEVICE: -1}
 }
 
 main $@
