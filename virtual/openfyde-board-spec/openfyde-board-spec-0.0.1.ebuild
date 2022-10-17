@@ -12,7 +12,10 @@ KEYWORDS="*"
 IUSE=""
 
 RDEPEND="
-  virtual/openfyde-board-spec
+  virtual/fydemina
+  chromeos-base/chromeos-bsp-inaugural
+  chromeos-base/chromeos-bsp-inaugural-openfyde
+  chromeos-base/chromeos-bsp-fydetab_duo-openfyde
 "
 
 DEPEND="${RDEPEND}"
