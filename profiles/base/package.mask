@@ -1,0 +1,1 @@
+media-libs/cros-camera-hal-usb::chromiumos
