@@ -27,7 +27,8 @@ RDEPEND="
 	chromeos-base/cros-camera-android-deps
 	chromeos-base/cros-camera-libs
 	dev-libs/re2
-	media-libs/libsync"
+	media-libs/libsync
+    media-libs/rockchip-mpp"
 
 DEPEND="${RDEPEND}
 	media-libs/libyuv
