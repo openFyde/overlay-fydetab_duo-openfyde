@@ -1,0 +1,12 @@
+# Copyright 2022 Fyde Innovations. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+imports:
+ - "include-public/model.yaml"
+chromeos:
+  devices:
+    - skus:
+      - config:
+          <<: *fydetab_duo_device_config
+          name: fydetab_duo-openfyde

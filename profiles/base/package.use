@@ -1,0 +1,2 @@
+chromeos-base/chromeos-chrome -iioservice
+app-emulation/archero archero-arm64-force
