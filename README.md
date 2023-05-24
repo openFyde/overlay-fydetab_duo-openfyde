@@ -30,9 +30,12 @@ This repository contains the following packages:
 <br>
 
 ## About the board `fydetab_duo-openfyde`
-Coming soon.
 
+ - This board specifically targets the [Fydetab Duo](https://wiki.fydetabduo.com/wiki/Main_Page).
+ 
+ 
+   ![Fydetab Duo](https://madeforfydeos.com/wp-content/uploads/2022/12/Frame-116-1.png)
 
 <br>
 
-###### Copyright (c) 2022 Fyde Innovations and the openFyde Authors. Distributed under the license specified in the root directory of this repository.
+###### Copyright (c) 2023 Fyde Innovations and the openFyde Authors. Distributed under the license specified in the root directory of this repository.
