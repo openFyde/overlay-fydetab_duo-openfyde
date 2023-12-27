@@ -1,4 +1,4 @@
-# Copyright 2022 Fyde Innovations. All rights reserved.
+# Copyright 2020 The Chromium OS Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -13,10 +13,9 @@ LICENSE="BSD-Google"
 SLOT="0"
 KEYWORDS="*"
 
-RDEPEND="chromeos-base/chromeos-config-bsp-fydetab_duo"
-
 S="${WORKDIR}"
 
 src_install() {
-	install_model_files
+	insinto "${UNIBOARD_YAML_DIR}/include-public"
+	doins "${FILESDIR}/model.yaml"
 }

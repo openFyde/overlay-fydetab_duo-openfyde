@@ -1,0 +1,2 @@
+ACTION=="change", SUBSYSTEM=="backlight", ATTR{bl_power}=="0", RUN+="/bin/sh -c 'echo default-on > /sys/class/leds/power-on/trigger'"
+ACTION=="change", SUBSYSTEM=="backlight", ATTR{bl_power}=="4", RUN+="/bin/sh -c 'echo timer > /sys/class/leds/power-on/trigger; echo 1500 > /sys/devices/platform/leds/leds/power-on/delay_off'"

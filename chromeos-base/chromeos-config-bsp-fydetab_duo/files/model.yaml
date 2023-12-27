@@ -1,0 +1,16 @@
+# Copyright 2022 Fyde Innovations. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+fydetab_duo-device-config: &fydetab_duo_device_config
+  camera:
+    count: 1
+    devices:
+      - interface: usb
+        facing: front
+        orientation: 0
+        flags:
+          support-1080p: True
+          support-autofocus: False
+  power:
+    internal-backlight-no-als-ac-brightness: "60"
+    internal-backlight-no-als-battery-brightness: "50"

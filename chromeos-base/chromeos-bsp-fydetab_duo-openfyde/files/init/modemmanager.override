@@ -1,0 +1,6 @@
+script
+  if [ -f /var/cache/modem-utilities/log_mm_debug ]; then
+    MM_LOGLEVEL=DEBUG
+  fi
+  exec runuser -u modem -g modem -- /usr/sbin/ModemManager --log-level="${MM_LOGLEVEL}"
+end script

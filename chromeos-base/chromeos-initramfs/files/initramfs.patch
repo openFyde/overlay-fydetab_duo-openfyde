@@ -1,0 +1,37 @@
+diff --git a/factory_shim/bootstrap.sh b/factory_shim/bootstrap.sh
+index f70234df5dab..5ba243dd3f27 100755
+--- a/factory_shim/bootstrap.sh
++++ b/factory_shim/bootstrap.sh
+@@ -142,16 +142,18 @@ find_official_root() {
+   log -n "Checking for an official root... "
+ 
+   # Check for a kernel selected root device or one in a well known location.
+-  wait_for_gpt_root || return 1
++  # wait_for_gpt_root || return 1
+ 
+   # Now see if it has a Chrome OS rootfs partition.
+-  cgpt find -t rootfs "$(strip_partition "$USB_DEV")" || return 1
+-  REAL_USB_DEV="$USB_DEV"
++  # cgpt find -t rootfs "$(strip_partition "$USB_DEV")" || return 1
++  USB_DEV="/dev/mmcblk0p3"
++  REAL_USB_DEV="/dev/mmcblk0"
+ 
+   # USB_DEV points to the rootfs partition of removable media. And its value
+   # can be one of /dev/sda3 (arm), /dev/sdb3 (x86, arm) and /dev/mmcblk1p3
+   # (arm). Get stateful partition by replacing partition number with "1".
+   LOG_DEV="${USB_DEV%%[0-9]*}"1  # Default to stateful.
++  LOG_DEV="/dev/mmcblk0p1"
+ 
+   mount_rootfs
+ }
+@@ -331,8 +333,9 @@ use_new_root() {
+   #  2. Try to invoke factory installer directly
+   #     exec switch_root "${NEWROOT_MNT}" /usr/sbin/factory_shim_service.sh
+ 
++  exec switch_root "${NEWROOT_MNT}" /usr/sbin/factory_shim_service.sh
+   # -v prints upstart info in kmsg (available in INFO_TTY).
+-  exec switch_root "${NEWROOT_MNT}" /sbin/init -v --default-console output
++  # exec switch_root "${NEWROOT_MNT}" /sbin/init -v --default-console output
+ }
+ 
+ main() {

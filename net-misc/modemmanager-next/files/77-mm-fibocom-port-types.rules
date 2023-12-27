@@ -1,0 +1,18 @@
+# Copyright 2017 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This file specifies udev rules to tag the type of ports on supported Fibocom
+# modems such that certain ports can be ignored by ModemManager.
+
+# Fibocom L850-GL (2cb7:0007) has 1 MBIM port and 3 ACM ports. The MBIM port
+# alone is sufficient for 3GPP related functionalities. It's unnecessary for
+# ModemManager to probe the ACM ports, which increases the overall modem
+# probing time. We thus tag the ACM ports to be ignored by ModemManager.
+ACTION=="add|change|move", SUBSYSTEMS=="tty", ENV{ID_VENDOR_ID}=="2cb7", ENV{ID_MODEL_ID}=="0007", ENV{ID_MM_PORT_IGNORE}="1"
+
+# Fibocom NL668-AM (2cb7:01a0) has 1 MBIM port and 3 AT channel serial ports.
+# The MBIM port alone is sufficient for 3GPP related functionalities.
+# The AT channels are used by modemfwd for firmware update related managed,
+# mark them as ignored by ModemManager to avoid perturbations.
+ACTION=="add|change|move", SUBSYSTEMS=="tty", ENV{ID_VENDOR_ID}=="2cb7", ENV{ID_MODEL_ID}=="01a0", ENV{ID_MM_PORT_IGNORE}="1"

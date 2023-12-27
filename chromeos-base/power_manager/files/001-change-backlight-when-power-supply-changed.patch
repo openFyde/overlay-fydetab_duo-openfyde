@@ -1,0 +1,18 @@
+Index: power_manager/powerd/policy/internal_backlight_controller.cc
+===================================================================
+--- power_manager.orig/powerd/policy/internal_backlight_controller.cc
++++ power_manager/powerd/policy/internal_backlight_controller.cc
+@@ -735,6 +735,13 @@ void InternalBacklightController::Update
+   // resulting in this request being dropped and the brightness being set to its
+   // previous value instead. See chrome-os-partner:31186 and :35662 for more
+   // details.
++  if (cause == BacklightBrightnessChange_Cause_EXTERNAL_POWER_CONNECTED &&
++      brightness_percent < 80.0) {
++    brightness_percent += 5.0;
++  } else if (cause == BacklightBrightnessChange_Cause_EXTERNAL_POWER_DISCONNECTED &&
++    brightness_percent > 15.0) {
++    brightness_percent -= 5.0;
++  }
+   const int64_t new_level = PercentToLevel(brightness_percent);
+   if (new_level != current_level_ || backlight_->TransitionInProgress()) {
+     // Force an instant transition if we're moving into or out of the
