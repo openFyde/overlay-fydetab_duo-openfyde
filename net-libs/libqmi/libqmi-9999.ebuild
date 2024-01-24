@@ -1,7 +1,7 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 CROS_WORKON_PROJECT="chromiumos/third_party/libqmi"
 
 inherit meson cros-sanitizers cros-workon udev cros-fuzzer cros-sanitizers

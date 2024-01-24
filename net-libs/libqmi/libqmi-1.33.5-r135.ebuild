@@ -1,7 +1,7 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 CROS_WORKON_COMMIT="c68af7a0183b1b9948aae826e75519e9b2c4dbb1"
 CROS_WORKON_TREE="89ccdb07dab5667ac16277e4d105d2a52cfc71c6"
 CROS_WORKON_PROJECT="chromiumos/third_party/libqmi"
