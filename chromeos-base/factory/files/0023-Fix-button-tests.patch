@@ -1,0 +1,91 @@
+From 20f62ae5e52fd4ee07268f5896b674a8c17673ae Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 18 Sep 2022 15:46:56 +0800
+Subject: [PATCH 23/38] Fix button tests
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ .../fydetab_duo_common.test_list.json         | 39 +++++++++++++------
+ 1 file changed, 28 insertions(+), 11 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_common.test_list.json b/py/test/test_lists/fydetab_duo_common.test_list.json
+index 08d722ac0..6b649e187 100644
+--- a/py/test/test_lists/fydetab_duo_common.test_list.json
++++ b/py/test/test_lists/fydetab_duo_common.test_list.json
+@@ -134,13 +134,16 @@
+       "pytest_name": "audio_loop",
+       "label": "Audio Jack",
+       "args": {
++        "initial_actions": [
++          ["1", "init_audiojack"]
++        ],
+         "input_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Extmic"
++          "rockchipes8388",
++          "1"
+         ],
+         "output_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Headphone"
++          "rockchipes8388",
++          "0"
+         ],
+         "require_dongle": true,
+         "check_dongle": true,
+@@ -222,7 +225,18 @@
+     "Button": {
+       "pytest_name": "button",
+       "args": {
+-        "timeout_secs": 120
++        "device_filter": "adc-keys",
++        "timeout_secs": 120,
++        "button_key_name": "KEY_VOLUMEDOWN",
++        "repeat_times": 3
++      }
++    },
++    "PowerButton": {
++      "pytest_name": "button",
++      "args": {
++        "device_filter": 1,
++        "timeout_secs": 120,
++        "repeat_times": 3
+       }
+     },
+     "Camera": {
+@@ -579,7 +593,7 @@
+           }
+         },
+         {
+-          "inherit": "Button",
++          "inherit": "PowerButton",
+           "label": "Power Button",
+           "args": {
+             "button_key_name": "KEY_POWER",
+@@ -863,15 +877,18 @@
+       "pytest_name": "audio_loop",
+       "label": "Speaker/Microphone",
+       "args": {
++        "initial_actions": [
++          ["1", "init_audiojack"]
++        ],
+         "input_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Dmic"
++          "rockchip-es8388",
++          "1"
+         ],
+         "output_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Speaker"
++          "rockchip-es8388",
++          "0"
+         ],
+-        "mic_source": "Dmic",
++        "mic_source": "Extmic",
+         "require_dongle": false,
+         "check_dongle": true,
+         "tests_to_conduct": [
+-- 
+2.42.0
+

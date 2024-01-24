@@ -1,0 +1,30 @@
+From 2800c743560049a6b08a01e42a7a8ef76313b6dd Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 19 Sep 2022 09:42:26 +0800
+Subject: [PATCH 31/38] Remove comments
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/common.test_list.json | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/py/test/test_lists/common.test_list.json b/py/test/test_lists/common.test_list.json
+index 0f80e78fe..1b4f1bf8e 100644
+--- a/py/test/test_lists/common.test_list.json
++++ b/py/test/test_lists/common.test_list.json
+@@ -3,12 +3,9 @@
+     "generic_common.test_list"
+   ],
+   "constants": {
+-    # Common constants for your project.
+   },
+   "options": {
+-    # Common test list options for your project.
+   },
+   "definitions": {
+-    # Define new pytests, or override pytest arguments.
+   }
+ }
+-- 
+2.42.0
+

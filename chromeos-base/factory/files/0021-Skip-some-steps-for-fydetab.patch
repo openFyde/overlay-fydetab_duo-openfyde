@@ -1,0 +1,51 @@
+From c3f540f85df9f0db3cdcfa268de3625aa38c15ce Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sat, 17 Sep 2022 20:13:25 +0800
+Subject: [PATCH 21/38] Skip some steps for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/gooftool/commands.py | 10 +++++-----
+ py/gooftool/core.py     |  3 ++-
+ 2 files changed, 7 insertions(+), 6 deletions(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -1265,10 +1265,10 @@
+   # VerifyAfterGSCFinalize(options)
+   LogSourceHashes(options)
+   UntarStatefulFiles(options)
+-  if options.cros_core:
+-    logging.info('SetFirmwareBitmapLocale is skipped for ChromeOS Core device.')
+-  else:
+-    SetFirmwareBitmapLocale(options)
++  #if options.cros_core:
++  #  logging.info('SetFirmwareBitmapLocale is skipped for ChromeOS Core device.')
++  #else:
++  # SetFirmwareBitmapLocale(options)
+   ClearFactoryVPDEntries(options)
+   # GenerateStableDeviceSecret(options)
+   if options.no_write_protect:
+@@ -1284,7 +1284,7 @@
+   event_log.Log(WIPE_IN_PLACE)
+   wipe_args = PrepareWipeArgs(options)
+ 
+-  ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
++  # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
+ 
+ 
+ @Command('get_firmware_hash',
+--- a/py/gooftool/core.py
++++ b/py/gooftool/core.py
+@@ -819,8 +819,9 @@
+     # after clobber-state.
+     try:
+       main_fw = self._flashrom.LoadMainFirmware()
+-      fw_filename = main_fw.GetFileName(sections=['GBB'])
+-      gbb_flags = self.futility.GetGBBFlags(fw_filename)
++      # fw_filename = main_fw.GetFileName(sections=['GBB'])
++      # gbb_flags = self.futility.GetGBBFlags(fw_filename)
++      gbb_flags = 0
+     except Exception:
+       logging.warning('Failed to get GBB flags, assume it is 0', exc_info=1)
+       gbb_flags = 0

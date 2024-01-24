@@ -1,0 +1,25 @@
+From 97ac8ec04907d385383b80c9bb83cb797ab96246 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 4 Sep 2022 21:41:00 +0800
+Subject: [PATCH 16/38] Remove LED test from fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo_smt.test_list.json | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_smt.test_list.json b/py/test/test_lists/fydetab_duo_smt.test_list.json
+index a80f4f22b..b456a7bd5 100644
+--- a/py/test/test_lists/fydetab_duo_smt.test_list.json
++++ b/py/test/test_lists/fydetab_duo_smt.test_list.json
+@@ -76,7 +76,6 @@
+         "SMTThermalLoad",
+         "LidSwitch",
+         "AudioJack",
+-        "LED",
+         "USBTypeCTest",
+         "SMTKeyboard",
+         "HWButton"
+-- 
+2.42.0
+

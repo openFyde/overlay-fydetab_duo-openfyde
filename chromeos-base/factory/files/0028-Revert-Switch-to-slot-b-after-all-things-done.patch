@@ -1,0 +1,29 @@
+From 8aad4589703befd2a14772aab75cc429ce7d3ebf Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 18 Sep 2022 17:23:32 +0800
+Subject: [PATCH 28/38] Revert "Switch to slot b after all things done"
+
+This reverts commit 9dd20cabea2b22a44948ce9dac4dd3213fa5ccfc.
+---
+ py/gooftool/commands.py | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -23,7 +23,6 @@
+ from tempfile import gettempdir
+ import threading
+ import xmlrpc.client
+-import subprocess
+ 
+ from cros.factory.gooftool.common import ExecFactoryPar
+ from cros.factory.gooftool.common import Shell
+@@ -1286,8 +1285,6 @@
+   wipe_args = PrepareWipeArgs(options)
+ 
+   # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
+-  p = subprocess.Popen("/usr/bin/fydeos_factory.sh mark_partition_bootable b", stdout=subprocess.PIPE, shell=True)
+-  logging.info(p.communicate())
+ 
+ 
+ @Command('get_firmware_hash',

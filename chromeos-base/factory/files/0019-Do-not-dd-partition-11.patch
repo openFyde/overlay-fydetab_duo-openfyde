@@ -1,0 +1,33 @@
+From 6eef7a142d0e11d8cb54b396930b74454a112aaa Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sat, 17 Sep 2022 20:12:12 +0800
+Subject: [PATCH 19/38] Do not dd partition "11"
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/gooftool/commands.py | 4 ++--
+ sh/cros_payload.sh      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -1259,7 +1259,7 @@
+       # We cannot lock HPS after HWWP is enabled.
+       LockHPS(options)
+ 
+-  ClearGBBFlags(options)
++  # ClearGBBFlags(options)
+   # VerifyBeforeGSCFinalize(options)
+   # GSCFinalize(options)
+   # VerifyAfterGSCFinalize(options)
+--- a/sh/cros_payload.sh
++++ b/sh/cros_payload.sh
+@@ -1265,7 +1265,7 @@
+         # The Root FS partition should be the last one to be written, since
+         # this process is not atomic and we can only get image version from
+         # lsb-release.
+-        for mapping in "6 6" "7 7" "8 8" "9 9" "10 10" "11 11" "12 12" \
++        for mapping in "6 6" "7 7" "8 8" "9 9" "10 10" "12 12" \
+           "4 4" "3 5"; do
+           from="${mapping% *}"
+           to="${mapping#* }"

@@ -1,0 +1,46 @@
+From fec79791cefa41cac3c225ab2da6af520c29043f Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 4 Sep 2022 20:55:41 +0800
+Subject: [PATCH 14/38] Comment unneeded commands for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/gooftool/commands.py | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -1248,9 +1248,9 @@
+   - Wipes the testing kernel, rootfs, and stateful partition
+   """
+ 
+-  if options.factory_process != FactoryProcessEnum.RMA:
++  if options.factory_process != FactoryProcessEnum.RMA and False:
+     # Write VPD values related to RLZ ping into VPD.
+-    GetGooftool(options).WriteVPDForRLZPing(options.embargo_offset)
++    # GetGooftool(options).WriteVPDForRLZPing(options.embargo_offset)
+     if options.generate_mfg_date:
+       GetGooftool(options).WriteVPDForMFGDate()
+ 
+@@ -1260,9 +1260,9 @@
+       LockHPS(options)
+ 
+   ClearGBBFlags(options)
+-  VerifyBeforeGSCFinalize(options)
+-  GSCFinalize(options)
+-  VerifyAfterGSCFinalize(options)
++  # VerifyBeforeGSCFinalize(options)
++  # GSCFinalize(options)
++  # VerifyAfterGSCFinalize(options)
+   LogSourceHashes(options)
+   UntarStatefulFiles(options)
+   if options.cros_core:
+@@ -1270,7 +1270,7 @@
+   else:
+     SetFirmwareBitmapLocale(options)
+   ClearFactoryVPDEntries(options)
+-  GenerateStableDeviceSecret(options)
++  # GenerateStableDeviceSecret(options)
+   if options.no_write_protect:
+     logging.warning('WARNING: Firmware Software Write Protection is SKIPPED.')
+     event_log.Log('wp', fw='both', status='skipped')

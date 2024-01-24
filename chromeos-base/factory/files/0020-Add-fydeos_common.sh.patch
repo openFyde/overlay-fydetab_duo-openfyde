@@ -1,0 +1,74 @@
+From 12ab219a208607699cd1e10a33cceb48b48489a1 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sat, 17 Sep 2022 20:12:59 +0800
+Subject: [PATCH 20/38] Add fydeos_common.sh
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ sh/fydeos_common.sh | 54 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100755 sh/fydeos_common.sh
+
+diff --git a/sh/fydeos_common.sh b/sh/fydeos_common.sh
+new file mode 100755
+index 000000000..170682bf3
+--- /dev/null
++++ b/sh/fydeos_common.sh
+@@ -0,0 +1,54 @@
++#!/bin/sh
++#
++
++set -e
++
++BOOT_PART="/dev/loop0p12"
++MNT="/tmp/$RANDOM"
++SLOT_B_FILE="first-b.txt"
++
++die()
++{
++    echo "$@"
++    exit 1
++}
++
++# This function is for ARM device only
++# TODO: make it generic
++mark_boot_partition()
++{
++    local p="$BOOT_PART"
++    local slot="$1"
++    local slotb_path="${MNT}/${SLOT_B_FILE}"
++
++    mkdir $MNT
++    mount "$p" $MNT
++
++    if [[ "$slot" == "a" || "$slot" == "A" ]]; then
++        rm "$slotb_path" 2>/dev/null || true
++    elif [[ "$slot" == "b" || "$slot" == "B" ]]; then
++        touch "$slotb_path" 2>/dev/null || true
++    else
++        die "the parameter must be 'a/b'"
++    fi
++
++    echo "Mark slot $slot as bootable"
++
++    umount $MNT
++}
++
++main()
++{
++  #shift
++    case "$1" in
++    'mark_partition_bootable')
++      shift
++      mark_boot_partition "$@"
++      ;;
++    *)
++      die "Unknown command: $1"
++      ;;
++  esac
++}
++
++main "$@"
+-- 
+2.42.0
+

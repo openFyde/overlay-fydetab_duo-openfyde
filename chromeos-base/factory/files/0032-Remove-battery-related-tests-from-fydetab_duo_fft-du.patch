@@ -1,0 +1,54 @@
+From c9c72fb526301dd2e72f435299e382c698ac0e20 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 19 Sep 2022 09:43:14 +0800
+Subject: [PATCH 32/38] Remove battery related tests from fydetab_duo_fft due
+ to lack of ec
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo_smt.test_list.json | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_smt.test_list.json b/py/test/test_lists/fydetab_duo_smt.test_list.json
+index b456a7bd5..694d7234a 100644
+--- a/py/test/test_lists/fydetab_duo_smt.test_list.json
++++ b/py/test/test_lists/fydetab_duo_smt.test_list.json
+@@ -9,15 +9,12 @@
+         "bluetooth",
+         "cpu",
+         "dram",
+-        "embedded_controller",
+-        "flash_chip",
+         "storage",
+-        "tpm",
+         "usb_hosts",
+         "wireless"
+       ],
+       "__comment_component_list": "Can also verify firmware here if preflashed firmware for SMT stage can meet the requirements in HWID.",
+-      "stress_duration_secs": 10,
++      "stress_duration_secs": 1,
+       "__comment_stress_duration_secs": "Duration of stress test (SAT, Stressful Application Test) during SMT."
+     }
+   },
+@@ -51,7 +48,6 @@
+       "subtests": [
+         "SMTProbe",
+         "SpeakerDMic",
+-        "SMTBatterySysfs",
+         "SMTWifiSSIDList",
+         "ChargerTypeDetection",
+         "PartitionTable",
+@@ -63,9 +59,7 @@
+       "label": "Finish",
+       "subtests": [
+         "StationEnd",
+-        "Cr50SMTWriteFlashInfo",
+-        "CheckPoint",
+-        "HaltStep"
++        "CheckPoint"
+       ]
+     },
+     "SMTItems": {
+-- 
+2.42.0
+

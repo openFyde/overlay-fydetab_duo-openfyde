@@ -1,0 +1,39 @@
+From d3ef4f1dc35c96a6d552e1d4d59f04b1871fbda2 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 18 Sep 2022 17:21:29 +0800
+Subject: [PATCH 37/38] Use process_utils instead of subprocess
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/gooftool/commands.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -23,7 +23,6 @@
+ from tempfile import gettempdir
+ import threading
+ import xmlrpc.client
+-import subprocess
+ 
+ from cros.factory.gooftool.common import ExecFactoryPar
+ from cros.factory.gooftool.common import Shell
+@@ -58,6 +57,7 @@
+ from cros.factory.utils import sys_utils
+ from cros.factory.utils import time_utils
+ from cros.factory.utils.type_utils import Error
++from cros.factory.utils import process_utils
+ 
+ from cros.factory.external.chromeos_cli import gsctool
+ from cros.factory.external.chromeos_cli import vpd
+@@ -1286,8 +1286,8 @@
+   wipe_args = PrepareWipeArgs(options)
+ 
+   # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
+-  p = subprocess.Popen("/usr/bin/fydeos_factory.sh mark_partition_bootable b", stdout=subprocess.PIPE, shell=True)
+-  logging.info(p.communicate())
++  p = process_utils.CheckOutput("/usr/bin/fydeos_factory.sh mark_partition_bootable b", shell=True, log=True)
++  logging.info(p)
+ 
+ 
+ @Command('get_firmware_hash',

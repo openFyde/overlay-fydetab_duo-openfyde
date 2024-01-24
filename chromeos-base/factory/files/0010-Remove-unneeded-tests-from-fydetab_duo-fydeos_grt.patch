@@ -1,0 +1,36 @@
+From 4372e513c68b9e2e9aaec03ca74b08c54bbb2c5b Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 29 Aug 2022 14:10:42 +0800
+Subject: [PATCH 10/38] Remove unneeded tests from fydetab_duo-fydeos_grt
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json b/py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json
+index aaea8e26c..ef0bbf57f 100644
+--- a/py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json
++++ b/py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json
+@@ -25,7 +25,7 @@
+   "definitions": {
+     "GRT": {
+       "inherit": "TestGroup",
+-      "label": "GRT (Google Required Tests)",
++      "label": "GRT (FydeOS Required Tests)",
+       "locals": {
+         "station_end_upload_report": true,
+         "station": "GRT"
+@@ -73,8 +73,7 @@
+         "UploadRegCodes",
+         "UploadZeroTouchIds",
+         "ClearTPMOwnerRequest",
+-        "RebootStep",
+-        "VerifyWidevineKeybox"
++        "RebootStep"
+       ]
+     },
+     "GRTStart": {
+-- 
+2.42.0
+

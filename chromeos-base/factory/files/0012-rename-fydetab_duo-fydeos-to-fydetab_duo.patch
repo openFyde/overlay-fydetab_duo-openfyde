@@ -1,0 +1,4420 @@
+From 7ce85832e957ef4342a48e35a3280ee3bfba96c9 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 4 Sep 2022 19:02:27 +0800
+Subject: [PATCH 12/38] rename fydetab_duo-fydeos* to  fydetab_duo*
+
+Because tests require files must be prefixed by '^([\w\:]+(?:-\d+)?\.?)+$'.
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/common.test_list.json       | 14 ++++++++++++++
+ ....json => fydetab_duo_common.test_list.json} |  0
+ ...ist.json => fydetab_duo_fat.test_list.json} |  2 +-
+ ...ist.json => fydetab_duo_fft.test_list.json} |  2 +-
+ ...ist.json => fydetab_duo_grt.test_list.json} |  2 +-
+ ....json => fydetab_duo_run_in.test_list.json} |  2 +-
+ ...ist.json => fydetab_duo_smt.test_list.json} |  2 +-
+ py/test/test_lists/generic_main.test_list.json | 18 ++++++++++++------
+ ...st.json => main_fydetab_duo.test_list.json} | 12 ++++++------
+ 9 files changed, 37 insertions(+), 17 deletions(-)
+ create mode 100644 py/test/test_lists/common.test_list.json
+ rename py/test/test_lists/{fydetab_duo-fydeos_common.test_list.json => fydetab_duo_common.test_list.json} (100%)
+ rename py/test/test_lists/{fydetab_duo-fydeos_fat.test_list.json => fydetab_duo_fat.test_list.json} (96%)
+ rename py/test/test_lists/{fydetab_duo-fydeos_fft.test_list.json => fydetab_duo_fft.test_list.json} (97%)
+ rename py/test/test_lists/{fydetab_duo-fydeos_grt.test_list.json => fydetab_duo_grt.test_list.json} (98%)
+ rename py/test/test_lists/{fydetab_duo-fydeos_run_in.test_list.json => fydetab_duo_run_in.test_list.json} (99%)
+ rename py/test/test_lists/{fydetab_duo-fydeos_smt.test_list.json => fydetab_duo_smt.test_list.json} (99%)
+ rename py/test/test_lists/{main_fydetab_duo-fydeos.test_list.json => main_fydetab_duo.test_list.json} (81%)
+
+--- /dev/null
++++ b/py/test/test_lists/common.test_list.json
+@@ -0,0 +1,14 @@
++{
++  "inherit": [
++    "generic_common.test_list"
++  ],
++  "constants": {
++    # Common constants for your project.
++  },
++  "options": {
++    # Common test list options for your project.
++  },
++  "definitions": {
++    # Define new pytests, or override pytest arguments.
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_fat.test_list.json
++++ /dev/null
+@@ -1,57 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_common.test_list"
+-  ],
+-  "definitions": {
+-    "FAT": {
+-      "inherit": "TestGroup",
+-      "label": "FAT (Final Assembly Test)",
+-      "locals": {
+-        "station_end_upload_report": false,
+-        "station": "FAT"
+-      },
+-      "subtests": [
+-        "FATStart",
+-        "Barrier",
+-        "FATItems",
+-        "CheckPoint",
+-        "FATEnd"
+-      ]
+-    },
+-    "FATEnd": {
+-      "inherit": "TestGroup",
+-      "label": "Finish",
+-      "subtests": [
+-        "StationEnd",
+-        "CheckPoint"
+-      ]
+-    },
+-    "FATItems": {
+-      "inherit": "FlattenGroup",
+-      "__comment": "Test plans for Final Assembly Test.  The FAT is the first stage of FATP after Final Assembly, before Run In or Final Functional Testing (FFT). We want to collect system information and quickly probe if peripherals are assembled correctly.",
+-      "subtests": [
+-        "ModelSKU",
+-        "ChargerTypeDetection",
+-        "EDPPanelTiming",
+-        "Barrier",
+-        "ThermalSensors",
+-        "Barrier",
+-        "FPSGroup"
+-      ]
+-    },
+-    "FATStart": {
+-      "inherit": "TestGroup",
+-      "label": "Prepare",
+-      "subtests": [
+-        "StationStart",
+-        {
+-          "subtests": [
+-            "GetDeviceInfo",
+-            "WriteDeviceDataToVPD",
+-            "WriteHWID"
+-          ]
+-        }
+-      ]
+-    }
+-  }
+-}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_fat.test_list.json
+@@ -0,0 +1,57 @@
++{
++  "inherit": [
++    "fydetab_duo_common.test_list"
++  ],
++  "definitions": {
++    "FAT": {
++      "inherit": "TestGroup",
++      "label": "FAT (Final Assembly Test)",
++      "locals": {
++        "station_end_upload_report": false,
++        "station": "FAT"
++      },
++      "subtests": [
++        "FATStart",
++        "Barrier",
++        "FATItems",
++        "CheckPoint",
++        "FATEnd"
++      ]
++    },
++    "FATEnd": {
++      "inherit": "TestGroup",
++      "label": "Finish",
++      "subtests": [
++        "StationEnd",
++        "CheckPoint"
++      ]
++    },
++    "FATItems": {
++      "inherit": "FlattenGroup",
++      "__comment": "Test plans for Final Assembly Test.  The FAT is the first stage of FATP after Final Assembly, before Run In or Final Functional Testing (FFT). We want to collect system information and quickly probe if peripherals are assembled correctly.",
++      "subtests": [
++        "ModelSKU",
++        "ChargerTypeDetection",
++        "EDPPanelTiming",
++        "Barrier",
++        "ThermalSensors",
++        "Barrier",
++        "FPSGroup"
++      ]
++    },
++    "FATStart": {
++      "inherit": "TestGroup",
++      "label": "Prepare",
++      "subtests": [
++        "StationStart",
++        {
++          "subtests": [
++            "GetDeviceInfo",
++            "WriteDeviceDataToVPD",
++            "WriteHWID"
++          ]
++        }
++      ]
++    }
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_fft.test_list.json
++++ /dev/null
+@@ -1,69 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_common.test_list"
+-  ],
+-  "definitions": {
+-    "FFT": {
+-      "inherit": "TestGroup",
+-      "label": "FFT (Final Functional Test)",
+-      "locals": {
+-        "station_end_upload_report": false,
+-        "station": "FFT"
+-      },
+-      "subtests": [
+-        "FFTStart",
+-        "Barrier",
+-        "FFTItems",
+-        "CheckPoint",
+-        "FFTEnd"
+-      ]
+-    },
+-    "FFTEnd": {
+-      "inherit": "TestGroup",
+-      "label": "Finish",
+-      "subtests": [
+-        "ClearAPROHash",
+-        "StationEnd",
+-        "CheckPoint"
+-      ]
+-    },
+-    "FFTItems": {
+-      "inherit": "FlattenGroup",
+-      "__comment": "Test plans for Final Functional Test. The FFT is usually the final stage of FATP, to make sure the system is functional, including most interactive tests.",
+-      "subtests": [
+-        "Probe",
+-        "LidSwitch",
+-        "DisplayPoint",
+-        "Display",
+-        "Backlight",
+-        "CameraTests",
+-        "LED",
+-        "Keyboard",
+-        "HWButton",
+-        "Wireless",
+-        "Bluetooth",
+-        "AudioJack",
+-        "SpeakerDMic",
+-        "ProximitySensor",
+-        "Touchpad",
+-        "Touchscreen",
+-        "StylusAndGarage",
+-        "HPS",
+-        "ExternalDisplay",
+-        "USBTypeCTest",
+-        "SDPerformance",
+-        "BaseAccelerometersCalibration",
+-        "LidAccelerometersCalibration",
+-        "AccelerometersLidAngle",
+-        "ScreenRotation"
+-      ]
+-    },
+-    "FFTStart": {
+-      "inherit": "TestGroup",
+-      "label": "Prepare",
+-      "subtests": [
+-        "StationStart"
+-      ]
+-    }
+-  }
+-}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_fft.test_list.json
+@@ -0,0 +1,69 @@
++{
++  "inherit": [
++    "fydetab_duo_common.test_list"
++  ],
++  "definitions": {
++    "FFT": {
++      "inherit": "TestGroup",
++      "label": "FFT (Final Functional Test)",
++      "locals": {
++        "station_end_upload_report": false,
++        "station": "FFT"
++      },
++      "subtests": [
++        "FFTStart",
++        "Barrier",
++        "FFTItems",
++        "CheckPoint",
++        "FFTEnd"
++      ]
++    },
++    "FFTEnd": {
++      "inherit": "TestGroup",
++      "label": "Finish",
++      "subtests": [
++        "ClearAPROHash",
++        "StationEnd",
++        "CheckPoint"
++      ]
++    },
++    "FFTItems": {
++      "inherit": "FlattenGroup",
++      "__comment": "Test plans for Final Functional Test. The FFT is usually the final stage of FATP, to make sure the system is functional, including most interactive tests.",
++      "subtests": [
++        "Probe",
++        "LidSwitch",
++        "DisplayPoint",
++        "Display",
++        "Backlight",
++        "CameraTests",
++        "LED",
++        "Keyboard",
++        "HWButton",
++        "Wireless",
++        "Bluetooth",
++        "AudioJack",
++        "SpeakerDMic",
++        "ProximitySensor",
++        "Touchpad",
++        "Touchscreen",
++        "StylusAndGarage",
++        "HPS",
++        "ExternalDisplay",
++        "USBTypeCTest",
++        "SDPerformance",
++        "BaseAccelerometersCalibration",
++        "LidAccelerometersCalibration",
++        "AccelerometersLidAngle",
++        "ScreenRotation"
++      ]
++    },
++    "FFTStart": {
++      "inherit": "TestGroup",
++      "label": "Prepare",
++      "subtests": [
++        "StationStart"
++      ]
++    }
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_grt.test_list.json
++++ /dev/null
+@@ -1,88 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_common.test_list"
+-  ],
+-  "constants": {
+-    "grt": {
+-      "force_write_protect": false,
+-      "__comment_force_write_protect": "*** Write protection is required for mass production and shippable devices. By default we enable write protection starting from PVT stages, but you can start trying write protection earlier by this option.",
+-      "cbi_eeprom_wp_status": "Locked",
+-      "__comment_cbi_eeprom_wp_status": "Set this to 'Absent' for board without CBI EEPROM. Set this to 'Unlocked' for MLB layouts which requires CBI WP being disabled in pre-PVT and enabled in PVT.",
+-      "collect_zero_touch_ids": false,
+-      "ec_pubkey_path": null,
+-      "ec_pubkey_hash": null,
+-      "rma_mode": false,
+-      "mlb_mode": false,
+-      "__comment_mlb_mode": "The MLB will leave factory without assembly, for example, this is a RMA spare board or local OEM projects.",
+-      "enable_zero_touch": false,
+-      "gooftool_skip_list": [],
+-      "gooftool_waive_list": [],
+-      "re_sign_release_kernel": false,
+-      "__comment_re_sign_release_kernel": "Enable this if you want to finalize with a DEV signed kernel; go/cros-factory-fw-in-early-builds",
+-      "secure_wipe": true
+-    }
+-  },
+-  "definitions": {
+-    "GRT": {
+-      "inherit": "TestGroup",
+-      "label": "GRT (FydeOS Required Tests)",
+-      "locals": {
+-        "station_end_upload_report": true,
+-        "station": "GRT"
+-      },
+-      "subtests": [
+-        "GRTStart",
+-        "GRTItems",
+-        "CheckPoint",
+-        "GRTEnd",
+-        "AllCheckPoint",
+-        "GRTFinalize"
+-      ]
+-    },
+-    "GRTEnd": {
+-      "inherit": "TestGroup",
+-      "label": "Finish",
+-      "subtests": [
+-        "StationEnd"
+-      ]
+-    },
+-    "GRTFinalize": {
+-      "pytest_name": "finalize",
+-      "args": {
+-        "enable_factory_server": "eval! constants.enable_factory_server",
+-        "enforced_release_channels": "eval! ['stable'] if options.phase == 'PVT' else None",
+-        "enable_zero_touch": "eval! constants.grt.enable_zero_touch",
+-        "ec_pubkey_path": "eval! constants.grt.ec_pubkey_path",
+-        "ec_pubkey_hash": "eval! constants.grt.ec_pubkey_hash",
+-        "gooftool_skip_list": "eval! constants.grt.gooftool_skip_list",
+-        "gooftool_waive_list": "eval! constants.grt.gooftool_waive_list",
+-        "hwid_need_vpd": "eval! constants.hwid_need_vpd",
+-        "has_ec_pubkey": "eval! constants.has_ec_pubkey",
+-        "rma_mode": "eval! constants.grt.rma_mode",
+-        "mlb_mode": "eval! constants.grt.mlb_mode",
+-        "secure_wipe": "eval! constants.grt.secure_wipe",
+-        "upload_method": "eval! 'shopfloor' if constants.enable_factory_server else 'none'",
+-        "write_protection": "eval! constants.grt.force_write_protect or options.phase == 'PVT'",
+-        "cbi_eeprom_wp_status": "eval! 'Locked' if constants.grt.cbi_eeprom_wp_status != 'Absent' and options.phase == 'PVT' else constants.grt.cbi_eeprom_wp_status",
+-        "use_generic_tpm2": "eval! constants.use_generic_tpm2"
+-      }
+-    },
+-    "GRTItems": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "UploadRegCodes",
+-        "UploadZeroTouchIds",
+-        "ClearTPMOwnerRequest",
+-        "RebootStep"
+-      ]
+-    },
+-    "GRTStart": {
+-      "inherit": "TestGroup",
+-      "label": "Prepare",
+-      "subtests": [
+-        "AllCheckPoint",
+-        "StationStart"
+-      ]
+-    }
+-  }
+-}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_grt.test_list.json
+@@ -0,0 +1,88 @@
++{
++  "inherit": [
++    "fydetab_duo_common.test_list"
++  ],
++  "constants": {
++    "grt": {
++      "force_write_protect": false,
++      "__comment_force_write_protect": "*** Write protection is required for mass production and shippable devices. By default we enable write protection starting from PVT stages, but you can start trying write protection earlier by this option.",
++      "cbi_eeprom_wp_status": "Locked",
++      "__comment_cbi_eeprom_wp_status": "Set this to 'Absent' for board without CBI EEPROM. Set this to 'Unlocked' for MLB layouts which requires CBI WP being disabled in pre-PVT and enabled in PVT.",
++      "collect_zero_touch_ids": false,
++      "ec_pubkey_path": null,
++      "ec_pubkey_hash": null,
++      "rma_mode": false,
++      "mlb_mode": false,
++      "__comment_mlb_mode": "The MLB will leave factory without assembly, for example, this is a RMA spare board or local OEM projects.",
++      "enable_zero_touch": false,
++      "gooftool_skip_list": [],
++      "gooftool_waive_list": [],
++      "re_sign_release_kernel": false,
++      "__comment_re_sign_release_kernel": "Enable this if you want to finalize with a DEV signed kernel; go/cros-factory-fw-in-early-builds",
++      "secure_wipe": true
++    }
++  },
++  "definitions": {
++    "GRT": {
++      "inherit": "TestGroup",
++      "label": "GRT (FydeOS Required Tests)",
++      "locals": {
++        "station_end_upload_report": true,
++        "station": "GRT"
++      },
++      "subtests": [
++        "GRTStart",
++        "GRTItems",
++        "CheckPoint",
++        "GRTEnd",
++        "AllCheckPoint",
++        "GRTFinalize"
++      ]
++    },
++    "GRTEnd": {
++      "inherit": "TestGroup",
++      "label": "Finish",
++      "subtests": [
++        "StationEnd"
++      ]
++    },
++    "GRTFinalize": {
++      "pytest_name": "finalize",
++      "args": {
++        "enable_factory_server": "eval! constants.enable_factory_server",
++        "enforced_release_channels": "eval! ['stable'] if options.phase == 'PVT' else None",
++        "enable_zero_touch": "eval! constants.grt.enable_zero_touch",
++        "ec_pubkey_path": "eval! constants.grt.ec_pubkey_path",
++        "ec_pubkey_hash": "eval! constants.grt.ec_pubkey_hash",
++        "gooftool_skip_list": "eval! constants.grt.gooftool_skip_list",
++        "gooftool_waive_list": "eval! constants.grt.gooftool_waive_list",
++        "hwid_need_vpd": "eval! constants.hwid_need_vpd",
++        "has_ec_pubkey": "eval! constants.has_ec_pubkey",
++        "rma_mode": "eval! constants.grt.rma_mode",
++        "mlb_mode": "eval! constants.grt.mlb_mode",
++        "secure_wipe": "eval! constants.grt.secure_wipe",
++        "upload_method": "eval! 'shopfloor' if constants.enable_factory_server else 'none'",
++        "write_protection": "eval! constants.grt.force_write_protect or options.phase == 'PVT'",
++        "cbi_eeprom_wp_status": "eval! 'Locked' if constants.grt.cbi_eeprom_wp_status != 'Absent' and options.phase == 'PVT' else constants.grt.cbi_eeprom_wp_status",
++        "use_generic_tpm2": "eval! constants.use_generic_tpm2"
++      }
++    },
++    "GRTItems": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "UploadRegCodes",
++        "UploadZeroTouchIds",
++        "ClearTPMOwnerRequest",
++        "RebootStep"
++      ]
++    },
++    "GRTStart": {
++      "inherit": "TestGroup",
++      "label": "Prepare",
++      "subtests": [
++        "AllCheckPoint",
++        "StationStart"
++      ]
++    }
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_run_in.test_list.json
++++ /dev/null
+@@ -1,215 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_common.test_list"
+-  ],
+-  "constants": {
+-    "run_in": {
+-      "sat_duration_secs": 28800,
+-      "dozing_sat_duration_secs": 600,
+-      "reboot_warmup_secs": 30
+-    }
+-  },
+-  "definitions": {
+-    "RunIn": {
+-      "inherit": "TestGroup",
+-      "label": "Run-In Test",
+-      "locals": {
+-        "station_end_upload_report": false,
+-        "station": "RUNIN"
+-      },
+-      "subtests": [
+-        "RunInStart",
+-        "Barrier",
+-        "RunInItems",
+-        "CheckPoint",
+-        "RunInEnd"
+-      ]
+-    },
+-    "RunInBlockingCharge": {
+-      "inherit": "BlockingCharge",
+-      "__comment": "Charges battery to min_charge_pct from Goofy's charge_manager. There will be no AC power during FATP process, so we must make sure DUT battery has enough charge before leaving RunIn.",
+-      "args": {
+-        "timeout_secs": 7200
+-      }
+-    },
+-    "RunInCountdown": {
+-      "pytest_name": "countdown",
+-      "__comment": "temp_criteria: A list of rules to check that temperature is under the given range, rule format is [name, temp_index, warning_temp, critical_temp]",
+-      "args": {
+-        "log_interval": 10,
+-        "grace_secs": 480,
+-        "temp_max_delta": 10,
+-        "temp_criteria": [
+-          [
+-            "CPU",
+-            null,
+-            null,
+-            null
+-          ]
+-        ]
+-      }
+-    },
+-    "RunInDozingStress": {
+-      "label": "Dozing Stress",
+-      "parallel": true,
+-      "subtests": [
+-        {
+-          "inherit": "StressAppTest",
+-          "args": {
+-            "seconds": "eval! constants.run_in.dozing_sat_duration_secs",
+-            "free_memory_only": true
+-          }
+-        },
+-        {
+-          "inherit": "SuspendStress",
+-          "args": {
+-            "cycles": 15,
+-            "suspend_delay_min_secs": 28,
+-            "suspend_delay_max_secs": 30,
+-            "suspend_time_margin_min_secs": -1
+-          }
+-        },
+-        {
+-          "inherit": "RunInCountdown",
+-          "args": {
+-            "duration_secs": "eval! constants.run_in.dozing_sat_duration_secs"
+-          }
+-        }
+-      ]
+-    },
+-    "RunInEnd": {
+-      "inherit": "TestGroup",
+-      "label": "Finish",
+-      "subtests": [
+-        "StationEnd",
+-        "CheckPoint",
+-        "RunInRebootStep"
+-      ]
+-    },
+-    "RunInItems": {
+-      "inherit": "FlattenGroup",
+-      "__comment": "RunIn is a stage to stress all ports for checking system stability. This stage may have many test barriers to let it fail early and reduce wasted test time.",
+-      "subtests": [
+-        "RunInRebootStep",
+-        "RunInStressGroupWithFrontCamera",
+-        "Barrier",
+-        "RunInRebootStep",
+-        "Barrier",
+-        "RunInDozingStress",
+-        "Barrier",
+-        "RunInRebootSequence",
+-        "Barrier",
+-        "VerifyRootPartition",
+-        "Barrier",
+-        "RunInBlockingCharge",
+-        "Barrier",
+-        "BatterySysfs"
+-      ]
+-    },
+-    "RunInMRCCache": {
+-      "label": "MRC Cache",
+-      "subtests": [
+-        {
+-          "pytest_name": "mrc_cache",
+-          "label": "Create Cache",
+-          "args": {
+-            "mode": "create"
+-          }
+-        },
+-        "RunInRebootStep",
+-        {
+-          "pytest_name": "mrc_cache",
+-          "label": "Verify Cache",
+-          "args": {
+-            "mode": "verify"
+-          }
+-        }
+-      ]
+-    },
+-    "RunInRebootSequence": {
+-      "inherit": "RunInRebootStep",
+-      "iterations": 15
+-    },
+-    "RunInRebootStep": {
+-      "inherit": "RebootStep",
+-      "args": {
+-        "warmup_post_shutdown": "eval! constants.run_in.reboot_warmup_secs"
+-      }
+-    },
+-    "RunInStart": {
+-      "inherit": "TestGroup",
+-      "label": "Prepare",
+-      "subtests": [
+-        "StationStart"
+-      ]
+-    },
+-    "RunInStressAppTest": {
+-      "inherit": "StressAppTest",
+-      "args": {
+-        "seconds": "eval! constants.run_in.sat_duration_secs",
+-        "wait_secs": 10,
+-        "free_memory_only": true
+-      }
+-    },
+-    "RunInStressCountdown": {
+-      "inherit": "RunInCountdown",
+-      "args": {
+-        "duration_secs": "eval! constants.run_in.sat_duration_secs"
+-      }
+-    },
+-    "RunInStressFrontCamera": {
+-      "inherit": "FrontCamera",
+-      "args": {
+-        "mode": "timeout",
+-        "show_image": false,
+-        "timeout_secs": "eval! constants.run_in.sat_duration_secs"
+-      }
+-    },
+-    "RunInStressGroup": {
+-      "inherit": "RunInStressGroupWithFrontCamera"
+-    },
+-    "RunInStressGroupWithFrontCamera": {
+-      "label": "Stress Group With Front Camera",
+-      "parallel": true,
+-      "subtests": [
+-        "RunInWebGLAquarium",
+-        "RunInStressFrontCamera",
+-        "RunInURandom",
+-        "RunInStressAppTest",
+-        "RunInStressCountdown"
+-      ]
+-    },
+-    "RunInStressGroupWithRearCamera": {
+-      "label": "Stress Group With Rear Camera",
+-      "run_if": "not constants.has_device_data or device.component.has_rear_camera",
+-      "parallel": true,
+-      "subtests": [
+-        "RunInWebGLAquarium",
+-        "RunInStressRearCamera",
+-        "RunInURandom",
+-        "RunInStressAppTest",
+-        "RunInStressCountdown"
+-      ]
+-    },
+-    "RunInStressRearCamera": {
+-      "inherit": "RearCamera",
+-      "args": {
+-        "mode": "timeout",
+-        "show_image": false,
+-        "timeout_secs": "eval! constants.run_in.sat_duration_secs"
+-      }
+-    },
+-    "RunInURandom": {
+-      "inherit": "URandom",
+-      "args": {
+-        "duration_secs": "eval! constants.run_in.sat_duration_secs"
+-      }
+-    },
+-    "RunInWebGLAquarium": {
+-      "inherit": "WebGLAquarium",
+-      "args": {
+-        "duration_secs": "eval! constants.run_in.sat_duration_secs"
+-      }
+-    }
+-  }
+-}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_run_in.test_list.json
+@@ -0,0 +1,215 @@
++{
++  "inherit": [
++    "fydetab_duo_common.test_list"
++  ],
++  "constants": {
++    "run_in": {
++      "sat_duration_secs": 28800,
++      "dozing_sat_duration_secs": 600,
++      "reboot_warmup_secs": 30
++    }
++  },
++  "definitions": {
++    "RunIn": {
++      "inherit": "TestGroup",
++      "label": "Run-In Test",
++      "locals": {
++        "station_end_upload_report": false,
++        "station": "RUNIN"
++      },
++      "subtests": [
++        "RunInStart",
++        "Barrier",
++        "RunInItems",
++        "CheckPoint",
++        "RunInEnd"
++      ]
++    },
++    "RunInBlockingCharge": {
++      "inherit": "BlockingCharge",
++      "__comment": "Charges battery to min_charge_pct from Goofy's charge_manager. There will be no AC power during FATP process, so we must make sure DUT battery has enough charge before leaving RunIn.",
++      "args": {
++        "timeout_secs": 7200
++      }
++    },
++    "RunInCountdown": {
++      "pytest_name": "countdown",
++      "__comment": "temp_criteria: A list of rules to check that temperature is under the given range, rule format is [name, temp_index, warning_temp, critical_temp]",
++      "args": {
++        "log_interval": 10,
++        "grace_secs": 480,
++        "temp_max_delta": 10,
++        "temp_criteria": [
++          [
++            "CPU",
++            null,
++            null,
++            null
++          ]
++        ]
++      }
++    },
++    "RunInDozingStress": {
++      "label": "Dozing Stress",
++      "parallel": true,
++      "subtests": [
++        {
++          "inherit": "StressAppTest",
++          "args": {
++            "seconds": "eval! constants.run_in.dozing_sat_duration_secs",
++            "free_memory_only": true
++          }
++        },
++        {
++          "inherit": "SuspendStress",
++          "args": {
++            "cycles": 15,
++            "suspend_delay_min_secs": 28,
++            "suspend_delay_max_secs": 30,
++            "suspend_time_margin_min_secs": -1
++          }
++        },
++        {
++          "inherit": "RunInCountdown",
++          "args": {
++            "duration_secs": "eval! constants.run_in.dozing_sat_duration_secs"
++          }
++        }
++      ]
++    },
++    "RunInEnd": {
++      "inherit": "TestGroup",
++      "label": "Finish",
++      "subtests": [
++        "StationEnd",
++        "CheckPoint",
++        "RunInRebootStep"
++      ]
++    },
++    "RunInItems": {
++      "inherit": "FlattenGroup",
++      "__comment": "RunIn is a stage to stress all ports for checking system stability. This stage may have many test barriers to let it fail early and reduce wasted test time.",
++      "subtests": [
++        "RunInRebootStep",
++        "RunInStressGroupWithFrontCamera",
++        "Barrier",
++        "RunInRebootStep",
++        "Barrier",
++        "RunInDozingStress",
++        "Barrier",
++        "RunInRebootSequence",
++        "Barrier",
++        "VerifyRootPartition",
++        "Barrier",
++        "RunInBlockingCharge",
++        "Barrier",
++        "BatterySysfs"
++      ]
++    },
++    "RunInMRCCache": {
++      "label": "MRC Cache",
++      "subtests": [
++        {
++          "pytest_name": "mrc_cache",
++          "label": "Create Cache",
++          "args": {
++            "mode": "create"
++          }
++        },
++        "RunInRebootStep",
++        {
++          "pytest_name": "mrc_cache",
++          "label": "Verify Cache",
++          "args": {
++            "mode": "verify"
++          }
++        }
++      ]
++    },
++    "RunInRebootSequence": {
++      "inherit": "RunInRebootStep",
++      "iterations": 15
++    },
++    "RunInRebootStep": {
++      "inherit": "RebootStep",
++      "args": {
++        "warmup_post_shutdown": "eval! constants.run_in.reboot_warmup_secs"
++      }
++    },
++    "RunInStart": {
++      "inherit": "TestGroup",
++      "label": "Prepare",
++      "subtests": [
++        "StationStart"
++      ]
++    },
++    "RunInStressAppTest": {
++      "inherit": "StressAppTest",
++      "args": {
++        "seconds": "eval! constants.run_in.sat_duration_secs",
++        "wait_secs": 10,
++        "free_memory_only": true
++      }
++    },
++    "RunInStressCountdown": {
++      "inherit": "RunInCountdown",
++      "args": {
++        "duration_secs": "eval! constants.run_in.sat_duration_secs"
++      }
++    },
++    "RunInStressFrontCamera": {
++      "inherit": "FrontCamera",
++      "args": {
++        "mode": "timeout",
++        "show_image": false,
++        "timeout_secs": "eval! constants.run_in.sat_duration_secs"
++      }
++    },
++    "RunInStressGroup": {
++      "inherit": "RunInStressGroupWithFrontCamera"
++    },
++    "RunInStressGroupWithFrontCamera": {
++      "label": "Stress Group With Front Camera",
++      "parallel": true,
++      "subtests": [
++        "RunInWebGLAquarium",
++        "RunInStressFrontCamera",
++        "RunInURandom",
++        "RunInStressAppTest",
++        "RunInStressCountdown"
++      ]
++    },
++    "RunInStressGroupWithRearCamera": {
++      "label": "Stress Group With Rear Camera",
++      "run_if": "not constants.has_device_data or device.component.has_rear_camera",
++      "parallel": true,
++      "subtests": [
++        "RunInWebGLAquarium",
++        "RunInStressRearCamera",
++        "RunInURandom",
++        "RunInStressAppTest",
++        "RunInStressCountdown"
++      ]
++    },
++    "RunInStressRearCamera": {
++      "inherit": "RearCamera",
++      "args": {
++        "mode": "timeout",
++        "show_image": false,
++        "timeout_secs": "eval! constants.run_in.sat_duration_secs"
++      }
++    },
++    "RunInURandom": {
++      "inherit": "URandom",
++      "args": {
++        "duration_secs": "eval! constants.run_in.sat_duration_secs"
++      }
++    },
++    "RunInWebGLAquarium": {
++      "inherit": "WebGLAquarium",
++      "args": {
++        "duration_secs": "eval! constants.run_in.sat_duration_secs"
++      }
++    }
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_smt.test_list.json
++++ /dev/null
+@@ -1,184 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_common.test_list"
+-  ],
+-  "constants": {
+-    "smt": {
+-      "component_list": [
+-        "audio_codec",
+-        "bluetooth",
+-        "cpu",
+-        "dram",
+-        "embedded_controller",
+-        "flash_chip",
+-        "storage",
+-        "tpm",
+-        "usb_hosts",
+-        "wireless"
+-      ],
+-      "__comment_component_list": "Can also verify firmware here if preflashed firmware for SMT stage can meet the requirements in HWID.",
+-      "stress_duration_secs": 10,
+-      "__comment_stress_duration_secs": "Duration of stress test (SAT, Stressful Application Test) during SMT."
+-    }
+-  },
+-  "definitions": {
+-    "SMT": {
+-      "inherit": "TestGroup",
+-      "label": "SMT (SA Test)",
+-      "run_if": "not device.factory.end_SMT",
+-      "__comment": "The stage of tests performed after SMT and before FA.  This is also known as SA (System Assembly) testing.  After SMT, most factories will do System Assembly (SA) and then System Imaging then perform SA Testing.",
+-      "locals": {
+-        "station_end_upload_report": true,
+-        "station": "SMT"
+-      },
+-      "subtests": [
+-        "SMTStart",
+-        "SMTItems",
+-        "CheckPoint",
+-        "SMTEnd"
+-      ]
+-    },
+-    "SMTBatterySysfs": {
+-      "inherit": "BatterySysfs",
+-      "args": {
+-        "maximum_cycle_count": -1,
+-        "percent_battery_wear_allowed": -1
+-      }
+-    },
+-    "SMTComponents": {
+-      "label": "Parallel Test",
+-      "parallel": true,
+-      "subtests": [
+-        "SMTProbe",
+-        "SpeakerDMic",
+-        "SMTBatterySysfs",
+-        "SMTWifiSSIDList",
+-        "ChargerTypeDetection",
+-        "ChargeDischargeCurrent",
+-        "PartitionTable",
+-        "VerifyRootPartition"
+-      ]
+-    },
+-    "SMTEnd": {
+-      "inherit": "TestGroup",
+-      "label": "Finish",
+-      "subtests": [
+-        "StationEnd",
+-        "Cr50SMTWriteFlashInfo",
+-        "CheckPoint",
+-        "HaltStep"
+-      ]
+-    },
+-    "SMTItems": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "SMTComponents",
+-        "SMTStress",
+-        "SMTThermalLoad",
+-        "LidSwitch",
+-        "AudioJack",
+-        "LED",
+-        "USBTypeCTest",
+-        "SMTKeyboard",
+-        "HWButton"
+-      ]
+-    },
+-    "SMTKeyboard": {
+-      "inherit": "Keyboard",
+-      "args": {
+-        "layout": "ANSI"
+-      }
+-    },
+-    "SMTProbe": {
+-      "inherit": "Probe",
+-      "args": {
+-        "component_list": "eval! constants.smt.component_list",
+-        "config_file": "probe.json"
+-      }
+-    },
+-    "SMTScanMLB": {
+-      "inherit": "Scan",
+-      "label": "Scan MLB",
+-      "args": {
+-        "device_data_key": "serials.mlb_serial_number",
+-        "event_log_key": "mlb_serial_number",
+-        "label": "i18n! MLB Serial Number"
+-      }
+-    },
+-    "SMTScanOperatorID": {
+-      "inherit": "Scan",
+-      "label": "Scan Operator ID",
+-      "args": {
+-        "device_data_key": "factory.smt_operator_id",
+-        "event_log_key": "smt_operator_id",
+-        "label": "i18n! Operator ID"
+-      }
+-    },
+-    "SMTScanStationID": {
+-      "inherit": "Scan",
+-      "label": "ScanStationID",
+-      "args": {
+-        "device_data_key": "factory.smt_station_id",
+-        "event_log_key": "smt_station_id",
+-        "label": "i18n! Station ID"
+-      }
+-    },
+-    "SMTStart": {
+-      "inherit": "TestGroup",
+-      "label": "Prepare",
+-      "subtests": [
+-        "ReadDeviceDataFromVPD",
+-        "SyncFactoryServer",
+-        "SMTScanMLB",
+-        "SMTScanOperatorID",
+-        "SMTScanStationID",
+-        "StationStart"
+-      ]
+-    },
+-    "SMTStress": {
+-      "inherit": "TestGroup",
+-      "label": "Stress Test",
+-      "parallel": true,
+-      "subtests": [
+-        "SMTStressCountdown",
+-        "SMTStressAppTest"
+-      ]
+-    },
+-    "SMTStressAppTest": {
+-      "inherit": "StressAppTest",
+-      "args": {
+-        "seconds": "eval! constants.smt.stress_duration_secs"
+-      }
+-    },
+-    "SMTStressCountdown": {
+-      "pytest_name": "countdown",
+-      "args": {
+-        "duration_secs": "eval! constants.smt.stress_duration_secs"
+-      }
+-    },
+-    "SMTThermalLoad": {
+-      "pytest_name": "thermal_load",
+-      "__comment": "Must not be run together with StressAppTest",
+-      "args": {
+-        "lower_threshold": 40,
+-        "temperature_limit": 100,
+-        "heat_up_timeout_secs": 12,
+-        "duration_secs": 15
+-      }
+-    },
+-    "SMTUpdateFirmware": {
+-      "inherit": "TestGroup",
+-      "label": "Update Firmware",
+-      "subtests": [
+-        "SyncFactoryServer",
+-        "UpdateFirmware"
+-      ]
+-    },
+-    "SMTWifiSSIDList": {
+-      "inherit": "WifiSSIDList",
+-      "args": {
+-        "event_log_name": "SMT_basic_ssid_list"
+-      }
+-    }
+-  }
+-}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_smt.test_list.json
+@@ -0,0 +1,184 @@
++{
++  "inherit": [
++    "fydetab_duo_common.test_list"
++  ],
++  "constants": {
++    "smt": {
++      "component_list": [
++        "audio_codec",
++        "bluetooth",
++        "cpu",
++        "dram",
++        "embedded_controller",
++        "flash_chip",
++        "storage",
++        "tpm",
++        "usb_hosts",
++        "wireless"
++      ],
++      "__comment_component_list": "Can also verify firmware here if preflashed firmware for SMT stage can meet the requirements in HWID.",
++      "stress_duration_secs": 10,
++      "__comment_stress_duration_secs": "Duration of stress test (SAT, Stressful Application Test) during SMT."
++    }
++  },
++  "definitions": {
++    "SMT": {
++      "inherit": "TestGroup",
++      "label": "SMT (SA Test)",
++      "run_if": "not device.factory.end_SMT",
++      "__comment": "The stage of tests performed after SMT and before FA.  This is also known as SA (System Assembly) testing.  After SMT, most factories will do System Assembly (SA) and then System Imaging then perform SA Testing.",
++      "locals": {
++        "station_end_upload_report": true,
++        "station": "SMT"
++      },
++      "subtests": [
++        "SMTStart",
++        "SMTItems",
++        "CheckPoint",
++        "SMTEnd"
++      ]
++    },
++    "SMTBatterySysfs": {
++      "inherit": "BatterySysfs",
++      "args": {
++        "maximum_cycle_count": -1,
++        "percent_battery_wear_allowed": -1
++      }
++    },
++    "SMTComponents": {
++      "label": "Parallel Test",
++      "parallel": true,
++      "subtests": [
++        "SMTProbe",
++        "SpeakerDMic",
++        "SMTBatterySysfs",
++        "SMTWifiSSIDList",
++        "ChargerTypeDetection",
++        "ChargeDischargeCurrent",
++        "PartitionTable",
++        "VerifyRootPartition"
++      ]
++    },
++    "SMTEnd": {
++      "inherit": "TestGroup",
++      "label": "Finish",
++      "subtests": [
++        "StationEnd",
++        "Cr50SMTWriteFlashInfo",
++        "CheckPoint",
++        "HaltStep"
++      ]
++    },
++    "SMTItems": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "SMTComponents",
++        "SMTStress",
++        "SMTThermalLoad",
++        "LidSwitch",
++        "AudioJack",
++        "LED",
++        "USBTypeCTest",
++        "SMTKeyboard",
++        "HWButton"
++      ]
++    },
++    "SMTKeyboard": {
++      "inherit": "Keyboard",
++      "args": {
++        "layout": "ANSI"
++      }
++    },
++    "SMTProbe": {
++      "inherit": "Probe",
++      "args": {
++        "component_list": "eval! constants.smt.component_list",
++        "config_file": "probe.json"
++      }
++    },
++    "SMTScanMLB": {
++      "inherit": "Scan",
++      "label": "Scan MLB",
++      "args": {
++        "device_data_key": "serials.mlb_serial_number",
++        "event_log_key": "mlb_serial_number",
++        "label": "i18n! MLB Serial Number"
++      }
++    },
++    "SMTScanOperatorID": {
++      "inherit": "Scan",
++      "label": "Scan Operator ID",
++      "args": {
++        "device_data_key": "factory.smt_operator_id",
++        "event_log_key": "smt_operator_id",
++        "label": "i18n! Operator ID"
++      }
++    },
++    "SMTScanStationID": {
++      "inherit": "Scan",
++      "label": "ScanStationID",
++      "args": {
++        "device_data_key": "factory.smt_station_id",
++        "event_log_key": "smt_station_id",
++        "label": "i18n! Station ID"
++      }
++    },
++    "SMTStart": {
++      "inherit": "TestGroup",
++      "label": "Prepare",
++      "subtests": [
++        "ReadDeviceDataFromVPD",
++        "SyncFactoryServer",
++        "SMTScanMLB",
++        "SMTScanOperatorID",
++        "SMTScanStationID",
++        "StationStart"
++      ]
++    },
++    "SMTStress": {
++      "inherit": "TestGroup",
++      "label": "Stress Test",
++      "parallel": true,
++      "subtests": [
++        "SMTStressCountdown",
++        "SMTStressAppTest"
++      ]
++    },
++    "SMTStressAppTest": {
++      "inherit": "StressAppTest",
++      "args": {
++        "seconds": "eval! constants.smt.stress_duration_secs"
++      }
++    },
++    "SMTStressCountdown": {
++      "pytest_name": "countdown",
++      "args": {
++        "duration_secs": "eval! constants.smt.stress_duration_secs"
++      }
++    },
++    "SMTThermalLoad": {
++      "pytest_name": "thermal_load",
++      "__comment": "Must not be run together with StressAppTest",
++      "args": {
++        "lower_threshold": 40,
++        "temperature_limit": 100,
++        "heat_up_timeout_secs": 12,
++        "duration_secs": 15
++      }
++    },
++    "SMTUpdateFirmware": {
++      "inherit": "TestGroup",
++      "label": "Update Firmware",
++      "subtests": [
++        "SyncFactoryServer",
++        "UpdateFirmware"
++      ]
++    },
++    "SMTWifiSSIDList": {
++      "inherit": "WifiSSIDList",
++      "args": {
++        "event_log_name": "SMT_basic_ssid_list"
++      }
++    }
++  }
++}
+--- a/py/test/test_lists/generic_main.test_list.json
++++ b/py/test/test_lists/generic_main.test_list.json
+@@ -1,14 +1,20 @@
+ {
+   "inherit": [
+-    "generic_smt.test_list",
+-    "generic_fat.test_list",
+-    "generic_run_in.test_list",
+-    "generic_fft.test_list",
+-    "generic_grt.test_list"
++    "fydetab_duo_smt.test_list",
++    "fydetab_duo_fat.test_list",
++    "fydetab_duo_run_in.test_list",
++    "fydetab_duo_fft.test_list",
++    "fydetab_duo_grt.test_list"
+   ],
+-  "label": "Generic Chromebook",
++  "label": "fydetab_duo",
+   "options": {
+     "skipped_tests": {
++      "PROTO" : [
++        "*.SMTBatterySysfs",
++        "*.VerifyRootPartition",
++        "*.BadBlocks",
++        "*.CheckSecdataVersion"
++      ],
+       "not is_engineering_mode and device.factory.end_SMT": [
+         "SMT"
+       ],
+--- a/py/test/test_lists/main_fydetab_duo-fydeos.test_list.json
++++ /dev/null
+@@ -1,61 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_smt.test_list",
+-    "fydetab_duo-fydeos_fat.test_list",
+-    "fydetab_duo-fydeos_run_in.test_list",
+-    "fydetab_duo-fydeos_fft.test_list",
+-    "fydetab_duo-fydeos_grt.test_list"
+-  ],
+-  "label": "fydetab_duo-fydeos",
+-  "options": {
+-    "skipped_tests": {
+-      "PROTO" : [
+-        "*.SMTBatterySysfs",
+-        "*.VerifyRootPartition",
+-        "*.BadBlocks",
+-        "*.CheckSecdataVersion"
+-      ],
+-      "device.factory.end_SMT": [
+-        "SMT"
+-      ],
+-      "device.factory.end_FAT": [
+-        "FAT"
+-      ],
+-      "device.factory.end_RUNIN": [
+-        "RunIn"
+-      ],
+-      "device.factory.end_FFT": [
+-        "FFT"
+-      ]
+-    },
+-    "ui_locale": "zh-CN"
+-  },
+-  "definitions": {
+-    "FATP": {
+-      "inherit": "FlattenGroup",
+-      "locals": {
+-        "factory_server_url": "eval! constants.default_factory_server_url"
+-      },
+-      "subtests": [
+-        "FAT",
+-        "RunIn",
+-        "FFT",
+-        "GRT"
+-      ]
+-    },
+-    "SMT": {
+-      "locals": {
+-        "factory_server_url": "eval! constants.default_factory_server_url"
+-      }
+-    },
+-    "SyncFactoryServer": {
+-      "args": {
+-        "server_url": "eval! locals.factory_server_url"
+-      }
+-    }
+-  },
+-  "tests": [
+-    "SMT",
+-    "FATP"
+-  ]
+-}
+--- /dev/null
++++ b/py/test/test_lists/main_fydetab_duo.test_list.json
+@@ -0,0 +1,61 @@
++{
++  "inherit": [
++    "fydetab_duo_smt.test_list",
++    "fydetab_duo_fat.test_list",
++    "fydetab_duo_run_in.test_list",
++    "fydetab_duo_fft.test_list",
++    "fydetab_duo_grt.test_list"
++  ],
++  "label": "fydetab_duo",
++  "options": {
++    "skipped_tests": {
++      "PROTO" : [
++        "*.SMTBatterySysfs",
++        "*.VerifyRootPartition",
++        "*.BadBlocks",
++        "*.CheckSecdataVersion"
++      ],
++      "device.factory.end_SMT": [
++        "SMT"
++      ],
++      "device.factory.end_FAT": [
++        "FAT"
++      ],
++      "device.factory.end_RUNIN": [
++        "RunIn"
++      ],
++      "device.factory.end_FFT": [
++        "FFT"
++      ]
++    },
++    "ui_locale": "zh-CN"
++  },
++  "definitions": {
++    "FATP": {
++      "inherit": "FlattenGroup",
++      "locals": {
++        "factory_server_url": "eval! constants.default_factory_server_url"
++      },
++      "subtests": [
++        "FAT",
++        "RunIn",
++        "FFT",
++        "GRT"
++      ]
++    },
++    "SMT": {
++      "locals": {
++        "factory_server_url": "eval! constants.default_factory_server_url"
++      }
++    },
++    "SyncFactoryServer": {
++      "args": {
++        "server_url": "eval! locals.factory_server_url"
++      }
++    }
++  },
++  "tests": [
++    "SMT",
++    "FATP"
++  ]
++}
+--- /dev/null
++++ b/py/test/test_lists/fydetab_duo_common.test_list.json
+@@ -0,0 +1,1478 @@
++{
++  "inherit": [
++    "base.test_list"
++  ],
++  "constants": {
++    "audio": {
++      "card_name": "1"
++    },
++    "grt": {
++        "re_sign_release_kernel" : false
++    },
++    "default_factory_server_url": "",
++    "__comment_default_factory_server_url": "The default URL to factory server, if not defined in locals.",
++    "enable_factory_server": true,
++    "__comment_enable_factory_server": "Enable factory_server. Change this to false by adding 'disable_factory_server.test_list' to beginning of inherit list in main test list. Note that some factory environment might not need a shopfloor.",
++    "has_battery": true,
++    "has_device_data": false,
++    "__comment_has_device_data": "When setting to true, some test objects will use the info from device data to decide to run or not.",
++    "has_ec_pubkey": false,
++    "has_fan": false,
++    "has_keybox": false,
++    "__comment_has_keybox": "Set to true if factory provisioning for Widevine keyboxes is needed. Note that the provisioning process is only available in AMD project.",
++    "hwid_need_vpd": false,
++    "__comment_hwid_need_vpd": "Set to true if some rules in the HWID database rely on VPD data",
++    "mlb_mode": false,
++    "__comment_mlb_mode": "Set this to true if the MLB parts will be sent to a different location for assembly, such as RMA or local OEM",
++    "overlord": {
++      "overlord_urls": [],
++      "tls_no_verify": true
++    },
++    "__comment_overlord_overlord_urls": "The urls of overlord server. e.g. 192.168.1.1. Don't contain http or port number.",
++    "__comment_overlord_tls_no_verify": "Skip the certificate verification or not. DUTs are usually in local network, it's fine to skip the verification.",
++    "retimer": {
++      "controller_ports": [
++        "0-0:1.1",
++        "0-0:3.1"
++      ],
++      "usb_ports": [
++        0,
++        1
++      ],
++      "min_retimer_version": "21.0"
++    },
++    "rma_mode": false,
++    "sd": {
++      "sysfs_path": "/sys/devices/platform/fe2c0000.mmc/mmc_host/"
++    },
++    "__comment_sd_sysfs_path": "Use 'udevadm monitor' to find out udev sysfs path.",
++    "typea_usb": {
++      "left": {
++        "usb2_sysfs_path": "",
++        "usb3_sysfs_path": ""
++      },
++      "right": {
++        "usb2_sysfs_path": "",
++        "usb3_sysfs_path": ""
++      }
++    },
++    "typec_usb": {
++      "left": {
++        "usb2_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
++        "usb3_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
++        "tbt_controller_port": "0-1.*",
++        "usbpd_id": -1,
++        "display_info": [
++          "DisplayPort",
++          "DP-1"
++        ]
++      }
++    },
++    "update_firmware": {
++      "reboot_type": "reboot"
++    },
++    "use_generic_tpm2": false,
++    "__comment_use_generic_tpm2": "If this device is not using Google security chip (H1), set this to true.",
++    "use_prepvt_cr50_firmware": false,
++    "__comment_use_prepvt_cr50_firmware": "Set this to true if the prepvt cr50 firmware in release image should be used.",
++    "wireless_services": [
++      [
++        "antenna_test",
++        2412,
++        null
++      ]
++    ]
++  },
++  "definitions": {
++    "APROVerification": {
++      "pytest_name": "ap_ro_verification",
++      "label": "AP RO Verification",
++      "allow_reboot": true
++    },
++    "Accelerometers": {
++      "pytest_name": "accelerometers"
++    },
++    "AccelerometersCalibration": {
++      "pytest_name": "accelerometers_calibration",
++      "args": {
++        "orientation": {
++          "in_accel_x": 0,
++          "in_accel_y": 0,
++          "in_accel_z": 1
++        },
++        "spec_offset": [
++          0.5,
++          0.5
++        ]
++      }
++    },
++    "AccelerometersLidAngle": {
++      "pytest_name": "accelerometers_lid_angle",
++      "run_if": "not constants.has_device_data or (device.component.has_lid_accelerometer and device.component.has_base_accelerometer)",
++      "args": {
++        "spec_offset": [
++          0.5,
++          0.5
++        ]
++      }
++    },
++    "ActivateRegCode": {
++      "inherit": "ShopfloorService",
++      "label": "Activate Registration Code",
++      "args": {
++        "method": "ActivateRegCode"
++      }
++    },
++    "AllCheckPoint": {
++      "inherit": "CheckPoint",
++      "label": "Check Point for All Tests",
++      "args": {
++        "include_parents": true
++      }
++    },
++    "AudioJack": {
++      "pytest_name": "audio_loop",
++      "label": "Audio Jack",
++      "args": {
++        "input_dev": [
++          "eval! device.component.audio_card_name or constants.audio.card_name",
++          "Extmic"
++        ],
++        "output_dev": [
++          "eval! device.component.audio_card_name or constants.audio.card_name",
++          "Headphone"
++        ],
++        "require_dongle": true,
++        "check_dongle": true,
++        "tests_to_conduct": [
++          {
++            "type": "sinewav",
++            "freq_threshold": 300,
++            "rms_threshold": [
++              0.08,
++              null
++            ]
++          }
++        ]
++      }
++    },
++    "AudioJackConformance": {
++      "inherit": "AudioJack",
++      "label": "Audio Jack Conformance",
++      "args": {
++        "autostart": true,
++        "check_dongle": false,
++        "tests_to_conduct": []
++      }
++    },
++    "Backlight": {
++      "pytest_name": "backlight"
++    },
++    "BadBlocks": {
++      "pytest_name": "bad_blocks",
++      "__comment": "When run alone, this takes ~.5s/MiB (for four passes).  We'll do a gigabyte, which takes about 9 minutes.",
++      "args": {
++        "timeout_secs": 120,
++        "log_threshold_secs": 10,
++        "max_bytes": 1073741824
++      }
++    },
++    "Barrier": {
++      "pytest_name": "summary",
++      "label": "Barrier",
++      "allow_reboot": true,
++      "action_on_failure": "STOP",
++      "disable_abort": true,
++      "args": {
++        "disable_input_on_fail": true,
++        "pass_without_prompt": true,
++        "accessibility": true
++      }
++    },
++    "BaseAccelerometersCalibration": {
++      "inherit": "AccelerometersCalibration",
++      "label": "Base Accelerometers Calibration",
++      "run_if": "not constants.has_device_data or device.component.has_base_accelerometer",
++      "args": {
++        "location": "base"
++      }
++    },
++    "Battery": {
++      "pytest_name": "battery",
++      "run_if": "constants.has_battery"
++    },
++    "BatterySysfs": {
++      "pytest_name": "battery_sysfs",
++      "run_if": "constants.has_battery"
++    },
++    "BlockingCharge": {
++      "pytest_name": "blocking_charge",
++      "exclusive_resources": [
++        "POWER"
++      ]
++    },
++    "Bluetooth": {
++      "pytest_name": "bluetooth",
++      "args": {
++        "expected_adapter_count": 1,
++        "scan_devices": true,
++        "average_rssi_threshold": -55.0
++      }
++    },
++    "Button": {
++      "pytest_name": "button",
++      "args": {
++        "timeout_secs": 120
++      }
++    },
++    "Camera": {
++      "pytest_name": "camera"
++    },
++    "CameraManual": {
++      "inherit": "Camera",
++      "args": {
++        "mode": "manual"
++      }
++    },
++    "CameraTests": {
++      "label": "Camera Tests",
++      "subtests": [
++        "FrontCamera",
++        "FrontCameraLED"
++      ]
++    },
++    "ChargeDischargeCurrent": {
++      "pytest_name": "battery_current",
++      "label": "Charge Discharge Current",
++      "exclusive_resources": [
++        "POWER"
++      ],
++      "args": {
++        "min_charging_current": 150,
++        "min_discharging_current": 400,
++        "timeout_secs": 30,
++        "max_battery_level": 90
++      }
++    },
++    "ChargerTypeDetection": {
++      "pytest_name": "ac_power",
++      "label": "Charger Type Detection"
++    },
++    "CheckCr50BoardIDNotSet": {
++      "pytest_name": "check_cr50_board_id",
++      "label": "Check Cr50 Board ID Not Set",
++      "args": {
++        "board_id_type": "ffffffff",
++        "board_id_flags": "ffffffff"
++      }
++    },
++    "CheckFPFirmware": {
++      "pytest_name": "update_fpmcu_firmware",
++      "label": "Check Fingerprint Firmware",
++      "run_if": "device.component.has_fingerprint",
++      "args": {
++        "method": "CHECK_VERSION"
++      }
++    },
++    "CheckPoint": {
++      "inherit": "Barrier",
++      "label": "Check Point",
++      "args": {
++        "pass_without_prompt": false
++      }
++    },
++    "CheckReleaseImage": {
++      "pytest_name": "check_image_version",
++      "label": "Check Release Image",
++      "args": {
++        "check_release_image": true,
++        "use_netboot": false
++      }
++    },
++    "CheckReleaseLVMStateful": {
++      "pytest_name": "check_release_lvm_stateful"
++    },
++    "CheckRetimerFirmware": {
++      "pytest_name": "check_retimer_firmware",
++      "args": {
++        "wait_all_ports_unplugged": false,
++        "controller_ports": "eval! constants.retimer.controller_ports",
++        "usb_ports": "eval! constants.retimer.usb_ports",
++        "min_retimer_version": "eval! constants.retimer.min_retimer_version"
++      }
++    },
++    "CheckRetimerFirmwareGroup": {
++      "run_if": "constants.retimer.controller_ports",
++      "subtests": [
++        {
++          "inherit": "CheckRetimerFirmware",
++          "args": {
++            "wait_all_ports_unplugged": true
++          }
++        },
++        {
++          "inherit": "RebootStep",
++          "run_if": "device.factory.retimer_firmware_reboot"
++        },
++        "CheckRetimerFirmware"
++      ]
++    },
++    "CheckSecdataVersion": {
++      "pytest_name": "check_secdata_version",
++      "label": "Check Secdata Version",
++      "disable_services": [
++        "trunksd"
++      ],
++      "args": {
++        "major_version": 1,
++        "minor_version": 0
++      }
++    },
++    "CheckSerialNumber": {
++      "pytest_name": "check_serial_number",
++      "label": "Check Serial Number"
++    },
++    "ClearAPROHash": {
++      "pytest_name": "ap_ro_hash",
++      "label": "Clear AP RO Hash",
++      "args": {
++        "action": "clear"
++      }
++    },
++    "ClearFactoryVPDEntries": {
++      "inherit": "TestGroup",
++      "label": "Clear factory VPD entries",
++      "subtests": [
++        {
++          "inherit": "ExecShell",
++          "label": "Clear factory VPD entries",
++          "args": {
++            "commands": "gooftool clear_factory_vpd_entries"
++          }
++        },
++        "RebootStep"
++      ]
++    },
++    "ClearTPMOwnerRequest": {
++      "pytest_name": "tpm_clear_owner"
++    },
++    "ColdReset": {
++      "inherit": "TestGroup",
++      "label": "Cold Reset",
++      "subtests": [
++        {
++          "inherit": "ExecShell",
++          "label": "EC Cold Reset",
++          "args": {
++            "commands": "ectool reboot_ec cold at-shutdown"
++          }
++        },
++        "HaltStep"
++      ]
++    },
++    "Cr50SMTWriteFlashInfo": {
++      "pytest_name": "cr50_smt_write_flash_info",
++      "args": {
++        "enable_zero_touch": "eval! constants.grt.enable_zero_touch",
++        "mlb_mode": "eval! constants.mlb_mode",
++        "rma_mode": "eval! constants.rma_mode"
++      }
++    },
++    "Cr50WriteCustomlabelFlags": {
++      "inherit": "Cr50SMTWriteFlashInfo",
++      "__comment": "Make old definition as an alias of the new definition for backward compatibility"
++    },
++    "DeprovisionCBI": {
++      "inherit": "ExecShell",
++      "label": "Deprovision CBI",
++      "args": {
++        "commands": [
++          "ectool cbi set 2 0x7fffffff 4",
++          "ectool cbi remove 6"
++        ]
++      }
++    },
++    "Display": {
++      "pytest_name": "display"
++    },
++    "DisplayPoint": {
++      "pytest_name": "display_point",
++      "args": {
++        "max_point_count": 5
++      }
++    },
++    "EDPPanelTiming": {
++      "pytest_name": "edp_panel_timing"
++    },
++    "EnableECWriteProtect": {
++      "inherit": "TestGroup",
++      "label": "Enable EC Write Protect",
++      "__comment": "This test group explicitly disables factory mode and enables EC write protection after rebooting. Run this test group before finalization if the project uses STM32 chips for EC, otherwise finalization may fail. STM32 chips are likely to be used in ARM projects, and they require an EC reboot to let write protect settings take effect. Note that this disables the factory mode in advance, usually we disable the factory mode in finalize step. So it's better to run this test as close to finalize step.",
++      "subtests": [
++        {
++          "pytest_name": "exec_shell",
++          "args": {
++            "commands": [
++              "gsctool -a -F disable | true",
++              "ectool flashprotect enable",
++              "ectool reboot_ec RO at-shutdown"
++            ]
++          }
++        },
++        "RebootStep"
++      ]
++    },
++    "ExecShell": {
++      "pytest_name": "exec_shell"
++    },
++    "ExternalDisplay": {
++      "pytest_name": "external_display",
++      "args": {
++        "main_display": "eDP-1",
++        "display_info": [
++          {
++            "display_label": "External Display",
++            "display_id": "HDMI",
++            "usbpd_spec": {
++              "port": 0
++            }
++          }
++        ]
++      }
++    },
++    "FPSGroup": {
++      "label": "Fingerprint Test Group",
++      "run_if": "device.component.has_fingerprint",
++      "subtests": [
++        "UpdateFPFirmware",
++        "RebootStep",
++        "CheckFPFirmware",
++        "FPSTest"
++      ]
++    },
++    "FPSTest": {
++      "pytest_name": "fingerprint_mcu",
++      "label": "Fingerprint Sensor test",
++      "run_if": "device.component.has_fingerprint",
++      "args": {
++        "fpframe_retry_count": 2
++      }
++    },
++    "Fan": {
++      "pytest_name": "fan_speed",
++      "label": "Fan Speed",
++      "run_if": "constants.has_fan",
++      "disable_services": [
++        "dptf"
++      ],
++      "args": {
++        "probe_interval_secs": 0.2,
++        "target_rpm": [
++          3000,
++          4500,
++          6000
++        ],
++        "error_margin": 300
++      }
++    },
++    "Finish": {
++      "inherit": "Message",
++      "label": "Finish"
++    },
++    "FlashNetboot": {
++      "pytest_name": "flash_netboot"
++    },
++    "FlushTestlog": {
++      "inherit": "SyncFactoryServer",
++      "args": {
++        "sync_event_logs": false,
++        "update_toolkit": false,
++        "upload_report": false,
++        "upload_reg_codes": false,
++        "flush_testlog": true
++      }
++    },
++    "FrontCamera": {
++      "inherit": "Camera",
++      "run_if": "not constants.has_device_data or device.component.has_front_camera",
++      "args": {
++        "camera_facing": "front"
++      }
++    },
++    "FrontCameraAssemble": {
++      "inherit": "FrontCamera",
++      "label": "Front Camera Assemble",
++      "args": {
++        "mode": "camera_assemble",
++        "min_luminance_ratio": 0.5
++      }
++    },
++    "FrontCameraAssembleQR": {
++      "inherit": "FrontCamera",
++      "label": "Front Camera Assemble QR",
++      "args": {
++        "mode": "camera_assemble_qr",
++        "min_luminance_ratio": 0.5,
++        "QR_string": "ChromeTeam"
++      }
++    },
++    "FrontCameraLED": {
++      "inherit": "FrontCamera",
++      "label": "Front Camera LED",
++      "args": {
++        "mode": "manual_led"
++      }
++    },
++    "FrontCameraQRScan": {
++      "inherit": "FrontCamera",
++      "args": {
++        "mode": "qr",
++        "QR_string": "ChromeTeam",
++        "timeout_secs": 2000
++      }
++    },
++    "GetDeviceInfo": {
++      "inherit": "ShopfloorService",
++      "args": {
++        "method": "GetDeviceInfo"
++      }
++    },
++    "Gyroscope": {
++      "pytest_name": "gyroscope",
++      "label": "Gyroscope",
++      "run_if": "not constants.has_device_data or device.component.has_base_gyroscope",
++      "args": {
++        "rotation_threshold": 1.0,
++        "stop_threshold": 0.1
++      }
++    },
++    "GyroscopeCalibration": {
++      "pytest_name": "gyroscope_calibration",
++      "label": "Gyroscope Calibration",
++      "run_if": "not constants.has_device_data or device.component.has_base_gyroscope"
++    },
++    "HPS": {
++      "pytest_name": "hps",
++      "run_if": "device.component.has_hps",
++      "args": {
++        "timeout_secs": 3600
++      }
++    },
++    "HWButton": {
++      "inherit": "TestGroup",
++      "label": "Hardware Button",
++      "subtests": [
++        {
++          "inherit": "Button",
++          "label": "Volume Down",
++          "args": {
++            "button_key_name": "KEY_VOLUMEDOWN",
++            "button_name": "i18n! Volume Down"
++          }
++        },
++        {
++          "inherit": "Button",
++          "label": "Volume Up",
++          "args": {
++            "button_key_name": "KEY_VOLUMEUP",
++            "button_name": "i18n! Volume Up"
++          }
++        },
++        {
++          "inherit": "Button",
++          "label": "Power Button",
++          "args": {
++            "button_key_name": "KEY_POWER",
++            "button_name": "i18n! Power Button"
++          }
++        }
++      ]
++    },
++    "Idle": {
++      "pytest_name": "nop",
++      "label": "Idle"
++    },
++    "Keyboard": {
++      "pytest_name": "keyboard",
++      "args": {
++        "allow_multi_keys": true,
++        "has_numpad": "eval! device.component.has_numeric_pad or False"
++      }
++    },
++    "KeyboardBacklight": {
++      "pytest_name": "keyboard_backlight",
++      "run_if": "not constants.has_device_data or device.component.has_keyboard_backlight"
++    },
++    "LED": {
++      "pytest_name": "led",
++      "exclusive_resources": [
++        "LED"
++      ],
++      "args": {
++        "challenge": true
++      }
++    },
++    "LidAccelerometersCalibration": {
++      "inherit": "AccelerometersCalibration",
++      "label": "Lid Accelerometers Calibration",
++      "run_if": "not constants.has_device_data or device.component.has_lid_accelerometer",
++      "args": {
++        "location": "lid"
++      }
++    },
++    "LidSwitch": {
++      "pytest_name": "lid_switch"
++    },
++    "MRCCache": {
++      "label": "MRC Cache",
++      "subtests": [
++        {
++          "pytest_name": "mrc_cache",
++          "label": "Create Cache",
++          "args": {
++            "mode": "create"
++          }
++        },
++        "RebootStep",
++        {
++          "pytest_name": "mrc_cache",
++          "label": "Verify Cache",
++          "args": {
++            "mode": "verify"
++          }
++        }
++      ]
++    },
++    "MemorySize": {
++      "pytest_name": "memory_size",
++      "label": "Memory Size"
++    },
++    "Message": {
++      "pytest_name": "message",
++      "allow_reboot": true
++    },
++    "ModelSKU": {
++      "pytest_name": "model_sku",
++      "label": "Model and SKU",
++      "action_on_failure": "STOP",
++      "args": {
++        "config_name": "model_sku"
++      }
++    },
++    "ModemSecurity": {
++      "pytest_name": "modem_security",
++      "disable_services": [
++        "modemmanager"
++      ]
++    },
++    "Mouse": {
++      "pytest_name": "mouse"
++    },
++    "NotebookMode": {
++      "pytest_name": "tablet_mode",
++      "label": "Notebook Mode",
++      "args": {
++        "timeout_secs": 3600,
++        "prompt_flip_notebook": true
++      }
++    },
++    "NotifyOverlordTrackConnection": {
++      "pytest_name": "exec_shell",
++      "label": "Notify Overlord to track connection",
++      "args": {
++        "commands": "ghost --track-connection y"
++      }
++    },
++    "NotifyOverlordUntrackConnection": {
++      "pytest_name": "exec_shell",
++      "label": "Notify Overlord not to track connection",
++      "args": {
++        "commands": "ghost --track-connection n"
++      }
++    },
++    "PartitionTable": {
++      "pytest_name": "partition_table"
++    },
++    "Placeholder": {
++      "pytest_name": "nop",
++      "label": "Placeholder"
++    },
++    "Probe": {
++      "pytest_name": "probe.probe",
++      "label": "Probe Hardware",
++      "args": {
++        "config_file": "probe.json"
++      }
++    },
++    "ProximitySensor": {
++      "pytest_name": "proximity_sensor",
++      "run_if": "not constants.has_device_data or device.component.has_proximity_sensor",
++      "disable_services": [
++        "powerd"
++      ]
++    },
++    "QRScan": {
++      "inherit": "Camera",
++      "label": "QR Scan",
++      "__comment": "Deprecated. Use FrontCameraQRScan or RearCameraQRScan.",
++      "args": {
++        "mode": "qr",
++        "QR_string": "Hello ChromeOS!"
++      }
++    },
++    "ReSignReleaseKernel": {
++      "pytest_name": "update_kernel",
++      "run_if": "constants.phase != 'PVT' and constants.grt.re_sign_release_kernel",
++      "args": {
++        "to_release": true
++      }
++    },
++    "ReadDeviceDataFromVPD": {
++      "pytest_name": "read_device_data_from_vpd"
++    },
++    "RearCamera": {
++      "inherit": "Camera",
++      "run_if": "not constants.has_device_data or device.component.has_rear_camera",
++      "args": {
++        "camera_facing": "rear"
++      }
++    },
++    "RearCameraAssemble": {
++      "inherit": "RearCamera",
++      "label": "Rear Camera Assemble",
++      "args": {
++        "mode": "camera_assemble",
++        "min_luminance_ratio": 0.5
++      }
++    },
++    "RearCameraAssembleQR": {
++      "inherit": "RearCamera",
++      "label": "Rear Camera Assemble QR",
++      "args": {
++        "mode": "camera_assemble_qr",
++        "min_luminance_ratio": 0.5,
++        "QR_string": "ChromeTeam"
++      }
++    },
++    "RearCameraLED": {
++      "inherit": "RearCamera",
++      "label": "Rear Camera LED",
++      "args": {
++        "mode": "manual_led"
++      }
++    },
++    "RearCameraQRScan": {
++      "inherit": "RearCamera",
++      "args": {
++        "mode": "qr",
++        "QR_string": "ChromeTeam",
++        "timeout_secs": 2000
++      }
++    },
++    "RemovableStorage": {
++      "pytest_name": "removable_storage",
++      "args": {
++        "block_size": 524288,
++        "perform_random_test": false,
++        "perform_sequential_test": true,
++        "sequential_block_count": 8
++      }
++    },
++    "SDPerformance": {
++      "inherit": "RemovableStorage",
++      "label": "SD Performance",
++      "run_if": "constants.sd.sysfs_path != ''",
++      "args": {
++        "media": "SD",
++        "sysfs_path": "eval! constants.sd.sysfs_path",
++        "timeout_secs": 60
++      }
++    },
++    "Scan": {
++      "pytest_name": "scan"
++    },
++    "ScreenRotation": {
++      "label": "Screen Rotation",
++      "run_if": "not constants.has_device_data or device.component.has_tabletmode",
++      "subtests": [
++        "TabletMode",
++        "TabletRotationAll",
++        "TabletRotationBase",
++        "TabletRotationLid",
++        "NotebookMode"
++      ]
++    },
++    "SetAPROHash": {
++      "pytest_name": "ap_ro_hash",
++      "label": "Set AP RO Hash",
++      "args": {
++        "action": "set"
++      }
++    },
++    "SetWidevineKeybox": {
++      "pytest_name": "provision_drm_key",
++      "label": "Set Widevine Keybox",
++      "run_if": "constants.has_keybox",
++      "args": {
++        "proxy_server_url": ""
++      }
++    },
++    "SetWidevineKeyboxGroup": {
++      "label": "Widevine Keybox provisioning Test Group",
++      "run_if": "constants.has_keybox",
++      "subtests": [
++        {
++          "inherit": "ExecShell",
++          "label": "Reset Widevine keyboxes",
++          "args": {
++            "commands": "vpd -d widevine_keybox; rm /var/lib/oemcrypto/wrapped_amd_keybox || true"
++          }
++        },
++        "RebootStep",
++        "SetWidevineKeybox"
++      ]
++    },
++    "ShopfloorNotifyEnd": {
++      "inherit": "ShopfloorService",
++      "label": "Shopfloor Service (NotifyEnd)",
++      "args": {
++        "method": "NotifyEnd",
++        "args": [
++          "eval! locals.station"
++        ]
++      }
++    },
++    "ShopfloorNotifyStart": {
++      "inherit": "ShopfloorService",
++      "label": "Shopfloor Service (NotifyStart)",
++      "args": {
++        "method": "NotifyStart",
++        "args": [
++          "eval! locals.station"
++        ]
++      }
++    },
++    "ShopfloorService": {
++      "pytest_name": "shopfloor_service",
++      "run_if": "constants.enable_factory_server"
++    },
++    "SpatialSensorCalibration": {
++      "pytest_name": "spatial_sensor_calibration"
++    },
++    "SpeakerDMic": {
++      "pytest_name": "audio_loop",
++      "label": "Speaker/Microphone",
++      "args": {
++        "input_dev": [
++          "eval! device.component.audio_card_name or constants.audio.card_name",
++          "Dmic"
++        ],
++        "output_dev": [
++          "eval! device.component.audio_card_name or constants.audio.card_name",
++          "Speaker"
++        ],
++        "mic_source": "Dmic",
++        "require_dongle": false,
++        "check_dongle": true,
++        "tests_to_conduct": [
++          {
++            "type": "audiofun",
++            "threshold": 80,
++            "volume_gain": 50
++          }
++        ]
++      }
++    },
++    "SpeakerDMicConformance": {
++      "inherit": "SpeakerDMic",
++      "label": "Speaker/Microphone Conformance",
++      "args": {
++        "autostart": true,
++        "check_dongle": false,
++        "tests_to_conduct": []
++      }
++    },
++    "Start": {
++      "pytest_name": "start",
++      "allow_reboot": true
++    },
++    "StationEnd": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "StationEndSyncFactoryServer",
++        "Barrier",
++        "ShopfloorNotifyEnd",
++        "Barrier",
++        "WriteDeviceDataToVPD"
++      ]
++    },
++    "StationEndSyncFactoryServer": {
++      "inherit": "SyncFactoryServerUploadReport",
++      "args": {
++        "upload_report": "eval! locals.station_end_upload_report"
++      }
++    },
++    "StationStart": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "SyncFactoryServer",
++        "Barrier",
++        "ShopfloorNotifyStart"
++      ]
++    },
++    "StressAppTest": {
++      "pytest_name": "stressapptest",
++      "label": "Stress App Test",
++      "exclusive_resources": [
++        "CPU"
++      ]
++    },
++    "Stylus": {
++      "pytest_name": "stylus",
++      "run_if": "not constants.has_device_data or device.component.has_stylus"
++    },
++    "StylusAndGarage": {
++      "label": "Stylus And Garage",
++      "subtests": [
++        {
++          "inherit": "StylusGarage",
++          "label": "Remove stylus",
++          "args": {
++            "target_state": "ejected"
++          }
++        },
++        "Stylus",
++        {
++          "inherit": "StylusGarage",
++          "label": "Insert stylus",
++          "args": {
++            "target_state": "inserted"
++          }
++        }
++      ]
++    },
++    "StylusGarage": {
++      "pytest_name": "stylus_garage",
++      "run_if": "not constants.has_device_data or device.component.has_stylus_garage"
++    },
++    "SuspendResume": {
++      "pytest_name": "suspend_resume"
++    },
++    "SuspendStress": {
++      "pytest_name": "suspend_stress"
++    },
++    "SyncFactoryServer": {
++      "pytest_name": "sync_factory_server",
++      "run_if": "constants.enable_factory_server",
++      "args": {
++        "server_url": "eval! constants.default_factory_server_url"
++      }
++    },
++    "SyncFactoryServerUploadReport": {
++      "inherit": "SyncFactoryServer",
++      "args": {
++        "upload_report": true,
++        "report_stage": "eval! locals.station"
++      }
++    },
++    "TBTLoopback": {
++      "pytest_name": "thunderbolt_loopback",
++      "run_if": "False"
++    },
++    "TPMVerifyEK": {
++      "pytest_name": "tpm_verify_ek"
++    },
++    "TabletMode": {
++      "pytest_name": "tablet_mode",
++      "run_if": "not constants.has_device_data or device.component.has_tabletmode",
++      "args": {
++        "timeout_secs": 3600,
++        "prompt_flip_tablet": true
++      }
++    },
++    "TabletRotation": {
++      "pytest_name": "tablet_rotation"
++    },
++    "TabletRotationAll": {
++      "pytest_name": "tablet_rotation",
++      "label": "Tablet Rotation Accelerometers",
++      "run_if": "not constants.has_device_data or (device.component.has_base_accelerometer and device.component.has_lid_accelerometer)",
++      "args": {
++        "spec_offset": [
++          1.5,
++          1.5
++        ],
++        "timeout_secs": 3600,
++        "degrees_to_orientations": {
++          "base": {
++            "0": {
++              "in_accel_x": 0,
++              "in_accel_y": -1,
++              "in_accel_z": 0
++            },
++            "90": {
++              "in_accel_x": 1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            },
++            "180": {
++              "in_accel_x": 0,
++              "in_accel_y": 1,
++              "in_accel_z": 0
++            },
++            "270": {
++              "in_accel_x": -1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            }
++          },
++          "lid": {
++            "0": {
++              "in_accel_x": 0,
++              "in_accel_y": 1,
++              "in_accel_z": 0
++            },
++            "90": {
++              "in_accel_x": 1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            },
++            "180": {
++              "in_accel_x": 0,
++              "in_accel_y": -1,
++              "in_accel_z": 0
++            },
++            "270": {
++              "in_accel_x": -1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            }
++          }
++        }
++      }
++    },
++    "TabletRotationBase": {
++      "pytest_name": "tablet_rotation",
++      "label": "Tablet Rotation Base-Accel",
++      "run_if": "constants.has_device_data and device.component.has_base_accelerometer and not device.component.has_lid_accelerometer",
++      "args": {
++        "spec_offset": [
++          1.5,
++          1.5
++        ],
++        "timeout_secs": 3600,
++        "degrees_to_orientations": {
++          "base": {
++            "0": {
++              "in_accel_x": 0,
++              "in_accel_y": -1,
++              "in_accel_z": 0
++            },
++            "90": {
++              "in_accel_x": 1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            },
++            "180": {
++              "in_accel_x": 0,
++              "in_accel_y": 1,
++              "in_accel_z": 0
++            },
++            "270": {
++              "in_accel_x": -1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            }
++          }
++        }
++      }
++    },
++    "TabletRotationLid": {
++      "pytest_name": "tablet_rotation",
++      "label": "Tablet Rotation Lid-Accel",
++      "run_if": "constants.has_device_data and not device.component.has_base_accelerometer and device.component.has_lid_accelerometer",
++      "args": {
++        "spec_offset": [
++          1.5,
++          1.5
++        ],
++        "timeout_secs": 3600,
++        "degrees_to_orientations": {
++          "lid": {
++            "0": {
++              "in_accel_x": 0,
++              "in_accel_y": 1,
++              "in_accel_z": 0
++            },
++            "90": {
++              "in_accel_x": 1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            },
++            "180": {
++              "in_accel_x": 0,
++              "in_accel_y": -1,
++              "in_accel_z": 0
++            },
++            "270": {
++              "in_accel_x": -1,
++              "in_accel_y": 0,
++              "in_accel_z": 0
++            }
++          }
++        }
++      }
++    },
++    "ThermalSensors": {
++      "pytest_name": "thermal_sensors"
++    },
++    "ThermalSlope": {
++      "pytest_name": "thermal_slope"
++    },
++    "Touchpad": {
++      "pytest_name": "touchpad"
++    },
++    "Touchscreen": {
++      "pytest_name": "touchscreen",
++      "run_if": "not constants.has_device_data or device.component.has_touchscreen"
++    },
++    "TouchscreenUniformity": {
++      "pytest_name": "touch_uniformity",
++      "label": "Touchscreen Uniformity",
++      "run_if": "not constants.has_device_data or device.component.has_touchscreen"
++    },
++    "URandom": {
++      "pytest_name": "urandom",
++      "label": "Random Number Generation"
++    },
++    "USBPerformance": {
++      "inherit": "RemovableStorage",
++      "label": "USB Performance",
++      "args": {
++        "media": "USB"
++      }
++    },
++    "USBTypeAManualLeft": {
++      "inherit": "TestGroup",
++      "label": "Manual Test Left USB TypeA",
++      "subtests": [
++        {
++          "inherit": "USBPerformance",
++          "label": "USB2 TypeA Performance",
++          "run_if": "constants.typea_usb.left.usb2_sysfs_path != ''",
++          "args": {
++            "sysfs_path": "eval! constants.typea_usb.left.usb2_sysfs_path"
++          }
++        },
++        {
++          "inherit": "USBPerformance",
++          "label": "USB3 TypeA Performance",
++          "run_if": "constants.typea_usb.left.usb3_sysfs_path != ''",
++          "args": {
++            "sysfs_path": "eval! constants.typea_usb.left.usb3_sysfs_path"
++          }
++        }
++      ]
++    },
++    "USBTypeAManualRight": {
++      "inherit": "TestGroup",
++      "label": "Manual Test Right USB TypeA",
++      "subtests": [
++        {
++          "inherit": "USBPerformance",
++          "label": "USB2 TypeA Performance",
++          "run_if": "constants.typea_usb.right.usb2_sysfs_path != ''",
++          "args": {
++            "sysfs_path": "eval! constants.typea_usb.right.usb2_sysfs_path"
++          }
++        },
++        {
++          "inherit": "USBPerformance",
++          "label": "USB3 TypeA Performance",
++          "run_if": "constants.typea_usb.right.usb3_sysfs_path != ''",
++          "args": {
++            "sysfs_path": "eval! constants.typea_usb.right.usb3_sysfs_path"
++          }
++        }
++      ]
++    },
++    "USBTypeAManualTest": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "USBTypeAManualLeft",
++        "USBTypeAManualRight"
++      ]
++    },
++    "USBTypeCManualBase": {
++      "inherit": "TestGroup",
++      "subtests": [
++        {
++          "inherit": "USBPerformance",
++          "label": "USB3 CC1 Performance",
++          "args": {
++            "sysfs_path": "eval! locals.usb.usb3_sysfs_path",
++            "usbpd_port_polarity": [
++              "eval! locals.usb.usbpd_id",
++              1
++            ]
++          }
++        },
++        {
++          "inherit": "USBPerformance",
++          "label": "USB3 CC2 Performance",
++          "args": {
++            "sysfs_path": "eval! locals.usb.usb3_sysfs_path",
++            "usbpd_port_polarity": [
++              "eval! locals.usb.usbpd_id",
++              2
++            ]
++          }
++        },
++        {
++          "inherit": "USBPerformance",
++          "label": "USB2 Performance",
++          "args": {
++            "sysfs_path": "eval! locals.usb.usb2_sysfs_path"
++          }
++        },
++        {
++          "inherit": "TBTLoopback",
++          "args": {
++            "controller_port": "eval! locals.usb.tbt_controller_port",
++            "usbpd_spec": {
++              "port": "eval! locals.usb.usbpd_id"
++            }
++          }
++        },
++        "USBTypeCManualChargeItems",
++        {
++          "inherit": "ExternalDisplay",
++          "label": "USB3 External Display Test",
++          "args": {
++            "display_info": [
++              "eval! locals.usb.display_info"
++            ]
++          }
++        },
++        "Barrier"
++      ]
++    },
++    "USBTypeCManualCharge": {
++      "inherit": "ChargeDischargeCurrent",
++      "args": {
++        "usbpd_info": [
++          "eval! locals.usb.usbpd_id",
++          "eval! int(locals.voltage * 1000 * 0.9)",
++          "eval! int(locals.voltage * 1000 * 1.1)"
++        ],
++        "usbpd_prompt": "eval! locals.usb_label"
++      }
++    },
++    "USBTypeCManualChargeItems": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        {
++          "inherit": "USBTypeCManualCharge",
++          "label": "20V Charging",
++          "locals": {
++            "voltage": 20
++          }
++        },
++        {
++          "inherit": "USBTypeCManualCharge",
++          "label": "5V Charging",
++          "locals": {
++            "voltage": 5
++          }
++        }
++      ]
++    },
++    "USBTypeCManualLeft": {
++      "inherit": "USBTypeCManualBase",
++      "label": "Manual Test Left USB TypeC",
++      "locals": {
++        "usb": "eval! constants.typec_usb.left",
++        "usb_label": "i18n! Left USB TypeC"
++      }
++    },
++    "USBTypeCManualRight": {
++      "inherit": "USBTypeCManualBase",
++      "label": "Manual Test Right USB TypeC",
++      "locals": {
++        "usb": "eval! constants.typec_usb.right",
++        "usb_label": "i18n! Right USB TypeC"
++      }
++    },
++    "USBTypeCManualTest": {
++      "inherit": "FlattenGroup",
++      "subtests": [
++        "USBTypeCManualLeft"
++      ]
++    },
++    "USBTypeCTest": "USBTypeCManualTest",
++    "UpdateCBI": {
++      "pytest_name": "update_cbi",
++      "label": "Update CBI",
++      "args": {
++        "cbi_data_names": [
++          "SKU_ID",
++          "DRAM_PART_NUM",
++          "PCB_SUPPLIER"
++        ]
++      }
++    },
++    "UpdateCr50Firmware": {
++      "inherit": "TestGroup",
++      "label": "Update Cr50 Firmware",
++      "subtests": [
++        {
++          "pytest_name": "update_cr50_firmware",
++          "args": {
++            "firmware_file": "eval! constants.use_prepvt_cr50_firmware and '/opt/google/cr50/firmware/cr50.bin.prepvt' or None",
++            "skip_prepvt_flag_check": "eval! constants.phase != 'PVT'"
++          }
++        },
++        "RebootStep",
++        {
++          "pytest_name": "update_cr50_firmware",
++          "label": "Check Cr50 Firmware Version",
++          "args": {
++            "method": "CHECK_VERSION"
++          }
++        }
++      ]
++    },
++    "UpdateDeviceData": {
++      "pytest_name": "update_device_data"
++    },
++    "UpdateFPFirmware": {
++      "pytest_name": "update_fpmcu_firmware",
++      "label": "Update Fingerprint Firmware",
++      "run_if": "device.component.has_fingerprint"
++    },
++    "UpdateFirmware": {
++      "label": "Update Firmware",
++      "subtests": [
++        {
++          "pytest_name": "update_firmware"
++        },
++        "Barrier",
++        {
++          "inherit": "ShutdownStep",
++          "label": "Reboot",
++          "args": {
++            "operation": "eval! constants.update_firmware.reboot_type"
++          }
++        }
++      ]
++    },
++    "UpdateSKUID": {
++      "pytest_name": "update_cbi",
++      "label": "Update SKU ID",
++      "args": {
++        "cbi_data_names": [
++          "SKU_ID"
++        ]
++      }
++    },
++    "UploadRegCodes": {
++      "inherit": "SyncFactoryServer",
++      "label": "Upload Reg (ECHO) Codes to activate",
++      "args": {
++        "sync_event_logs": false,
++        "sync_time": true,
++        "update_toolkit": false,
++        "upload_report": false,
++        "upload_reg_codes": true,
++        "flush_testlog": false
++      }
++    },
++    "UploadZeroTouchIds": {
++      "inherit": "SyncFactoryServer",
++      "label": "Upload Zero Touch Ids",
++      "run_if": "constants.grt.enable_zero_touch and constants.grt.collect_zero_touch_ids",
++      "args": {
++        "sync_event_logs": false,
++        "sync_time": true,
++        "update_toolkit": false,
++        "upload_report": false,
++        "upload_reg_codes": false,
++        "upload_zero_touch_ids": true,
++        "flush_testlog": false
++      }
++    },
++    "VerifyRootPartition": {
++      "pytest_name": "verify_root_partition",
++      "args": {
++        "max_bytes": 1048576
++      }
++    },
++    "VerifyWidevineKeybox": {
++      "pytest_name": "verify_keybox",
++      "label": "Verify Widevine Keybox",
++      "run_if": "constants.has_keybox"
++    },
++    "WebGLAquarium": {
++      "pytest_name": "webgl_aquarium"
++    },
++    "WifiSSIDList": {
++      "pytest_name": "wifi_throughput",
++      "label": "Wifi"
++    },
++    "Wireless": {
++      "inherit": "WirelessRadiotap",
++      "args": {
++        "device_name": "wlan0",
++        "services": "eval! constants.wireless_services",
++        "strength": {
++          "main": -60,
++          "aux": -60,
++          "all": -60
++        },
++        "wifi_chip_type": null
++      }
++    },
++    "WirelessAntenna": {
++      "pytest_name": "wireless_antenna",
++      "exclusive_resources": [
++        "NETWORK"
++      ],
++      "args": {
++        "wifi_chip_type": "switch_antenna"
++      }
++    },
++    "WirelessCharger": {
++      "pytest_name": "wireless_charge",
++      "label": "Wireless Charger",
++      "run_if": "not constants.has_device_data or device.component.has_wireless_charger",
++      "args": {
++        "occupy_instruction": "i18n! Attach peripheral to charging port",
++        "release_instruction": "i18n! Remove peripheral from charging port"
++      }
++    },
++    "WirelessRadiotap": {
++      "pytest_name": "wireless_antenna",
++      "exclusive_resources": [
++        "NETWORK"
++      ],
++      "args": {
++        "wifi_chip_type": "radiotap"
++      }
++    },
++    "WriteDeviceDataToVPD": {
++      "pytest_name": "write_device_data_to_vpd"
++    },
++    "WriteHWID": {
++      "pytest_name": "hwid",
++      "label": "Write HWID",
++      "args": {
++        "enable_factory_server": "eval! constants.enable_factory_server",
++        "run_vpd": "eval! constants.hwid_need_vpd",
++        "rma_mode": "eval! constants.rma_mode"
++      }
++    },
++    "WriteProtectSwitch": {
++      "pytest_name": "write_protect_switch"
++    }
++  }
++}
+--- a/py/test/test_lists/fydetab_duo-fydeos_common.test_list.json
++++ /dev/null
+@@ -1,1478 +0,0 @@
+-{
+-  "inherit": [
+-    "base.test_list"
+-  ],
+-  "constants": {
+-    "audio": {
+-      "card_name": "1"
+-    },
+-    "grt": {
+-        "re_sign_release_kernel" : false
+-    },
+-    "default_factory_server_url": "",
+-    "__comment_default_factory_server_url": "The default URL to factory server, if not defined in locals.",
+-    "enable_factory_server": true,
+-    "__comment_enable_factory_server": "Enable factory_server. Change this to false by adding 'disable_factory_server.test_list' to beginning of inherit list in main test list. Note that some factory environment might not need a shopfloor.",
+-    "has_battery": true,
+-    "has_device_data": false,
+-    "__comment_has_device_data": "When setting to true, some test objects will use the info from device data to decide to run or not.",
+-    "has_ec_pubkey": false,
+-    "has_fan": false,
+-    "has_keybox": false,
+-    "__comment_has_keybox": "Set to true if factory provisioning for Widevine keyboxes is needed. Note that the provisioning process is only available in AMD project.",
+-    "hwid_need_vpd": false,
+-    "__comment_hwid_need_vpd": "Set to true if some rules in the HWID database rely on VPD data",
+-    "mlb_mode": false,
+-    "__comment_mlb_mode": "Set this to true if the MLB parts will be sent to a different location for assembly, such as RMA or local OEM",
+-    "overlord": {
+-      "overlord_urls": [],
+-      "tls_no_verify": true
+-    },
+-    "__comment_overlord_overlord_urls": "The urls of overlord server. e.g. 192.168.1.1. Don't contain http or port number.",
+-    "__comment_overlord_tls_no_verify": "Skip the certificate verification or not. DUTs are usually in local network, it's fine to skip the verification.",
+-    "retimer": {
+-      "controller_ports": [
+-        "0-0:1.1",
+-        "0-0:3.1"
+-      ],
+-      "usb_ports": [
+-        0,
+-        1
+-      ],
+-      "min_retimer_version": "21.0"
+-    },
+-    "rma_mode": false,
+-    "sd": {
+-      "sysfs_path": "/sys/devices/platform/fe2c0000.mmc/mmc_host/"
+-    },
+-    "__comment_sd_sysfs_path": "Use 'udevadm monitor' to find out udev sysfs path.",
+-    "typea_usb": {
+-      "left": {
+-        "usb2_sysfs_path": "",
+-        "usb3_sysfs_path": ""
+-      },
+-      "right": {
+-        "usb2_sysfs_path": "",
+-        "usb3_sysfs_path": ""
+-      }
+-    },
+-    "typec_usb": {
+-      "left": {
+-        "usb2_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
+-        "usb3_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
+-        "tbt_controller_port": "0-1.*",
+-        "usbpd_id": -1,
+-        "display_info": [
+-          "DisplayPort",
+-          "DP-1"
+-        ]
+-      }
+-    },
+-    "update_firmware": {
+-      "reboot_type": "reboot"
+-    },
+-    "use_generic_tpm2": false,
+-    "__comment_use_generic_tpm2": "If this device is not using Google security chip (H1), set this to true.",
+-    "use_prepvt_cr50_firmware": false,
+-    "__comment_use_prepvt_cr50_firmware": "Set this to true if the prepvt cr50 firmware in release image should be used.",
+-    "wireless_services": [
+-      [
+-        "antenna_test",
+-        2412,
+-        null
+-      ]
+-    ]
+-  },
+-  "definitions": {
+-    "APROVerification": {
+-      "pytest_name": "ap_ro_verification",
+-      "label": "AP RO Verification",
+-      "allow_reboot": true
+-    },
+-    "Accelerometers": {
+-      "pytest_name": "accelerometers"
+-    },
+-    "AccelerometersCalibration": {
+-      "pytest_name": "accelerometers_calibration",
+-      "args": {
+-        "orientation": {
+-          "in_accel_x": 0,
+-          "in_accel_y": 0,
+-          "in_accel_z": 1
+-        },
+-        "spec_offset": [
+-          0.5,
+-          0.5
+-        ]
+-      }
+-    },
+-    "AccelerometersLidAngle": {
+-      "pytest_name": "accelerometers_lid_angle",
+-      "run_if": "not constants.has_device_data or (device.component.has_lid_accelerometer and device.component.has_base_accelerometer)",
+-      "args": {
+-        "spec_offset": [
+-          0.5,
+-          0.5
+-        ]
+-      }
+-    },
+-    "ActivateRegCode": {
+-      "inherit": "ShopfloorService",
+-      "label": "Activate Registration Code",
+-      "args": {
+-        "method": "ActivateRegCode"
+-      }
+-    },
+-    "AllCheckPoint": {
+-      "inherit": "CheckPoint",
+-      "label": "Check Point for All Tests",
+-      "args": {
+-        "include_parents": true
+-      }
+-    },
+-    "AudioJack": {
+-      "pytest_name": "audio_loop",
+-      "label": "Audio Jack",
+-      "args": {
+-        "input_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Extmic"
+-        ],
+-        "output_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Headphone"
+-        ],
+-        "require_dongle": true,
+-        "check_dongle": true,
+-        "tests_to_conduct": [
+-          {
+-            "type": "sinewav",
+-            "freq_threshold": 300,
+-            "rms_threshold": [
+-              0.08,
+-              null
+-            ]
+-          }
+-        ]
+-      }
+-    },
+-    "AudioJackConformance": {
+-      "inherit": "AudioJack",
+-      "label": "Audio Jack Conformance",
+-      "args": {
+-        "autostart": true,
+-        "check_dongle": false,
+-        "tests_to_conduct": []
+-      }
+-    },
+-    "Backlight": {
+-      "pytest_name": "backlight"
+-    },
+-    "BadBlocks": {
+-      "pytest_name": "bad_blocks",
+-      "__comment": "When run alone, this takes ~.5s/MiB (for four passes).  We'll do a gigabyte, which takes about 9 minutes.",
+-      "args": {
+-        "timeout_secs": 120,
+-        "log_threshold_secs": 10,
+-        "max_bytes": 1073741824
+-      }
+-    },
+-    "Barrier": {
+-      "pytest_name": "summary",
+-      "label": "Barrier",
+-      "allow_reboot": true,
+-      "action_on_failure": "STOP",
+-      "disable_abort": true,
+-      "args": {
+-        "disable_input_on_fail": true,
+-        "pass_without_prompt": true,
+-        "accessibility": true
+-      }
+-    },
+-    "BaseAccelerometersCalibration": {
+-      "inherit": "AccelerometersCalibration",
+-      "label": "Base Accelerometers Calibration",
+-      "run_if": "not constants.has_device_data or device.component.has_base_accelerometer",
+-      "args": {
+-        "location": "base"
+-      }
+-    },
+-    "Battery": {
+-      "pytest_name": "battery",
+-      "run_if": "constants.has_battery"
+-    },
+-    "BatterySysfs": {
+-      "pytest_name": "battery_sysfs",
+-      "run_if": "constants.has_battery"
+-    },
+-    "BlockingCharge": {
+-      "pytest_name": "blocking_charge",
+-      "exclusive_resources": [
+-        "POWER"
+-      ]
+-    },
+-    "Bluetooth": {
+-      "pytest_name": "bluetooth",
+-      "args": {
+-        "expected_adapter_count": 1,
+-        "scan_devices": true,
+-        "average_rssi_threshold": -55.0
+-      }
+-    },
+-    "Button": {
+-      "pytest_name": "button",
+-      "args": {
+-        "timeout_secs": 120
+-      }
+-    },
+-    "Camera": {
+-      "pytest_name": "camera"
+-    },
+-    "CameraManual": {
+-      "inherit": "Camera",
+-      "args": {
+-        "mode": "manual"
+-      }
+-    },
+-    "CameraTests": {
+-      "label": "Camera Tests",
+-      "subtests": [
+-        "FrontCamera",
+-        "FrontCameraLED"
+-      ]
+-    },
+-    "ChargeDischargeCurrent": {
+-      "pytest_name": "battery_current",
+-      "label": "Charge Discharge Current",
+-      "exclusive_resources": [
+-        "POWER"
+-      ],
+-      "args": {
+-        "min_charging_current": 150,
+-        "min_discharging_current": 400,
+-        "timeout_secs": 30,
+-        "max_battery_level": 90
+-      }
+-    },
+-    "ChargerTypeDetection": {
+-      "pytest_name": "ac_power",
+-      "label": "Charger Type Detection"
+-    },
+-    "CheckCr50BoardIDNotSet": {
+-      "pytest_name": "check_cr50_board_id",
+-      "label": "Check Cr50 Board ID Not Set",
+-      "args": {
+-        "board_id_type": "ffffffff",
+-        "board_id_flags": "ffffffff"
+-      }
+-    },
+-    "CheckFPFirmware": {
+-      "pytest_name": "update_fpmcu_firmware",
+-      "label": "Check Fingerprint Firmware",
+-      "run_if": "device.component.has_fingerprint",
+-      "args": {
+-        "method": "CHECK_VERSION"
+-      }
+-    },
+-    "CheckPoint": {
+-      "inherit": "Barrier",
+-      "label": "Check Point",
+-      "args": {
+-        "pass_without_prompt": false
+-      }
+-    },
+-    "CheckReleaseImage": {
+-      "pytest_name": "check_image_version",
+-      "label": "Check Release Image",
+-      "args": {
+-        "check_release_image": true,
+-        "use_netboot": false
+-      }
+-    },
+-    "CheckReleaseLVMStateful": {
+-      "pytest_name": "check_release_lvm_stateful"
+-    },
+-    "CheckRetimerFirmware": {
+-      "pytest_name": "check_retimer_firmware",
+-      "args": {
+-        "wait_all_ports_unplugged": false,
+-        "controller_ports": "eval! constants.retimer.controller_ports",
+-        "usb_ports": "eval! constants.retimer.usb_ports",
+-        "min_retimer_version": "eval! constants.retimer.min_retimer_version"
+-      }
+-    },
+-    "CheckRetimerFirmwareGroup": {
+-      "run_if": "constants.retimer.controller_ports",
+-      "subtests": [
+-        {
+-          "inherit": "CheckRetimerFirmware",
+-          "args": {
+-            "wait_all_ports_unplugged": true
+-          }
+-        },
+-        {
+-          "inherit": "RebootStep",
+-          "run_if": "device.factory.retimer_firmware_reboot"
+-        },
+-        "CheckRetimerFirmware"
+-      ]
+-    },
+-    "CheckSecdataVersion": {
+-      "pytest_name": "check_secdata_version",
+-      "label": "Check Secdata Version",
+-      "disable_services": [
+-        "trunksd"
+-      ],
+-      "args": {
+-        "major_version": 1,
+-        "minor_version": 0
+-      }
+-    },
+-    "CheckSerialNumber": {
+-      "pytest_name": "check_serial_number",
+-      "label": "Check Serial Number"
+-    },
+-    "ClearAPROHash": {
+-      "pytest_name": "ap_ro_hash",
+-      "label": "Clear AP RO Hash",
+-      "args": {
+-        "action": "clear"
+-      }
+-    },
+-    "ClearFactoryVPDEntries": {
+-      "inherit": "TestGroup",
+-      "label": "Clear factory VPD entries",
+-      "subtests": [
+-        {
+-          "inherit": "ExecShell",
+-          "label": "Clear factory VPD entries",
+-          "args": {
+-            "commands": "gooftool clear_factory_vpd_entries"
+-          }
+-        },
+-        "RebootStep"
+-      ]
+-    },
+-    "ClearTPMOwnerRequest": {
+-      "pytest_name": "tpm_clear_owner"
+-    },
+-    "ColdReset": {
+-      "inherit": "TestGroup",
+-      "label": "Cold Reset",
+-      "subtests": [
+-        {
+-          "inherit": "ExecShell",
+-          "label": "EC Cold Reset",
+-          "args": {
+-            "commands": "ectool reboot_ec cold at-shutdown"
+-          }
+-        },
+-        "HaltStep"
+-      ]
+-    },
+-    "Cr50SMTWriteFlashInfo": {
+-      "pytest_name": "cr50_smt_write_flash_info",
+-      "args": {
+-        "enable_zero_touch": "eval! constants.grt.enable_zero_touch",
+-        "mlb_mode": "eval! constants.mlb_mode",
+-        "rma_mode": "eval! constants.rma_mode"
+-      }
+-    },
+-    "Cr50WriteCustomlabelFlags": {
+-      "inherit": "Cr50SMTWriteFlashInfo",
+-      "__comment": "Make old definition as an alias of the new definition for backward compatibility"
+-    },
+-    "DeprovisionCBI": {
+-      "inherit": "ExecShell",
+-      "label": "Deprovision CBI",
+-      "args": {
+-        "commands": [
+-          "ectool cbi set 2 0x7fffffff 4",
+-          "ectool cbi remove 6"
+-        ]
+-      }
+-    },
+-    "Display": {
+-      "pytest_name": "display"
+-    },
+-    "DisplayPoint": {
+-      "pytest_name": "display_point",
+-      "args": {
+-        "max_point_count": 5
+-      }
+-    },
+-    "EDPPanelTiming": {
+-      "pytest_name": "edp_panel_timing"
+-    },
+-    "EnableECWriteProtect": {
+-      "inherit": "TestGroup",
+-      "label": "Enable EC Write Protect",
+-      "__comment": "This test group explicitly disables factory mode and enables EC write protection after rebooting. Run this test group before finalization if the project uses STM32 chips for EC, otherwise finalization may fail. STM32 chips are likely to be used in ARM projects, and they require an EC reboot to let write protect settings take effect. Note that this disables the factory mode in advance, usually we disable the factory mode in finalize step. So it's better to run this test as close to finalize step.",
+-      "subtests": [
+-        {
+-          "pytest_name": "exec_shell",
+-          "args": {
+-            "commands": [
+-              "gsctool -a -F disable | true",
+-              "ectool flashprotect enable",
+-              "ectool reboot_ec RO at-shutdown"
+-            ]
+-          }
+-        },
+-        "RebootStep"
+-      ]
+-    },
+-    "ExecShell": {
+-      "pytest_name": "exec_shell"
+-    },
+-    "ExternalDisplay": {
+-      "pytest_name": "external_display",
+-      "args": {
+-        "main_display": "eDP-1",
+-        "display_info": [
+-          {
+-            "display_label": "External Display",
+-            "display_id": "HDMI",
+-            "usbpd_spec": {
+-              "port": 0
+-            }
+-          }
+-        ]
+-      }
+-    },
+-    "FPSGroup": {
+-      "label": "Fingerprint Test Group",
+-      "run_if": "device.component.has_fingerprint",
+-      "subtests": [
+-        "UpdateFPFirmware",
+-        "RebootStep",
+-        "CheckFPFirmware",
+-        "FPSTest"
+-      ]
+-    },
+-    "FPSTest": {
+-      "pytest_name": "fingerprint_mcu",
+-      "label": "Fingerprint Sensor test",
+-      "run_if": "device.component.has_fingerprint",
+-      "args": {
+-        "fpframe_retry_count": 2
+-      }
+-    },
+-    "Fan": {
+-      "pytest_name": "fan_speed",
+-      "label": "Fan Speed",
+-      "run_if": "constants.has_fan",
+-      "disable_services": [
+-        "dptf"
+-      ],
+-      "args": {
+-        "probe_interval_secs": 0.2,
+-        "target_rpm": [
+-          3000,
+-          4500,
+-          6000
+-        ],
+-        "error_margin": 300
+-      }
+-    },
+-    "Finish": {
+-      "inherit": "Message",
+-      "label": "Finish"
+-    },
+-    "FlashNetboot": {
+-      "pytest_name": "flash_netboot"
+-    },
+-    "FlushTestlog": {
+-      "inherit": "SyncFactoryServer",
+-      "args": {
+-        "sync_event_logs": false,
+-        "update_toolkit": false,
+-        "upload_report": false,
+-        "upload_reg_codes": false,
+-        "flush_testlog": true
+-      }
+-    },
+-    "FrontCamera": {
+-      "inherit": "Camera",
+-      "run_if": "not constants.has_device_data or device.component.has_front_camera",
+-      "args": {
+-        "camera_facing": "front"
+-      }
+-    },
+-    "FrontCameraAssemble": {
+-      "inherit": "FrontCamera",
+-      "label": "Front Camera Assemble",
+-      "args": {
+-        "mode": "camera_assemble",
+-        "min_luminance_ratio": 0.5
+-      }
+-    },
+-    "FrontCameraAssembleQR": {
+-      "inherit": "FrontCamera",
+-      "label": "Front Camera Assemble QR",
+-      "args": {
+-        "mode": "camera_assemble_qr",
+-        "min_luminance_ratio": 0.5,
+-        "QR_string": "ChromeTeam"
+-      }
+-    },
+-    "FrontCameraLED": {
+-      "inherit": "FrontCamera",
+-      "label": "Front Camera LED",
+-      "args": {
+-        "mode": "manual_led"
+-      }
+-    },
+-    "FrontCameraQRScan": {
+-      "inherit": "FrontCamera",
+-      "args": {
+-        "mode": "qr",
+-        "QR_string": "ChromeTeam",
+-        "timeout_secs": 2000
+-      }
+-    },
+-    "GetDeviceInfo": {
+-      "inherit": "ShopfloorService",
+-      "args": {
+-        "method": "GetDeviceInfo"
+-      }
+-    },
+-    "Gyroscope": {
+-      "pytest_name": "gyroscope",
+-      "label": "Gyroscope",
+-      "run_if": "not constants.has_device_data or device.component.has_base_gyroscope",
+-      "args": {
+-        "rotation_threshold": 1.0,
+-        "stop_threshold": 0.1
+-      }
+-    },
+-    "GyroscopeCalibration": {
+-      "pytest_name": "gyroscope_calibration",
+-      "label": "Gyroscope Calibration",
+-      "run_if": "not constants.has_device_data or device.component.has_base_gyroscope"
+-    },
+-    "HPS": {
+-      "pytest_name": "hps",
+-      "run_if": "device.component.has_hps",
+-      "args": {
+-        "timeout_secs": 3600
+-      }
+-    },
+-    "HWButton": {
+-      "inherit": "TestGroup",
+-      "label": "Hardware Button",
+-      "subtests": [
+-        {
+-          "inherit": "Button",
+-          "label": "Volume Down",
+-          "args": {
+-            "button_key_name": "KEY_VOLUMEDOWN",
+-            "button_name": "i18n! Volume Down"
+-          }
+-        },
+-        {
+-          "inherit": "Button",
+-          "label": "Volume Up",
+-          "args": {
+-            "button_key_name": "KEY_VOLUMEUP",
+-            "button_name": "i18n! Volume Up"
+-          }
+-        },
+-        {
+-          "inherit": "Button",
+-          "label": "Power Button",
+-          "args": {
+-            "button_key_name": "KEY_POWER",
+-            "button_name": "i18n! Power Button"
+-          }
+-        }
+-      ]
+-    },
+-    "Idle": {
+-      "pytest_name": "nop",
+-      "label": "Idle"
+-    },
+-    "Keyboard": {
+-      "pytest_name": "keyboard",
+-      "args": {
+-        "allow_multi_keys": true,
+-        "has_numpad": "eval! device.component.has_numeric_pad or False"
+-      }
+-    },
+-    "KeyboardBacklight": {
+-      "pytest_name": "keyboard_backlight",
+-      "run_if": "not constants.has_device_data or device.component.has_keyboard_backlight"
+-    },
+-    "LED": {
+-      "pytest_name": "led",
+-      "exclusive_resources": [
+-        "LED"
+-      ],
+-      "args": {
+-        "challenge": true
+-      }
+-    },
+-    "LidAccelerometersCalibration": {
+-      "inherit": "AccelerometersCalibration",
+-      "label": "Lid Accelerometers Calibration",
+-      "run_if": "not constants.has_device_data or device.component.has_lid_accelerometer",
+-      "args": {
+-        "location": "lid"
+-      }
+-    },
+-    "LidSwitch": {
+-      "pytest_name": "lid_switch"
+-    },
+-    "MRCCache": {
+-      "label": "MRC Cache",
+-      "subtests": [
+-        {
+-          "pytest_name": "mrc_cache",
+-          "label": "Create Cache",
+-          "args": {
+-            "mode": "create"
+-          }
+-        },
+-        "RebootStep",
+-        {
+-          "pytest_name": "mrc_cache",
+-          "label": "Verify Cache",
+-          "args": {
+-            "mode": "verify"
+-          }
+-        }
+-      ]
+-    },
+-    "MemorySize": {
+-      "pytest_name": "memory_size",
+-      "label": "Memory Size"
+-    },
+-    "Message": {
+-      "pytest_name": "message",
+-      "allow_reboot": true
+-    },
+-    "ModelSKU": {
+-      "pytest_name": "model_sku",
+-      "label": "Model and SKU",
+-      "action_on_failure": "STOP",
+-      "args": {
+-        "config_name": "model_sku"
+-      }
+-    },
+-    "ModemSecurity": {
+-      "pytest_name": "modem_security",
+-      "disable_services": [
+-        "modemmanager"
+-      ]
+-    },
+-    "Mouse": {
+-      "pytest_name": "mouse"
+-    },
+-    "NotebookMode": {
+-      "pytest_name": "tablet_mode",
+-      "label": "Notebook Mode",
+-      "args": {
+-        "timeout_secs": 3600,
+-        "prompt_flip_notebook": true
+-      }
+-    },
+-    "NotifyOverlordTrackConnection": {
+-      "pytest_name": "exec_shell",
+-      "label": "Notify Overlord to track connection",
+-      "args": {
+-        "commands": "ghost --track-connection y"
+-      }
+-    },
+-    "NotifyOverlordUntrackConnection": {
+-      "pytest_name": "exec_shell",
+-      "label": "Notify Overlord not to track connection",
+-      "args": {
+-        "commands": "ghost --track-connection n"
+-      }
+-    },
+-    "PartitionTable": {
+-      "pytest_name": "partition_table"
+-    },
+-    "Placeholder": {
+-      "pytest_name": "nop",
+-      "label": "Placeholder"
+-    },
+-    "Probe": {
+-      "pytest_name": "probe.probe",
+-      "label": "Probe Hardware",
+-      "args": {
+-        "config_file": "probe.json"
+-      }
+-    },
+-    "ProximitySensor": {
+-      "pytest_name": "proximity_sensor",
+-      "run_if": "not constants.has_device_data or device.component.has_proximity_sensor",
+-      "disable_services": [
+-        "powerd"
+-      ]
+-    },
+-    "QRScan": {
+-      "inherit": "Camera",
+-      "label": "QR Scan",
+-      "__comment": "Deprecated. Use FrontCameraQRScan or RearCameraQRScan.",
+-      "args": {
+-        "mode": "qr",
+-        "QR_string": "Hello ChromeOS!"
+-      }
+-    },
+-    "ReSignReleaseKernel": {
+-      "pytest_name": "update_kernel",
+-      "run_if": "constants.phase != 'PVT' and constants.grt.re_sign_release_kernel",
+-      "args": {
+-        "to_release": true
+-      }
+-    },
+-    "ReadDeviceDataFromVPD": {
+-      "pytest_name": "read_device_data_from_vpd"
+-    },
+-    "RearCamera": {
+-      "inherit": "Camera",
+-      "run_if": "not constants.has_device_data or device.component.has_rear_camera",
+-      "args": {
+-        "camera_facing": "rear"
+-      }
+-    },
+-    "RearCameraAssemble": {
+-      "inherit": "RearCamera",
+-      "label": "Rear Camera Assemble",
+-      "args": {
+-        "mode": "camera_assemble",
+-        "min_luminance_ratio": 0.5
+-      }
+-    },
+-    "RearCameraAssembleQR": {
+-      "inherit": "RearCamera",
+-      "label": "Rear Camera Assemble QR",
+-      "args": {
+-        "mode": "camera_assemble_qr",
+-        "min_luminance_ratio": 0.5,
+-        "QR_string": "ChromeTeam"
+-      }
+-    },
+-    "RearCameraLED": {
+-      "inherit": "RearCamera",
+-      "label": "Rear Camera LED",
+-      "args": {
+-        "mode": "manual_led"
+-      }
+-    },
+-    "RearCameraQRScan": {
+-      "inherit": "RearCamera",
+-      "args": {
+-        "mode": "qr",
+-        "QR_string": "ChromeTeam",
+-        "timeout_secs": 2000
+-      }
+-    },
+-    "RemovableStorage": {
+-      "pytest_name": "removable_storage",
+-      "args": {
+-        "block_size": 524288,
+-        "perform_random_test": false,
+-        "perform_sequential_test": true,
+-        "sequential_block_count": 8
+-      }
+-    },
+-    "SDPerformance": {
+-      "inherit": "RemovableStorage",
+-      "label": "SD Performance",
+-      "run_if": "constants.sd.sysfs_path != ''",
+-      "args": {
+-        "media": "SD",
+-        "sysfs_path": "eval! constants.sd.sysfs_path",
+-        "timeout_secs": 60
+-      }
+-    },
+-    "Scan": {
+-      "pytest_name": "scan"
+-    },
+-    "ScreenRotation": {
+-      "label": "Screen Rotation",
+-      "run_if": "not constants.has_device_data or device.component.has_tabletmode",
+-      "subtests": [
+-        "TabletMode",
+-        "TabletRotationAll",
+-        "TabletRotationBase",
+-        "TabletRotationLid",
+-        "NotebookMode"
+-      ]
+-    },
+-    "SetAPROHash": {
+-      "pytest_name": "ap_ro_hash",
+-      "label": "Set AP RO Hash",
+-      "args": {
+-        "action": "set"
+-      }
+-    },
+-    "SetWidevineKeybox": {
+-      "pytest_name": "provision_drm_key",
+-      "label": "Set Widevine Keybox",
+-      "run_if": "constants.has_keybox",
+-      "args": {
+-        "proxy_server_url": ""
+-      }
+-    },
+-    "SetWidevineKeyboxGroup": {
+-      "label": "Widevine Keybox provisioning Test Group",
+-      "run_if": "constants.has_keybox",
+-      "subtests": [
+-        {
+-          "inherit": "ExecShell",
+-          "label": "Reset Widevine keyboxes",
+-          "args": {
+-            "commands": "vpd -d widevine_keybox; rm /var/lib/oemcrypto/wrapped_amd_keybox || true"
+-          }
+-        },
+-        "RebootStep",
+-        "SetWidevineKeybox"
+-      ]
+-    },
+-    "ShopfloorNotifyEnd": {
+-      "inherit": "ShopfloorService",
+-      "label": "Shopfloor Service (NotifyEnd)",
+-      "args": {
+-        "method": "NotifyEnd",
+-        "args": [
+-          "eval! locals.station"
+-        ]
+-      }
+-    },
+-    "ShopfloorNotifyStart": {
+-      "inherit": "ShopfloorService",
+-      "label": "Shopfloor Service (NotifyStart)",
+-      "args": {
+-        "method": "NotifyStart",
+-        "args": [
+-          "eval! locals.station"
+-        ]
+-      }
+-    },
+-    "ShopfloorService": {
+-      "pytest_name": "shopfloor_service",
+-      "run_if": "constants.enable_factory_server"
+-    },
+-    "SpatialSensorCalibration": {
+-      "pytest_name": "spatial_sensor_calibration"
+-    },
+-    "SpeakerDMic": {
+-      "pytest_name": "audio_loop",
+-      "label": "Speaker/Microphone",
+-      "args": {
+-        "input_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Dmic"
+-        ],
+-        "output_dev": [
+-          "eval! device.component.audio_card_name or constants.audio.card_name",
+-          "Speaker"
+-        ],
+-        "mic_source": "Dmic",
+-        "require_dongle": false,
+-        "check_dongle": true,
+-        "tests_to_conduct": [
+-          {
+-            "type": "audiofun",
+-            "threshold": 80,
+-            "volume_gain": 50
+-          }
+-        ]
+-      }
+-    },
+-    "SpeakerDMicConformance": {
+-      "inherit": "SpeakerDMic",
+-      "label": "Speaker/Microphone Conformance",
+-      "args": {
+-        "autostart": true,
+-        "check_dongle": false,
+-        "tests_to_conduct": []
+-      }
+-    },
+-    "Start": {
+-      "pytest_name": "start",
+-      "allow_reboot": true
+-    },
+-    "StationEnd": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "StationEndSyncFactoryServer",
+-        "Barrier",
+-        "ShopfloorNotifyEnd",
+-        "Barrier",
+-        "WriteDeviceDataToVPD"
+-      ]
+-    },
+-    "StationEndSyncFactoryServer": {
+-      "inherit": "SyncFactoryServerUploadReport",
+-      "args": {
+-        "upload_report": "eval! locals.station_end_upload_report"
+-      }
+-    },
+-    "StationStart": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "SyncFactoryServer",
+-        "Barrier",
+-        "ShopfloorNotifyStart"
+-      ]
+-    },
+-    "StressAppTest": {
+-      "pytest_name": "stressapptest",
+-      "label": "Stress App Test",
+-      "exclusive_resources": [
+-        "CPU"
+-      ]
+-    },
+-    "Stylus": {
+-      "pytest_name": "stylus",
+-      "run_if": "not constants.has_device_data or device.component.has_stylus"
+-    },
+-    "StylusAndGarage": {
+-      "label": "Stylus And Garage",
+-      "subtests": [
+-        {
+-          "inherit": "StylusGarage",
+-          "label": "Remove stylus",
+-          "args": {
+-            "target_state": "ejected"
+-          }
+-        },
+-        "Stylus",
+-        {
+-          "inherit": "StylusGarage",
+-          "label": "Insert stylus",
+-          "args": {
+-            "target_state": "inserted"
+-          }
+-        }
+-      ]
+-    },
+-    "StylusGarage": {
+-      "pytest_name": "stylus_garage",
+-      "run_if": "not constants.has_device_data or device.component.has_stylus_garage"
+-    },
+-    "SuspendResume": {
+-      "pytest_name": "suspend_resume"
+-    },
+-    "SuspendStress": {
+-      "pytest_name": "suspend_stress"
+-    },
+-    "SyncFactoryServer": {
+-      "pytest_name": "sync_factory_server",
+-      "run_if": "constants.enable_factory_server",
+-      "args": {
+-        "server_url": "eval! constants.default_factory_server_url"
+-      }
+-    },
+-    "SyncFactoryServerUploadReport": {
+-      "inherit": "SyncFactoryServer",
+-      "args": {
+-        "upload_report": true,
+-        "report_stage": "eval! locals.station"
+-      }
+-    },
+-    "TBTLoopback": {
+-      "pytest_name": "thunderbolt_loopback",
+-      "run_if": "False"
+-    },
+-    "TPMVerifyEK": {
+-      "pytest_name": "tpm_verify_ek"
+-    },
+-    "TabletMode": {
+-      "pytest_name": "tablet_mode",
+-      "run_if": "not constants.has_device_data or device.component.has_tabletmode",
+-      "args": {
+-        "timeout_secs": 3600,
+-        "prompt_flip_tablet": true
+-      }
+-    },
+-    "TabletRotation": {
+-      "pytest_name": "tablet_rotation"
+-    },
+-    "TabletRotationAll": {
+-      "pytest_name": "tablet_rotation",
+-      "label": "Tablet Rotation Accelerometers",
+-      "run_if": "not constants.has_device_data or (device.component.has_base_accelerometer and device.component.has_lid_accelerometer)",
+-      "args": {
+-        "spec_offset": [
+-          1.5,
+-          1.5
+-        ],
+-        "timeout_secs": 3600,
+-        "degrees_to_orientations": {
+-          "base": {
+-            "0": {
+-              "in_accel_x": 0,
+-              "in_accel_y": -1,
+-              "in_accel_z": 0
+-            },
+-            "90": {
+-              "in_accel_x": 1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            },
+-            "180": {
+-              "in_accel_x": 0,
+-              "in_accel_y": 1,
+-              "in_accel_z": 0
+-            },
+-            "270": {
+-              "in_accel_x": -1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            }
+-          },
+-          "lid": {
+-            "0": {
+-              "in_accel_x": 0,
+-              "in_accel_y": 1,
+-              "in_accel_z": 0
+-            },
+-            "90": {
+-              "in_accel_x": 1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            },
+-            "180": {
+-              "in_accel_x": 0,
+-              "in_accel_y": -1,
+-              "in_accel_z": 0
+-            },
+-            "270": {
+-              "in_accel_x": -1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            }
+-          }
+-        }
+-      }
+-    },
+-    "TabletRotationBase": {
+-      "pytest_name": "tablet_rotation",
+-      "label": "Tablet Rotation Base-Accel",
+-      "run_if": "constants.has_device_data and device.component.has_base_accelerometer and not device.component.has_lid_accelerometer",
+-      "args": {
+-        "spec_offset": [
+-          1.5,
+-          1.5
+-        ],
+-        "timeout_secs": 3600,
+-        "degrees_to_orientations": {
+-          "base": {
+-            "0": {
+-              "in_accel_x": 0,
+-              "in_accel_y": -1,
+-              "in_accel_z": 0
+-            },
+-            "90": {
+-              "in_accel_x": 1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            },
+-            "180": {
+-              "in_accel_x": 0,
+-              "in_accel_y": 1,
+-              "in_accel_z": 0
+-            },
+-            "270": {
+-              "in_accel_x": -1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            }
+-          }
+-        }
+-      }
+-    },
+-    "TabletRotationLid": {
+-      "pytest_name": "tablet_rotation",
+-      "label": "Tablet Rotation Lid-Accel",
+-      "run_if": "constants.has_device_data and not device.component.has_base_accelerometer and device.component.has_lid_accelerometer",
+-      "args": {
+-        "spec_offset": [
+-          1.5,
+-          1.5
+-        ],
+-        "timeout_secs": 3600,
+-        "degrees_to_orientations": {
+-          "lid": {
+-            "0": {
+-              "in_accel_x": 0,
+-              "in_accel_y": 1,
+-              "in_accel_z": 0
+-            },
+-            "90": {
+-              "in_accel_x": 1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            },
+-            "180": {
+-              "in_accel_x": 0,
+-              "in_accel_y": -1,
+-              "in_accel_z": 0
+-            },
+-            "270": {
+-              "in_accel_x": -1,
+-              "in_accel_y": 0,
+-              "in_accel_z": 0
+-            }
+-          }
+-        }
+-      }
+-    },
+-    "ThermalSensors": {
+-      "pytest_name": "thermal_sensors"
+-    },
+-    "ThermalSlope": {
+-      "pytest_name": "thermal_slope"
+-    },
+-    "Touchpad": {
+-      "pytest_name": "touchpad"
+-    },
+-    "Touchscreen": {
+-      "pytest_name": "touchscreen",
+-      "run_if": "not constants.has_device_data or device.component.has_touchscreen"
+-    },
+-    "TouchscreenUniformity": {
+-      "pytest_name": "touch_uniformity",
+-      "label": "Touchscreen Uniformity",
+-      "run_if": "not constants.has_device_data or device.component.has_touchscreen"
+-    },
+-    "URandom": {
+-      "pytest_name": "urandom",
+-      "label": "Random Number Generation"
+-    },
+-    "USBPerformance": {
+-      "inherit": "RemovableStorage",
+-      "label": "USB Performance",
+-      "args": {
+-        "media": "USB"
+-      }
+-    },
+-    "USBTypeAManualLeft": {
+-      "inherit": "TestGroup",
+-      "label": "Manual Test Left USB TypeA",
+-      "subtests": [
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB2 TypeA Performance",
+-          "run_if": "constants.typea_usb.left.usb2_sysfs_path != ''",
+-          "args": {
+-            "sysfs_path": "eval! constants.typea_usb.left.usb2_sysfs_path"
+-          }
+-        },
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB3 TypeA Performance",
+-          "run_if": "constants.typea_usb.left.usb3_sysfs_path != ''",
+-          "args": {
+-            "sysfs_path": "eval! constants.typea_usb.left.usb3_sysfs_path"
+-          }
+-        }
+-      ]
+-    },
+-    "USBTypeAManualRight": {
+-      "inherit": "TestGroup",
+-      "label": "Manual Test Right USB TypeA",
+-      "subtests": [
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB2 TypeA Performance",
+-          "run_if": "constants.typea_usb.right.usb2_sysfs_path != ''",
+-          "args": {
+-            "sysfs_path": "eval! constants.typea_usb.right.usb2_sysfs_path"
+-          }
+-        },
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB3 TypeA Performance",
+-          "run_if": "constants.typea_usb.right.usb3_sysfs_path != ''",
+-          "args": {
+-            "sysfs_path": "eval! constants.typea_usb.right.usb3_sysfs_path"
+-          }
+-        }
+-      ]
+-    },
+-    "USBTypeAManualTest": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "USBTypeAManualLeft",
+-        "USBTypeAManualRight"
+-      ]
+-    },
+-    "USBTypeCManualBase": {
+-      "inherit": "TestGroup",
+-      "subtests": [
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB3 CC1 Performance",
+-          "args": {
+-            "sysfs_path": "eval! locals.usb.usb3_sysfs_path",
+-            "usbpd_port_polarity": [
+-              "eval! locals.usb.usbpd_id",
+-              1
+-            ]
+-          }
+-        },
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB3 CC2 Performance",
+-          "args": {
+-            "sysfs_path": "eval! locals.usb.usb3_sysfs_path",
+-            "usbpd_port_polarity": [
+-              "eval! locals.usb.usbpd_id",
+-              2
+-            ]
+-          }
+-        },
+-        {
+-          "inherit": "USBPerformance",
+-          "label": "USB2 Performance",
+-          "args": {
+-            "sysfs_path": "eval! locals.usb.usb2_sysfs_path"
+-          }
+-        },
+-        {
+-          "inherit": "TBTLoopback",
+-          "args": {
+-            "controller_port": "eval! locals.usb.tbt_controller_port",
+-            "usbpd_spec": {
+-              "port": "eval! locals.usb.usbpd_id"
+-            }
+-          }
+-        },
+-        "USBTypeCManualChargeItems",
+-        {
+-          "inherit": "ExternalDisplay",
+-          "label": "USB3 External Display Test",
+-          "args": {
+-            "display_info": [
+-              "eval! locals.usb.display_info"
+-            ]
+-          }
+-        },
+-        "Barrier"
+-      ]
+-    },
+-    "USBTypeCManualCharge": {
+-      "inherit": "ChargeDischargeCurrent",
+-      "args": {
+-        "usbpd_info": [
+-          "eval! locals.usb.usbpd_id",
+-          "eval! int(locals.voltage * 1000 * 0.9)",
+-          "eval! int(locals.voltage * 1000 * 1.1)"
+-        ],
+-        "usbpd_prompt": "eval! locals.usb_label"
+-      }
+-    },
+-    "USBTypeCManualChargeItems": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        {
+-          "inherit": "USBTypeCManualCharge",
+-          "label": "20V Charging",
+-          "locals": {
+-            "voltage": 20
+-          }
+-        },
+-        {
+-          "inherit": "USBTypeCManualCharge",
+-          "label": "5V Charging",
+-          "locals": {
+-            "voltage": 5
+-          }
+-        }
+-      ]
+-    },
+-    "USBTypeCManualLeft": {
+-      "inherit": "USBTypeCManualBase",
+-      "label": "Manual Test Left USB TypeC",
+-      "locals": {
+-        "usb": "eval! constants.typec_usb.left",
+-        "usb_label": "i18n! Left USB TypeC"
+-      }
+-    },
+-    "USBTypeCManualRight": {
+-      "inherit": "USBTypeCManualBase",
+-      "label": "Manual Test Right USB TypeC",
+-      "locals": {
+-        "usb": "eval! constants.typec_usb.right",
+-        "usb_label": "i18n! Right USB TypeC"
+-      }
+-    },
+-    "USBTypeCManualTest": {
+-      "inherit": "FlattenGroup",
+-      "subtests": [
+-        "USBTypeCManualLeft"
+-      ]
+-    },
+-    "USBTypeCTest": "USBTypeCManualTest",
+-    "UpdateCBI": {
+-      "pytest_name": "update_cbi",
+-      "label": "Update CBI",
+-      "args": {
+-        "cbi_data_names": [
+-          "SKU_ID",
+-          "DRAM_PART_NUM",
+-          "PCB_SUPPLIER"
+-        ]
+-      }
+-    },
+-    "UpdateCr50Firmware": {
+-      "inherit": "TestGroup",
+-      "label": "Update Cr50 Firmware",
+-      "subtests": [
+-        {
+-          "pytest_name": "update_cr50_firmware",
+-          "args": {
+-            "firmware_file": "eval! constants.use_prepvt_cr50_firmware and '/opt/google/cr50/firmware/cr50.bin.prepvt' or None",
+-            "skip_prepvt_flag_check": "eval! constants.phase != 'PVT'"
+-          }
+-        },
+-        "RebootStep",
+-        {
+-          "pytest_name": "update_cr50_firmware",
+-          "label": "Check Cr50 Firmware Version",
+-          "args": {
+-            "method": "CHECK_VERSION"
+-          }
+-        }
+-      ]
+-    },
+-    "UpdateDeviceData": {
+-      "pytest_name": "update_device_data"
+-    },
+-    "UpdateFPFirmware": {
+-      "pytest_name": "update_fpmcu_firmware",
+-      "label": "Update Fingerprint Firmware",
+-      "run_if": "device.component.has_fingerprint"
+-    },
+-    "UpdateFirmware": {
+-      "label": "Update Firmware",
+-      "subtests": [
+-        {
+-          "pytest_name": "update_firmware"
+-        },
+-        "Barrier",
+-        {
+-          "inherit": "ShutdownStep",
+-          "label": "Reboot",
+-          "args": {
+-            "operation": "eval! constants.update_firmware.reboot_type"
+-          }
+-        }
+-      ]
+-    },
+-    "UpdateSKUID": {
+-      "pytest_name": "update_cbi",
+-      "label": "Update SKU ID",
+-      "args": {
+-        "cbi_data_names": [
+-          "SKU_ID"
+-        ]
+-      }
+-    },
+-    "UploadRegCodes": {
+-      "inherit": "SyncFactoryServer",
+-      "label": "Upload Reg (ECHO) Codes to activate",
+-      "args": {
+-        "sync_event_logs": false,
+-        "sync_time": true,
+-        "update_toolkit": false,
+-        "upload_report": false,
+-        "upload_reg_codes": true,
+-        "flush_testlog": false
+-      }
+-    },
+-    "UploadZeroTouchIds": {
+-      "inherit": "SyncFactoryServer",
+-      "label": "Upload Zero Touch Ids",
+-      "run_if": "constants.grt.enable_zero_touch and constants.grt.collect_zero_touch_ids",
+-      "args": {
+-        "sync_event_logs": false,
+-        "sync_time": true,
+-        "update_toolkit": false,
+-        "upload_report": false,
+-        "upload_reg_codes": false,
+-        "upload_zero_touch_ids": true,
+-        "flush_testlog": false
+-      }
+-    },
+-    "VerifyRootPartition": {
+-      "pytest_name": "verify_root_partition",
+-      "args": {
+-        "max_bytes": 1048576
+-      }
+-    },
+-    "VerifyWidevineKeybox": {
+-      "pytest_name": "verify_keybox",
+-      "label": "Verify Widevine Keybox",
+-      "run_if": "constants.has_keybox"
+-    },
+-    "WebGLAquarium": {
+-      "pytest_name": "webgl_aquarium"
+-    },
+-    "WifiSSIDList": {
+-      "pytest_name": "wifi_throughput",
+-      "label": "Wifi"
+-    },
+-    "Wireless": {
+-      "inherit": "WirelessRadiotap",
+-      "args": {
+-        "device_name": "wlan0",
+-        "services": "eval! constants.wireless_services",
+-        "strength": {
+-          "main": -60,
+-          "aux": -60,
+-          "all": -60
+-        },
+-        "wifi_chip_type": null
+-      }
+-    },
+-    "WirelessAntenna": {
+-      "pytest_name": "wireless_antenna",
+-      "exclusive_resources": [
+-        "NETWORK"
+-      ],
+-      "args": {
+-        "wifi_chip_type": "switch_antenna"
+-      }
+-    },
+-    "WirelessCharger": {
+-      "pytest_name": "wireless_charge",
+-      "label": "Wireless Charger",
+-      "run_if": "not constants.has_device_data or device.component.has_wireless_charger",
+-      "args": {
+-        "occupy_instruction": "i18n! Attach peripheral to charging port",
+-        "release_instruction": "i18n! Remove peripheral from charging port"
+-      }
+-    },
+-    "WirelessRadiotap": {
+-      "pytest_name": "wireless_antenna",
+-      "exclusive_resources": [
+-        "NETWORK"
+-      ],
+-      "args": {
+-        "wifi_chip_type": "radiotap"
+-      }
+-    },
+-    "WriteDeviceDataToVPD": {
+-      "pytest_name": "write_device_data_to_vpd"
+-    },
+-    "WriteHWID": {
+-      "pytest_name": "hwid",
+-      "label": "Write HWID",
+-      "args": {
+-        "enable_factory_server": "eval! constants.enable_factory_server",
+-        "run_vpd": "eval! constants.hwid_need_vpd",
+-        "rma_mode": "eval! constants.rma_mode"
+-      }
+-    },
+-    "WriteProtectSwitch": {
+-      "pytest_name": "write_protect_switch"
+-    }
+-  }
+-}

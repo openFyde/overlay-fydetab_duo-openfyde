@@ -1,0 +1,34 @@
+From c96c67523ac9b96a4ebf6adc9326da3412a9837c Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 19 Sep 2022 09:41:29 +0800
+Subject: [PATCH 29/38] Hardcode DRAM info for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/probe/functions/generic_dram.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/py/probe/functions/generic_dram.py b/py/probe/functions/generic_dram.py
+index a42f39d1b..c06414c4f 100644
+--- a/py/probe/functions/generic_dram.py
++++ b/py/probe/functions/generic_dram.py
+@@ -8,7 +8,6 @@ from cros.factory.probe.lib import cached_probe_function
+ from cros.factory.utils import process_utils
+ from cros.factory.utils import sys_utils
+ 
+-
+ class GenericDRAMFunction(cached_probe_function.CachedProbeFunction):
+   """Probe the generic DRAM information."""
+ 
+@@ -17,6 +16,8 @@ class GenericDRAMFunction(cached_probe_function.CachedProbeFunction):
+ 
+   @classmethod
+   def ProbeAllDevices(cls):
++    return [{'slot':0, 'part':0, 'size':8192}]
++
+     """Combine mosys memory timing and geometry information."""
+     # TODO(tammo): Document why mosys cannot load i2c_dev itself.
+     sys_utils.LoadKernelModule('i2c_dev', error_on_fail=False)
+-- 
+2.42.0
+

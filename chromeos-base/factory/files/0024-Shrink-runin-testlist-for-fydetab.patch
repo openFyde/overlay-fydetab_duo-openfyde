@@ -1,0 +1,70 @@
+From 766db2c8691f8537dcbda569e0c0ad678899618c Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 18 Sep 2022 16:25:05 +0800
+Subject: [PATCH 24/38] Shrink runin testlist for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ .../fydetab_duo_run_in.test_list.json         | 23 +++++--------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_run_in.test_list.json b/py/test/test_lists/fydetab_duo_run_in.test_list.json
+index 8c99357f5..06d0c1101 100644
+--- a/py/test/test_lists/fydetab_duo_run_in.test_list.json
++++ b/py/test/test_lists/fydetab_duo_run_in.test_list.json
+@@ -4,8 +4,8 @@
+   ],
+   "constants": {
+     "run_in": {
+-      "sat_duration_secs": 28800,
+-      "dozing_sat_duration_secs": 600,
++      "sat_duration_secs": 10,
++      "dozing_sat_duration_secs": 10,
+       "reboot_warmup_secs": 30
+     }
+   },
+@@ -43,8 +43,8 @@
+           [
+             "CPU",
+             null,
+-            null,
+-            null
++            90,
++            100
+           ]
+         ]
+       }
+@@ -82,28 +82,17 @@
+       "label": "Finish",
+       "subtests": [
+         "StationEnd",
+-        "CheckPoint",
+-        "RunInRebootStep"
++        "CheckPoint"
+       ]
+     },
+     "RunInItems": {
+       "inherit": "FlattenGroup",
+       "__comment": "RunIn is a stage to stress all ports for checking system stability. This stage may have many test barriers to let it fail early and reduce wasted test time.",
+       "subtests": [
+-        "RunInRebootStep",
+         "RunInStressGroupWithFrontCamera",
+         "Barrier",
+-        "RunInRebootStep",
+-        "Barrier",
+         "RunInDozingStress",
+-        "Barrier",
+-        "RunInRebootSequence",
+-        "Barrier",
+-        "VerifyRootPartition",
+-        "Barrier",
+-        "RunInBlockingCharge",
+-        "Barrier",
+-        "BatterySysfs"
++        "Barrier"
+       ]
+     },
+     "RunInMRCCache": {
+-- 
+2.42.0
+

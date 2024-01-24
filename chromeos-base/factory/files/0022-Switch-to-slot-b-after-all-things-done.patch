@@ -1,0 +1,29 @@
+From 9dd20cabea2b22a44948ce9dac4dd3213fa5ccfc Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sat, 17 Sep 2022 20:37:08 +0800
+Subject: [PATCH 22/38] Switch to slot b after all things done
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/gooftool/commands.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/py/gooftool/commands.py
++++ b/py/gooftool/commands.py
+@@ -23,6 +23,7 @@
+ from tempfile import gettempdir
+ import threading
+ import xmlrpc.client
++import subprocess
+ 
+ from cros.factory.gooftool.common import ExecFactoryPar
+ from cros.factory.gooftool.common import Shell
+@@ -1285,6 +1286,8 @@
+   wipe_args = PrepareWipeArgs(options)
+ 
+   # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
++  p = subprocess.Popen("/usr/bin/fydeos_factory.sh mark_partition_bootable b", stdout=subprocess.PIPE, shell=True)
++  logging.info(p.communicate())
+ 
+ 
+ @Command('get_firmware_hash',

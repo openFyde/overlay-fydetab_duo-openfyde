@@ -1,0 +1,75 @@
+From 203eee1b56618837b6c9994285218542f98f39df Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 29 Aug 2022 13:37:10 +0800
+Subject: [PATCH 06/38] Remove fydetab_duo-fydeos.test_list.json
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ .../fydetab_duo-fydeos.test_list.json         | 55 -------------------
+ 1 file changed, 55 deletions(-)
+ delete mode 100644 py/test/test_lists/fydetab_duo-fydeos.test_list.json
+
+diff --git a/py/test/test_lists/fydetab_duo-fydeos.test_list.json b/py/test/test_lists/fydetab_duo-fydeos.test_list.json
+deleted file mode 100644
+index f61feb11a..000000000
+--- a/py/test/test_lists/fydetab_duo-fydeos.test_list.json
++++ /dev/null
+@@ -1,55 +0,0 @@
+-{
+-  "inherit": [
+-    "fydetab_duo-fydeos_smt.test_list",
+-    "fydetab_duo-fydeos_fat.test_list",
+-    "fydetab_duo-fydeos_run_in.test_list",
+-    "fydetab_duo-fydeos_fft.test_list",
+-    "fydetab_duo-fydeos_grt.test_list"
+-  ],
+-  "label": "Generic Chromebook",
+-  "options": {
+-    "skipped_tests": {
+-      "device.factory.end_SMT": [
+-        "SMT"
+-      ],
+-      "device.factory.end_FAT": [
+-        "FAT"
+-      ],
+-      "device.factory.end_RUNIN": [
+-        "RunIn"
+-      ],
+-      "device.factory.end_FFT": [
+-        "FFT"
+-      ]
+-    },
+-    "ui_locale": "zh-CN"
+-  },
+-  "definitions": {
+-    "FATP": {
+-      "inherit": "FlattenGroup",
+-      "locals": {
+-        "factory_server_url": "eval! constants.default_factory_server_url"
+-      },
+-      "subtests": [
+-        "FAT",
+-        "RunIn",
+-        "FFT",
+-        "GRT"
+-      ]
+-    },
+-    "SMT": {
+-      "locals": {
+-        "factory_server_url": "eval! constants.default_factory_server_url"
+-      }
+-    },
+-    "SyncFactoryServer": {
+-      "args": {
+-        "server_url": "eval! locals.factory_server_url"
+-      }
+-    }
+-  },
+-  "tests": [
+-    "SMT",
+-    "FATP"
+-  ]
+-}
+-- 
+2.42.0
+

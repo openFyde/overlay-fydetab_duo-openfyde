@@ -1,0 +1,26 @@
+From 74f81087e134573035fec69ffa355ce492a9d77e Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 19 Sep 2022 09:41:57 +0800
+Subject: [PATCH 30/38] Hardcode fan speed to 0
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/pytests/countdown.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/py/test/pytests/countdown.py b/py/test/pytests/countdown.py
+index cc2d9db46..d322903d3 100644
+--- a/py/test/pytests/countdown.py
++++ b/py/test/pytests/countdown.py
+@@ -285,7 +285,7 @@ class CountDownTest(test_case.TestCase):
+ 
+   def SnapshotStatus(self):
+     return Status(self._dut.thermal.GetAllTemperatures(),
+-                  self._dut.fan.GetFanRPM(),
++                  0,
+                   self._cpu_freq_manager.GetCurrentFrequency())
+ 
+   def setUp(self):
+-- 
+2.42.0
+

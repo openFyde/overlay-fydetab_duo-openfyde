@@ -1,0 +1,47 @@
+From e17adeb354ccd21783e67b494293ac36e983f3b1 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 4 Sep 2022 20:55:18 +0800
+Subject: [PATCH 13/38] Adjust grt for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo_grt.test_list.json | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_grt.test_list.json b/py/test/test_lists/fydetab_duo_grt.test_list.json
+index f442884f9..20ed88246 100644
+--- a/py/test/test_lists/fydetab_duo_grt.test_list.json
++++ b/py/test/test_lists/fydetab_duo_grt.test_list.json
+@@ -13,13 +13,18 @@
+       "ec_pubkey_hash": null,
+       "rma_mode": false,
+       "mlb_mode": false,
+-      "__comment_mlb_mode": "The MLB will leave factory without assembly, for example, this is a RMA spare board or local OEM projects.",
++      "has_ec_pubkey": false,
++      "hwid_need_vpd": false,
++      "is_cros_core": true,
+       "enable_zero_touch": false,
+-      "gooftool_skip_list": [],
++      "use_generic_tpm2": true,
++      "gooftool_skip_list": [
++        "clear_gbb_flags"
++      ],
+       "gooftool_waive_list": [],
+       "re_sign_release_kernel": false,
+       "__comment_re_sign_release_kernel": "Enable this if you want to finalize with a DEV signed kernel; go/cros-factory-fw-in-early-builds",
+-      "secure_wipe": true
++      "secure_wipe": false
+     }
+   },
+   "definitions": {
+@@ -60,6 +65,7 @@
+         "has_ec_pubkey": "eval! constants.has_ec_pubkey",
+         "rma_mode": "eval! constants.grt.rma_mode",
+         "mlb_mode": "eval! constants.grt.mlb_mode",
++        "is_cros_core": "eval! constants.grt.is_cros_core",
+         "secure_wipe": "eval! constants.grt.secure_wipe",
+         "upload_method": "eval! 'shopfloor' if constants.enable_factory_server else 'none'",
+         "write_protection": "eval! constants.grt.force_write_protect or options.phase == 'PVT'",
+-- 
+2.42.0
+

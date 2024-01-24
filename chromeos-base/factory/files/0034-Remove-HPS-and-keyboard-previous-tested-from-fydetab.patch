@@ -1,0 +1,34 @@
+From 87ae1be0817a0ea24a628e2432803f27a6f0b4c2 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 19 Sep 2022 09:45:14 +0800
+Subject: [PATCH 34/38] Remove HPS and keyboard(previous tested) from
+ fydetab_duo_fft
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo_fft.test_list.json | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_fft.test_list.json b/py/test/test_lists/fydetab_duo_fft.test_list.json
+index 049672dd0..880f87bed 100644
+--- a/py/test/test_lists/fydetab_duo_fft.test_list.json
++++ b/py/test/test_lists/fydetab_duo_fft.test_list.json
+@@ -38,7 +38,6 @@
+         "Backlight",
+         "CameraTests",
+         "LED",
+-        "Keyboard",
+         "HWButton",
+         "Wireless",
+         "Bluetooth",
+@@ -46,7 +45,6 @@
+         "SpeakerDMic",
+         "Touchscreen",
+         "StylusAndGarage",
+-        "HPS",
+         "ExternalDisplay",
+         "USBTypeCTest",
+         "SDPerformance"
+-- 
+2.42.0
+

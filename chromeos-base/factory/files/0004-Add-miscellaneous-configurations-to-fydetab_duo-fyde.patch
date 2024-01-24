@@ -1,0 +1,85 @@
+From f462c481b6543e8d035bce8d48b27dd464f57996 Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Mon, 29 Aug 2022 11:14:48 +0800
+Subject: [PATCH 04/38] Add miscellaneous configurations to
+ fydetab_duo-fydeos_common
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ .../fydetab_duo-fydeos_common.test_list.json  | 26 +++++++------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
+
+diff --git a/py/test/test_lists/fydetab_duo-fydeos_common.test_list.json b/py/test/test_lists/fydetab_duo-fydeos_common.test_list.json
+index 2302ed033..250cded53 100644
+--- a/py/test/test_lists/fydetab_duo-fydeos_common.test_list.json
++++ b/py/test/test_lists/fydetab_duo-fydeos_common.test_list.json
+@@ -4,7 +4,10 @@
+   ],
+   "constants": {
+     "audio": {
+-      "card_name": "0"
++      "card_name": "1"
++    },
++    "grt": {
++        "re_sign_release_kernel" : false
+     },
+     "default_factory_server_url": "",
+     "__comment_default_factory_server_url": "The default URL to factory server, if not defined in locals.",
+@@ -14,7 +17,7 @@
+     "has_device_data": false,
+     "__comment_has_device_data": "When setting to true, some test objects will use the info from device data to decide to run or not.",
+     "has_ec_pubkey": false,
+-    "has_fan": true,
++    "has_fan": false,
+     "has_keybox": false,
+     "__comment_has_keybox": "Set to true if factory provisioning for Widevine keyboxes is needed. Note that the provisioning process is only available in AMD project.",
+     "hwid_need_vpd": false,
+@@ -40,7 +43,7 @@
+     },
+     "rma_mode": false,
+     "sd": {
+-      "sysfs_path": ""
++      "sysfs_path": "/sys/devices/platform/fe2c0000.mmc/mmc_host/"
+     },
+     "__comment_sd_sysfs_path": "Use 'udevadm monitor' to find out udev sysfs path.",
+     "typea_usb": {
+@@ -55,24 +58,14 @@
+     },
+     "typec_usb": {
+       "left": {
+-        "usb2_sysfs_path": "/sys/devices/pci0000:00/0000:00:xx.y/usb1/?-?",
+-        "usb3_sysfs_path": "/sys/devices/pci0000:00/0000:00:xx.y/usb2/?-?",
++        "usb2_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
++        "usb3_sysfs_path": "/sys/devices/platform/fc800000.usb/usb1/?-?",
+         "tbt_controller_port": "0-1.*",
+         "usbpd_id": -1,
+         "display_info": [
+           "DisplayPort",
+           "DP-1"
+         ]
+-      },
+-      "right": {
+-        "usb2_sysfs_path": "/sys/devices/pci0000:00/0000:00:xx.y/usb1/?-?",
+-        "usb3_sysfs_path": "/sys/devices/pci0000:00/0000:00:xx.y/usb2/?-?",
+-        "tbt_controller_port": "0-3.*",
+-        "usbpd_id": -1,
+-        "display_info": [
+-          "DisplayPort",
+-          "DP-2"
+-        ]
+       }
+     },
+     "update_firmware": {
+@@ -1315,8 +1308,7 @@
+     "USBTypeCManualTest": {
+       "inherit": "FlattenGroup",
+       "subtests": [
+-        "USBTypeCManualLeft",
+-        "USBTypeCManualRight"
++        "USBTypeCManualLeft"
+       ]
+     },
+     "USBTypeCTest": "USBTypeCManualTest",
+-- 
+2.42.0
+

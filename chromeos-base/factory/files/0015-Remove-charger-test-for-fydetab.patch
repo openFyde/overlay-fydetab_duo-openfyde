@@ -1,0 +1,25 @@
+From 73cd7fa8e70edeefeaa7c02acce76043acfd64da Mon Sep 17 00:00:00 2001
+From: Su Yue <glass@fydeos.io>
+Date: Sun, 4 Sep 2022 21:39:08 +0800
+Subject: [PATCH 15/38] Remove charger test for fydetab
+
+Signed-off-by: Su Yue <glass@fydeos.io>
+---
+ py/test/test_lists/fydetab_duo_smt.test_list.json | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/py/test/test_lists/fydetab_duo_smt.test_list.json b/py/test/test_lists/fydetab_duo_smt.test_list.json
+index eea63a0fd..a80f4f22b 100644
+--- a/py/test/test_lists/fydetab_duo_smt.test_list.json
++++ b/py/test/test_lists/fydetab_duo_smt.test_list.json
+@@ -54,7 +54,6 @@
+         "SMTBatterySysfs",
+         "SMTWifiSSIDList",
+         "ChargerTypeDetection",
+-        "ChargeDischargeCurrent",
+         "PartitionTable",
+         "VerifyRootPartition"
+       ]
+-- 
+2.42.0
+
