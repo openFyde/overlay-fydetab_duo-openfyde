@@ -1,4 +1,4 @@
-media-libs/cros-camera-hal-usb::chromiumos
-chromeos-base/factory::chromiumos
+#media-libs/cros-camera-hal-usb::chromiumos
+#chromeos-base/factory::chromiumos
 chromeos-base/biod::chromiumos
 sys-kernel/linux-firmware::baseboard-inaugural
