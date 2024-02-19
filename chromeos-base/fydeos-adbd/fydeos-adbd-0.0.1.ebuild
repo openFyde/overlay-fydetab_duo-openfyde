@@ -4,9 +4,9 @@
 EAPI=7
 
 DESCRIPTION="FydeOS adbd service"
-HOMEPAGE="http://fydeos.com"
+HOMEPAGE="https://fydeos.io"
 
-LICENSE="BSD-Google"
+LICENSE="BSD-Fyde"
 SLOT="0"
 KEYWORDS="arm arm64"
 IUSE=""
