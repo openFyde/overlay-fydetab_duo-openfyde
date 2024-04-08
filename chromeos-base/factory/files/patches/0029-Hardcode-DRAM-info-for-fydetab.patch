@@ -8,11 +8,9 @@ Signed-off-by: Su Yue <glass@fydeos.io>
  py/probe/functions/generic_dram.py | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/py/probe/functions/generic_dram.py b/py/probe/functions/generic_dram.py
-index a42f39d1b..c06414c4f 100644
 --- a/py/probe/functions/generic_dram.py
 +++ b/py/probe/functions/generic_dram.py
-@@ -8,7 +8,6 @@ from cros.factory.probe.lib import cached_probe_function
+@@ -8,7 +8,6 @@
  from cros.factory.utils import process_utils
  from cros.factory.utils import sys_utils
  
@@ -20,7 +18,7 @@ index a42f39d1b..c06414c4f 100644
  class GenericDRAMFunction(cached_probe_function.CachedProbeFunction):
    """Probe the generic DRAM information."""
  
-@@ -17,6 +16,8 @@ class GenericDRAMFunction(cached_probe_function.CachedProbeFunction):
+@@ -17,6 +16,8 @@
  
    @classmethod
    def ProbeAllDevices(cls):
@@ -29,6 +27,3 @@ index a42f39d1b..c06414c4f 100644
      """Combine mosys memory timing and geometry information."""
      # TODO(tammo): Document why mosys cannot load i2c_dev itself.
      sys_utils.LoadKernelModule('i2c_dev', error_on_fail=False)
--- 
-2.42.0
-

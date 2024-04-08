@@ -1,0 +1,83 @@
+{
+  "inherit": [
+    "fydetab_duo_common.test_list"
+  ],
+  "constants": {
+    "grt": {
+      "force_write_protect": false,
+      "__comment_force_write_protect": "*** Write protection is required for mass production and shippable devices. By default we enable write protection starting from PVT stages, but you can start trying write protection earlier by this option.",
+      "cbi_eeprom_wp_status": "Locked",
+      "__comment_cbi_eeprom_wp_status": "Set this to 'Absent' for board without CBI EEPROM. Set this to 'Unlocked' for MLB layouts which requires CBI WP being disabled in pre-PVT and enabled in PVT.",
+      "collect_zero_touch_ids": false,
+      "ec_pubkey_path": null,
+      "ec_pubkey_hash": null,
+      "enable_zero_touch": false,
+      "gooftool_skip_list": [
+        "clear_gbb_flags"
+      ],
+      "gooftool_waive_list": [],
+      "re_sign_release_kernel": false,
+      "__comment_re_sign_release_kernel": "Enable this if you want to finalize with a DEV signed kernel; go/cros-factory-fw-in-early-builds",
+      "secure_wipe": false
+    }
+  },
+  "definitions": {
+    "GRT": {
+      "inherit": "TestGroup",
+      "label": "GRT (FydeOS Required Tests)",
+      "locals": {
+        "station_end_upload_report": true,
+        "station": "GRT"
+      },
+      "subtests": [
+        "GRTStart",
+        "GRTItems",
+        "CheckPoint",
+        "GRTEnd",
+        "AllCheckPoint",
+        "GRTFinalize"
+      ]
+    },
+    "GRTEnd": {
+      "inherit": "TestGroup",
+      "label": "Finish",
+      "subtests": [
+        "StationEnd"
+      ]
+    },
+    "GRTFinalize": {
+      "pytest_name": "finalize",
+      "args": {
+        "enable_factory_server": "eval! constants.enable_factory_server",
+        "enforced_release_channels": "eval! ['stable'] if options.phase == 'PVT' else None",
+        "enable_zero_touch": "eval! constants.grt.enable_zero_touch",
+        "ec_pubkey_path": "eval! constants.grt.ec_pubkey_path",
+        "ec_pubkey_hash": "eval! constants.grt.ec_pubkey_hash",
+        "gooftool_skip_list": "eval! constants.grt.gooftool_skip_list",
+        "gooftool_waive_list": "eval! constants.grt.gooftool_waive_list",
+        "hwid_need_vpd": "eval! constants.hwid_need_vpd",
+        "has_ec_pubkey": "eval! constants.has_ec_pubkey",
+        "secure_wipe": "eval! constants.grt.secure_wipe",
+        "upload_method": "eval! 'shopfloor' if constants.enable_factory_server else 'none'",
+        "write_protection": "eval! constants.grt.force_write_protect or options.phase == 'PVT'",
+        "cbi_eeprom_wp_status": "eval! 'Locked' if constants.grt.cbi_eeprom_wp_status != 'Absent' and options.phase == 'PVT' else constants.grt.cbi_eeprom_wp_status"
+      }
+    },
+    "GRTItems": {
+      "inherit": "FlattenGroup",
+      "subtests": [
+        "UploadRegCodes",
+        "UploadZeroTouchIds",
+        "ClearTPMOwnerRequest"
+      ]
+    },
+    "GRTStart": {
+      "inherit": "TestGroup",
+      "label": "Prepare",
+      "subtests": [
+        "AllCheckPoint",
+        "StationStart"
+      ]
+    }
+  }
+}

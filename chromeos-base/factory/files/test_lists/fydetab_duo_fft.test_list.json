@@ -1,0 +1,61 @@
+{
+  "inherit": [
+    "fydetab_duo_common.test_list"
+  ],
+  "definitions": {
+    "FFT": {
+      "inherit": "TestGroup",
+      "label": "FFT (Final Functional Test)",
+      "locals": {
+        "station_end_upload_report": false,
+        "station": "FFT"
+      },
+      "subtests": [
+        "FFTStart",
+        "Barrier",
+        "FFTItems",
+        "CheckPoint",
+        "FFTEnd"
+      ]
+    },
+    "FFTEnd": {
+      "inherit": "TestGroup",
+      "label": "Finish",
+      "subtests": [
+        "ClearAPROHash",
+        "StationEnd",
+        "CheckPoint"
+      ]
+    },
+    "FFTItems": {
+      "inherit": "FlattenGroup",
+      "__comment": "Test plans for Final Functional Test. The FFT is usually the final stage of FATP, to make sure the system is functional, including most interactive tests.",
+      "subtests": [
+        "Probe",
+        "LidSwitch",
+        "DisplayPoint",
+        "Display",
+        "Backlight",
+        "CameraTests",
+        "LED",
+        "HWButton",
+        "Wireless",
+        "Bluetooth",
+        "AudioJack",
+        "SpeakerDMic",
+        "Touchscreen",
+        "StylusAndGarage",
+        "ExternalDisplay",
+        "USBTypeCTest",
+        "SDPerformance"
+      ]
+    },
+    "FFTStart": {
+      "inherit": "TestGroup",
+      "label": "Prepare",
+      "subtests": [
+        "StationStart"
+      ]
+    }
+  }
+}

@@ -8,18 +8,13 @@ Signed-off-by: Su Yue <glass@fydeos.io>
  py/gooftool/commands.py | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/py/gooftool/commands.py b/py/gooftool/commands.py
-index 55002c905..0991b86d5 100755
 --- a/py/gooftool/commands.py
 +++ b/py/gooftool/commands.py
-@@ -1026,6 +1026,7 @@ def Finalize(options):
-   #ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
+@@ -1288,6 +1288,7 @@
+   # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
    p = process_utils.CheckOutput("/usr/bin/fydeos_factory.sh mark_partition_bootable b", shell=True, log=True)
    logging.info(p)
 +  p = process_utils.CheckOutput("/sbin/reboot", shell=True, log=False)
  
- @Command('verify_hwid',
-          _probe_results_cmd_arg,
--- 
-2.42.0
-
+ 
+ @Command('get_firmware_hash',

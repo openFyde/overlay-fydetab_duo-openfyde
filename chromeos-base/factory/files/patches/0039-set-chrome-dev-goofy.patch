@@ -1,0 +1,17 @@
+--- a/init/goofy.d/chrome_dev.conf
++++ b/init/goofy.d/chrome_dev.conf
+@@ -7,6 +7,14 @@
+ # For complete syntax, see src/platform2/login_manager/chrome_dev.conf or
+ # original /etc/chrome_dev.conf on DUT.
+ 
++--disable-buffer-bw-compression
++--fydeos-accel-config=1
++--fydeos-accel-right-move=4
++--fydeos-accel-revert-y
++--fydeos-accel-revert-x
++--enable-zero-copy
++--fingerprint-sensor-location=power-button-top-left
++
+ --ash-hide-notifications-for-factory
+ --disable-demo-mode
+ --disable-translate

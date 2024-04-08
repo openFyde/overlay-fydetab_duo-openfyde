@@ -26,6 +26,15 @@ Signed-off-by: Su Yue <glass@fydeos.io>
    ClearFactoryVPDEntries(options)
    # GenerateStableDeviceSecret(options)
    if options.no_write_protect:
+@@ -1276,7 +1276,7 @@
+     event_log.Log('wp', fw='both', status='skipped')
+   else:
+     WriteProtect(options)
+-  VerifyCBIEEPROMWPStatus(options)
++  # VerifyCBIEEPROMWPStatus(options)
+   FpmcuInitializeEntropy(options)
+   LogSystemDetails(options)
+   UploadReport(options)
 @@ -1284,7 +1284,7 @@
    event_log.Log(WIPE_IN_PLACE)
    wipe_args = PrepareWipeArgs(options)

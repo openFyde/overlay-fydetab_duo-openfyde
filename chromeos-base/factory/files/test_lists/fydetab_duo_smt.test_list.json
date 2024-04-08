@@ -1,0 +1,176 @@
+{
+  "inherit": [
+    "fydetab_duo_common.test_list"
+  ],
+  "constants": {
+    "smt": {
+      "component_list": [
+        "audio_codec",
+        "bluetooth",
+        "cpu",
+        "dram",
+        "storage",
+        "usb_hosts",
+        "wireless"
+      ],
+      "__comment_component_list": "Can also verify firmware here if preflashed firmware for SMT stage can meet the requirements in HWID.",
+      "stress_duration_secs": 1,
+      "__comment_stress_duration_secs": "Duration of stress test (SAT, Stressful Application Test) during SMT."
+    }
+  },
+  "definitions": {
+    "SMT": {
+      "inherit": "TestGroup",
+      "label": "SMT (SA Test)",
+      "run_if": "not device.factory.end_SMT",
+      "__comment": "The stage of tests performed after SMT and before FA.  This is also known as SA (System Assembly) testing.  After SMT, most factories will do System Assembly (SA) and then System Imaging then perform SA Testing.",
+      "locals": {
+        "station_end_upload_report": true,
+        "station": "SMT"
+      },
+      "subtests": [
+        "SMTStart",
+        "SMTItems",
+        "CheckPoint",
+        "SMTEnd"
+      ]
+    },
+    "SMTBatterySysfs": {
+      "inherit": "BatterySysfs",
+      "args": {
+        "maximum_cycle_count": -1,
+        "percent_battery_wear_allowed": -1
+      }
+    },
+    "SMTComponents": {
+      "label": "Parallel Test",
+      "parallel": true,
+      "subtests": [
+        "SMTProbe",
+        "SpeakerDMic",
+        "SMTWifiSSIDList",
+        "ChargerTypeDetection",
+        "PartitionTable",
+        "VerifyRootPartition"
+      ]
+    },
+    "SMTEnd": {
+      "inherit": "TestGroup",
+      "label": "Finish",
+      "subtests": [
+        "StationEnd",
+        "CheckPoint"
+      ]
+    },
+    "SMTItems": {
+      "inherit": "FlattenGroup",
+      "subtests": [
+        "SMTComponents",
+        "SMTStress",
+        "SMTThermalLoad",
+        "LidSwitch",
+        "AudioJack",
+        "USBTypeCTest",
+        "SMTKeyboard",
+        "HWButton"
+      ]
+    },
+    "SMTKeyboard": {
+      "inherit": "Keyboard",
+      "args": {
+        "layout": "ANSI"
+      }
+    },
+    "SMTProbe": {
+      "inherit": "Probe",
+      "args": {
+        "component_list": "eval! constants.smt.component_list",
+        "config_file": "probe.json"
+      }
+    },
+    "SMTScanMLB": {
+      "inherit": "Scan",
+      "label": "Scan MLB",
+      "args": {
+        "device_data_key": "serials.mlb_serial_number",
+        "event_log_key": "mlb_serial_number",
+        "label": "i18n! MLB Serial Number"
+      }
+    },
+    "SMTScanOperatorID": {
+      "inherit": "Scan",
+      "label": "Scan Operator ID",
+      "args": {
+        "device_data_key": "factory.smt_operator_id",
+        "event_log_key": "smt_operator_id",
+        "label": "i18n! Operator ID"
+      }
+    },
+    "SMTScanStationID": {
+      "inherit": "Scan",
+      "label": "ScanStationID",
+      "args": {
+        "device_data_key": "factory.smt_station_id",
+        "event_log_key": "smt_station_id",
+        "label": "i18n! Station ID"
+      }
+    },
+    "SMTStart": {
+      "inherit": "TestGroup",
+      "label": "Prepare",
+      "subtests": [
+        "ReadDeviceDataFromVPD",
+        "SyncFactoryServer",
+        "SMTScanMLB",
+        "SMTScanOperatorID",
+        "SMTScanStationID",
+        "StationStart"
+      ]
+    },
+    "SMTStress": {
+      "inherit": "TestGroup",
+      "label": "Stress Test",
+      "parallel": true,
+      "subtests": [
+        "SMTStressCountdown",
+        "SMTStressAppTest"
+      ]
+    },
+    "SMTStressAppTest": {
+      "inherit": "StressAppTest",
+      "args": {
+        "seconds": "eval! constants.smt.stress_duration_secs"
+      }
+    },
+    "SMTStressCountdown": {
+      "pytest_name": "countdown",
+      "args": {
+        "duration_secs": "eval! constants.smt.stress_duration_secs"
+      }
+    },
+    "SMTThermalLoad": {
+      "pytest_name": "thermal_load",
+      "__comment": "Must not be run together with StressAppTest",
+      "args": {
+        "lower_threshold": 40,
+        "temperature_limit": 100,
+        "heat_up_timeout_secs": 12,
+        "duration_secs": 15
+      }
+    },
+    "SMTUpdateFirmware": {
+      "inherit": "TestGroup",
+      "label": "Update Firmware",
+      "subtests": [
+        "SyncFactoryServer",
+        "UpdateFirmware"
+      ]
+    },
+    "SMTWifiSSIDList": {
+      "inherit": "WifiSSIDList",
+      "args": {
+        "event_log_name": "SMT_basic_ssid_list"
+      }
+    }
+  }
+}

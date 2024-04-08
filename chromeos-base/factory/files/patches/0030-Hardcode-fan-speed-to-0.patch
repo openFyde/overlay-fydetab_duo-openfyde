@@ -8,11 +8,9 @@ Signed-off-by: Su Yue <glass@fydeos.io>
  py/test/pytests/countdown.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/py/test/pytests/countdown.py b/py/test/pytests/countdown.py
-index cc2d9db46..d322903d3 100644
 --- a/py/test/pytests/countdown.py
 +++ b/py/test/pytests/countdown.py
-@@ -285,7 +285,7 @@ class CountDownTest(test_case.TestCase):
+@@ -317,7 +317,7 @@
  
    def SnapshotStatus(self):
      return Status(self._dut.thermal.GetAllTemperatures(),
@@ -21,6 +19,3 @@ index cc2d9db46..d322903d3 100644
                    self._cpu_freq_manager.GetCurrentFrequency())
  
    def setUp(self):
--- 
-2.42.0
-
