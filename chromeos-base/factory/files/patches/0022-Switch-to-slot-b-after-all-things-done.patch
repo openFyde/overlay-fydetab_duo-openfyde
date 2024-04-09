@@ -10,20 +10,20 @@ Signed-off-by: Su Yue <glass@fydeos.io>
 
 --- a/py/gooftool/commands.py
 +++ b/py/gooftool/commands.py
-@@ -23,6 +23,7 @@
- from tempfile import gettempdir
- import threading
- import xmlrpc.client
-+import subprocess
- 
- from cros.factory.gooftool.common import ExecFactoryPar
- from cros.factory.gooftool.common import Shell
+@@ -53,6 +53,7 @@
+ from cros.factory.utils.debug_utils import SetupLogging
+ from cros.factory.utils import file_utils
+ from cros.factory.utils.process_utils import Spawn
++from cros.factory.utils.process_utils import CheckOutput
+ from cros.factory.utils import sys_interface
+ from cros.factory.utils import sys_utils
+ from cros.factory.utils import time_utils
 @@ -1285,6 +1286,8 @@
    wipe_args = PrepareWipeArgs(options)
  
    # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
-+  p = subprocess.Popen("/usr/bin/fydeos_factory.sh mark_partition_bootable b", stdout=subprocess.PIPE, shell=True)
-+  logging.info(p.communicate())
++  p = CheckOutput("/usr/local/factory/bin/fydeos_factory.sh mark_partition_bootable b", shell=True, log=True)
++  logging.info(p)
  
  
  @Command('get_firmware_hash',

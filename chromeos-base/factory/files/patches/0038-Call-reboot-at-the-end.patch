@@ -12,9 +12,9 @@ Signed-off-by: Su Yue <glass@fydeos.io>
 +++ b/py/gooftool/commands.py
 @@ -1288,6 +1288,7 @@
    # ExecFactoryPar('gooftool', WIPE_IN_PLACE, *wipe_args)
-   p = process_utils.CheckOutput("/usr/bin/fydeos_factory.sh mark_partition_bootable b", shell=True, log=True)
+   p = CheckOutput("/usr/local/factory/bin/fydeos_factory.sh mark_partition_bootable b", shell=True, log=True)
    logging.info(p)
-+  p = process_utils.CheckOutput("/sbin/reboot", shell=True, log=False)
++  p = CheckOutput("/sbin/reboot", shell=True, log=False)
  
  
  @Command('get_firmware_hash',
