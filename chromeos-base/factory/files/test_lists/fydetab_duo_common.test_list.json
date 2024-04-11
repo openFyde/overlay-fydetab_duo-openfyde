@@ -1148,7 +1148,10 @@
     },
     "Touchscreen": {
       "pytest_name": "touchscreen",
-      "run_if": "not constants.has_device_data or device.component.has_touchscreen"
+      "run_if": "not constants.has_device_data or device.component.has_touchscreen",
+      "args": {
+        "e2e_mode": true
+      }
     },
     "TouchscreenUniformity": {
       "pytest_name": "touch_uniformity",
