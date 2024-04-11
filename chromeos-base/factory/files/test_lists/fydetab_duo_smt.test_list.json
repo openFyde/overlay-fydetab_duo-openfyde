@@ -121,9 +121,6 @@
       "subtests": [
         "ReadDeviceDataFromVPD",
         "SyncFactoryServer",
-        "SMTScanMLB",
-        "SMTScanOperatorID",
-        "SMTScanStationID",
         "StationStart"
       ]
     },

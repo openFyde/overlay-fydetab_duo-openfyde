@@ -22,7 +22,6 @@
       "inherit": "TestGroup",
       "label": "Finish",
       "subtests": [
-        "ClearAPROHash",
         "StationEnd",
         "CheckPoint"
       ]

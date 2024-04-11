@@ -66,8 +66,6 @@
     "GRTItems": {
       "inherit": "FlattenGroup",
       "subtests": [
-        "UploadRegCodes",
-        "UploadZeroTouchIds",
         "ClearTPMOwnerRequest"
       ]
     },

@@ -343,8 +343,12 @@
       "label": "Check Serial Number"
     },
     "ClearAPROHash": {
-      "pytest_name": "ap_ro_hash",
-      "label": "Clear AP RO Hash",
+      "inherit": "ClearCr50APROHash",
+      "__comment": "Make old definition as an alias of the new definition for backward compatibility"
+    },
+    "ClearCr50APROHash": {
+      "pytest_name": "cr50_ap_ro_hash",
+      "label": "Clear Cr50 AP RO Hash",
       "args": {
         "action": "clear"
       }
@@ -917,8 +921,7 @@
         "StationEndSyncFactoryServer",
         "Barrier",
         "ShopfloorNotifyEnd",
-        "Barrier",
-        "WriteDeviceDataToVPD"
+        "Barrier"
       ]
     },
     "StationEndSyncFactoryServer": {

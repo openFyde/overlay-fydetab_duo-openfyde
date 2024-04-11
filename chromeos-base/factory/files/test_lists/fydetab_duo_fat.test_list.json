@@ -46,8 +46,7 @@
         "StationStart",
         {
           "subtests": [
-            "GetDeviceInfo",
-            "WriteHWID"
+            "GetDeviceInfo"
           ]
         }
       ]
