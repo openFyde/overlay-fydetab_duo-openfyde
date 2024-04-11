@@ -1,0 +1,11 @@
+--- a/py/test/pytests/keyboard.py
++++ b/py/test/pytests/keyboard.py
+@@ -139,7 +139,7 @@
+ _DEFAULT_FN_KEYCODES_IN_FIRST_ROW = [59, 60, 61, 62, 63, 64, 65, 66, 67, 68]
+ _ESC_KEY_CODE = 1
+ _POWER_KEY_CODE = 116
+-_LOCK_KEY_CODE = 142
++_LOCK_KEY_CODE = 183
+ 
+ 
+ class KeyboardTest(test_case.TestCase):

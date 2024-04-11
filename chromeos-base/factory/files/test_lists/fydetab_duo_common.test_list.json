@@ -607,6 +607,7 @@
         "allow_multi_keys": true,
         "device_filter": "DOKING USB HID Keyboard",
         "vivaldi_keyboard": false,
+        "has_power_key": false,
         "has_numpad": "eval! device.component.has_numeric_pad or False"
       }
     },
