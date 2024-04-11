@@ -9,7 +9,7 @@
     "grt": {
         "re_sign_release_kernel" : false
     },
-    "default_factory_server_url": "",
+    "default_factory_server_url": "http://lan.dome.fydeos.com:8080",
     "__comment_default_factory_server_url": "The default URL to factory server, if not defined in locals.",
     "enable_factory_server": true,
     "__comment_enable_factory_server": "Enable factory_server. Change this to false by adding 'disable_factory_server.test_list' to beginning of inherit list in main test list. Note that some factory environment might not need a shopfloor.",
