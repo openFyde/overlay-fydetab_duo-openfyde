@@ -42,4 +42,6 @@ src_install() {
   doins firmware/*
   insinto /etc/modprobe.d
   doins modprobe.d/*
+  insinto /usr/share/alsa/ucm
+  doins -r ucm/*
 }
