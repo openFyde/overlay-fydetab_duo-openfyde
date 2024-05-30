@@ -1,0 +1,17 @@
+diff --git a/login_manager/init/scripts/write-machine-info b/login_manager/init/scripts/write-machine-info
+index 06304bacb1..3dec4ef610 100755
+--- a/login_manager/init/scripts/write-machine-info
++++ b/login_manager/init/scripts/write-machine-info
+@@ -26,6 +26,12 @@ serial_number() {
+     return
+   fi
+ 
++  serial_number=$(grep 'Serial' /proc/cpuinfo  | awk '{print $3}' | tr -d ' ')
++  if [ -n "${serial_number}" ]; then
++    echo "${serial_number}"
++    return
++  fi
++
+   if crossystem "mainfw_type?nonchrome"; then
+     # Try the SMBIOS product serial if available.
+     local smbios_pserial="/sys/devices/virtual/dmi/id/product_serial"
