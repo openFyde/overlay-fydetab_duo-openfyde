@@ -1,13 +1,13 @@
 diff --git a/ash/system/input_device_settings/input_device_settings_defaults.h b/ash/system/input_device_settings/input_device_settings_defaults.h
-index 8f9c8b5ecc7b1..37d8a02d434e2 100644
+index 8f9c8b5ecc7b1..30d09dbc5f9a0 100644
 --- a/ash/system/input_device_settings/input_device_settings_defaults.h
 +++ b/ash/system/input_device_settings/input_device_settings_defaults.h
-@@ -19,7 +19,7 @@ constexpr base::TimeDelta kDefaultAutoRepeatInterval =
-     kDefaultKeyAutoRepeatInterval;
+@@ -20,7 +20,7 @@ constexpr base::TimeDelta kDefaultAutoRepeatInterval =
  constexpr bool kDefaultAutoRepeatEnabled = true;
  constexpr bool kDefaultSuppressMetaFKeyRewrites = false;
--constexpr bool kDefaultTopRowAreFKeys = false;
-+constexpr bool kDefaultTopRowAreFKeys = true;
- constexpr bool kDefaultTopRowAreFKeysExternal = true;
+ constexpr bool kDefaultTopRowAreFKeys = false;
+-constexpr bool kDefaultTopRowAreFKeysExternal = true;
++constexpr bool kDefaultTopRowAreFKeysExternal = false;
  constexpr ui::mojom::ExtendedFkeysModifier kDefaultFkey =
      ui::mojom::ExtendedFkeysModifier::kDisabled;
+ 
