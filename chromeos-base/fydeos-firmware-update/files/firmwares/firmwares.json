@@ -1,0 +1,9 @@
+[
+  {
+    "device_id": "1bcf:28c4",
+    "device_type": "camera",
+    "version": "6.07",
+    "file": "/usr/share/fydeos-assets/firmwares/camera/STJC-SPCA2089D+GC5035-2592x1944-15f-N-ZJ-240607.bin",
+    "checksum": "315a970cfb79a1df5e92777850bbc0caf7c4160534851e661d3a40a2001b5c17"
+  }
+]
