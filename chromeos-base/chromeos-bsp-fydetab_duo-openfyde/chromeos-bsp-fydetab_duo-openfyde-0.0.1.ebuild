@@ -44,4 +44,6 @@ src_install() {
   doins modprobe.d/*
   insinto /usr/share/alsa/ucm
   doins -r ucm/*
+  insinto /etc/gesture
+  doins gesture/*
 }
