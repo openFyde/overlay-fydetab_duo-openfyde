@@ -1,0 +1,1553 @@
+commit 1e5a585862fd2b08c94c28456de9b60147b7f931
+Author: yang <yang@fydeos.io>
+Date:   Mon Jul 15 15:46:38 2024 +0800
+
+    add support for charging on the fydetab
+
+diff --git a/arch/arm/dts/rk3588s-12c-rk806-single.dtsi b/arch/arm/dts/rk3588s-12c-rk806-single.dtsi
+new file mode 100644
+index 0000000000..8fdfe47f63
+--- /dev/null
++++ b/arch/arm/dts/rk3588s-12c-rk806-single.dtsi
+@@ -0,0 +1,491 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2021 Rockchip Electronics Co., Ltd.
++ *
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++/ {
++  vbus_typec: vbus-typec {
++    compatible = "regulator-fixed";
++    regulator-name = "vbus_typec";
++    regulator-always-on;
++    regulator-boot-on;
++    regulator-min-microvolt = <5000000>;
++    regulator-max-microvolt = <5000000>;
++  };
++
++  vcc_in: vcc-in {
++    compatible = "regulator-fixed";
++    regulator-name = "vcc_in";
++    regulator-always-on;
++    regulator-boot-on;
++    regulator-min-microvolt = <12000000>;
++    regulator-max-microvolt = <12000000>;
++    vin-supply = <&vbus_typec>;
++  };
++
++  vcc_sysin: vcc-sysin {
++    compatible = "regulator-fixed";
++    regulator-name = "vcc_sysin";
++    regulator-always-on;
++    regulator-boot-on;
++    regulator-min-microvolt = <4000000>;
++    regulator-max-microvolt = <4000000>;
++    vin-supply = <&vcc_in>;
++  };
++
++   vcc_1v1_nldo_s3: vcc-1v1-nldo-s3 {
++    compatible = "regulator-fixed";
++    regulator-name = "vcc_1v1_nldo_s3";
++    regulator-always-on;
++    regulator-boot-on;
++    regulator-min-microvolt = <1100000>;
++    regulator-max-microvolt = <1100000>;
++    vin-supply = <&vcc_sysin>;
++  };
++};
++
++&i2c0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0m2_xfer>;
++	vdd_cpu_big0_s0: vdd_cpu_big0_mem_s0: rk8602@42 {
++		compatible = "rockchip,rk8602";
++		reg = <0x42>;
++		vin-supply = <&vcc_sysin>;
++		regulator-compatible = "rk860x-reg";
++		regulator-name = "vdd_cpu_big0_s0";
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <1050000>;
++		regulator-ramp-delay = <2300>;
++		rockchip,suspend-voltage-selector = <1>;
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++
++	vdd_cpu_big1_s0: vdd_cpu_big1_mem_s0: rk8603@43 {
++		compatible = "rockchip,rk8603";
++		reg = <0x43>;
++		vin-supply = <&vcc_sysin>;
++		regulator-compatible = "rk860x-reg";
++		regulator-name = "vdd_cpu_big1_s0";
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <1050000>;
++		regulator-ramp-delay = <2300>;
++		rockchip,suspend-voltage-selector = <1>;
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
++&i2c2 {
++	status = "okay";
++
++	vdd_npu_s0: vdd_npu_mem_s0: rk8602@42 {
++		compatible = "rockchip,rk8602";
++		reg = <0x42>;
++		vin-supply = <&vcc_sysin>;
++		regulator-compatible = "rk860x-reg";
++		regulator-name = "vdd_npu_s0";
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <950000>;
++		regulator-ramp-delay = <2300>;
++		rockchip,suspend-voltage-selector = <1>;
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
++&spi2 {
++	status = "okay";
++	assigned-clocks = <&cru CLK_SPI2>;
++	assigned-clock-rates = <200000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi2m2_cs0 &spi2m2_pins>;
++	num-cs = <1>;
++
++	rk806single@0 {
++		compatible = "rockchip,rk806";
++		spi-max-frequency = <1000000>;
++		reg = <0x0>;
++
++		interrupt-parent = <&gpio0>;
++		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default", "pmic-power-off";
++		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>, <&rk806_dvs2_null>, <&rk806_dvs3_null>;
++		pinctrl-1 = <&rk806_dvs1_pwrdn>;
++
++		/* 2800mv-3500mv */
++		low_voltage_threshold = <3000>;
++		/* 2700mv-3400mv */
++		shutdown_voltage_threshold = <2700>;
++		/* 140 160 */
++		shutdown_temperture_threshold = <160>;
++		hotdie_temperture_threshold = <115>;
++
++		/* 0: restart PMU;
++		 * 1: reset all the power off reset registers,
++		 *    forcing the state to switch to ACTIVE mode;
++		 * 2: Reset all the power off reset registers,
++		 *    forcing the state to switch to ACTIVE mode,
++		 *    and simultaneously pull down the RESETB PIN for 5mS before releasing
++		 */
++		pmic-reset-func = <1>;
++
++		vcc1-supply = <&vcc_sysin>;
++		vcc2-supply = <&vcc_sysin>;
++		vcc3-supply = <&vcc_sysin>;
++		vcc4-supply = <&vcc_sysin>;
++		vcc5-supply = <&vcc_sysin>;
++		vcc6-supply = <&vcc_sysin>;
++		vcc7-supply = <&vcc_sysin>;
++		vcc8-supply = <&vcc_sysin>;
++		vcc9-supply = <&vcc_sysin>;
++		vcc10-supply = <&vcc_sysin>;
++		vcc11-supply = <&vcc_2v0_pldo_s3>;
++		vcc12-supply = <&vcc_sysin>;
++		vcc13-supply = <&vcc_1v1_nldo_s3>;
++		vcc14-supply = <&vcc_1v1_nldo_s3>;
++		vcca-supply = <&vcc_sysin>;
++
++		pwrkey {
++			status = "okay";
++		};
++
++		pinctrl_rk806: pinctrl_rk806 {
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			rk806_dvs1_null: rk806_dvs1_null {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun0";
++			};
++
++			rk806_dvs1_slp: rk806_dvs1_slp {
++				pins = "gpio_pwrctrl1";
++				function = "pin_fun1";
++			};
++
++			rk806_dvs1_pwrdn: rk806_dvs1_pwrdn {
++				pins = "gpio_pwrctrl1";
++				function = "pin_fun2";
++			};
++
++			rk806_dvs1_rst: rk806_dvs1_rst {
++				pins = "gpio_pwrctrl1";
++				function = "pin_fun3";
++			};
++
++			rk806_dvs2_null: rk806_dvs2_null {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun0";
++			};
++
++			rk806_dvs2_slp: rk806_dvs2_slp {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun1";
++			};
++
++			rk806_dvs2_pwrdn: rk806_dvs2_pwrdn {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun2";
++			};
++
++			rk806_dvs2_rst: rk806_dvs2_rst {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun3";
++			};
++
++			rk806_dvs2_dvs: rk806_dvs2_dvs {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun4";
++			};
++
++			rk806_dvs2_gpio: rk806_dvs2_gpio {
++				pins = "gpio_pwrctrl2";
++				function = "pin_fun5";
++			};
++
++			rk806_dvs3_null: rk806_dvs3_null {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun0";
++			};
++
++			rk806_dvs3_slp: rk806_dvs3_slp {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun1";
++			};
++
++			rk806_dvs3_pwrdn: rk806_dvs3_pwrdn {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun2";
++			};
++
++			rk806_dvs3_rst: rk806_dvs3_rst {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun3";
++			};
++
++			rk806_dvs3_dvs: rk806_dvs3_dvs {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun4";
++			};
++
++			rk806_dvs3_gpio: rk806_dvs3_gpio {
++				pins = "gpio_pwrctrl3";
++				function = "pin_fun5";
++			};
++		};
++
++		regulators {
++			vdd_gpu_s0: vdd_gpu_mem_s0: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_gpu_s0";
++        regulator-enable-ramp-delay = <400>;
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_cpu_lit_s0: vdd_cpu_lit_mem_s0: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_cpu_lit_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_log_s0: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_log_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_vdenc_s0: vdd_vdenc_mem_s0: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <550000>;
++				regulator-max-microvolt = <950000>;
++				regulator-init-microvolt = <750000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_vdenc_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_ddr_s0: DCDC_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-ramp-delay = <12500>;
++				regulator-name = "vdd_ddr_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <850000>;
++				};
++			};
++
++			vdd2_ddr_s3: DCDC_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vdd2_ddr_s3";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_2v0_pldo_s3: DCDC_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <2000000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-name = "vdd_2v0_pldo_s3";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_3v3_s3: DCDC_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_3v3_s3";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++          regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vddq_ddr_s0: DCDC_REG9 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vddq_ddr_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8_s3: DCDC_REG10 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8_s3";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++          regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			avcc_1v8_s0: PLDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "avcc_1v8_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_1v8_s0: PLDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++          regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			avdd_1v2_s0: PLDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-name = "avdd_1v2_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vcc_3v3_s0: PLDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_3v3_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vccio_sd_s0: PLDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_sd_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			pldo6_s3: PLDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "pldo6_s3";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vdd_0v75_s3: NLDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-name = "vdd_0v75_s3";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <750000>;
++				};
++			};
++
++			vdd_ddr_pll_s0: NLDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-name = "vdd_ddr_pll_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <850000>;
++				};
++			};
++
++			avdd_0v75_s0: NLDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <750000>;
++				regulator-name = "avdd_0v75_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_0v85_s0: NLDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <850000>;
++				regulator-name = "vdd_0v85_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			nldo5_s0: NLDO_REG5 {
++				regulator-name = "nldo5_s0";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++		};
++	};
++};
+diff --git a/arch/arm/dts/rk3588s-fydetab-charge.dtsi b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+new file mode 100644
+index 0000000000..3e6257eb22
+--- /dev/null
++++ b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+@@ -0,0 +1,185 @@
++// Copyright 2024 The FydeOS Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++// Author: Yang Tsao<yang@fydeos.io>
++#include "rk3588s-12c-rk806-single.dtsi"
++#include <dt-bindings/usb/pd.h>
++
++/ {
++	leds {
++    compatible = "gpio-leds";
++
++    red_led: led-0 {
++      default-state = "off";
++      gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
++      label = "battery_charging";
++    };
++
++    green_led: led-1 {
++      default-state = "on";
++      gpios = <&gpio3 RK_PC2 GPIO_ACTIVE_HIGH>;
++      label = "battery_full";
++    };
++
++  };
++
++	charge-animation {
++		compatible = "rockchip,uboot-charge";
++		rockchip,uboot-charge-on = <1>;
++		rockchip,uboot-exit-charge-auto = <1>;
++		rockchip,uboot-exit-charge-level = <8>;
++		rockchip,uboot-low-power-voltage = <12000>;
++		rockchip,screen-on-voltage = <12200>;
++	};
++
++};
++
++&i2c6 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c6m3_xfer>;
++
++	usbc0: husb311@4e {
++    compatible = "hynetek,husb311";
++    reg = <0x4e>;
++    interrupt-parent = <&gpio0>;
++    interrupts = <RK_PC4 IRQ_TYPE_LEVEL_LOW>;
++    pinctrl-names = "default";
++    pinctrl-0 = <&usbc0_int>;
++    vbus-supply = <&vbus5v0_typec>;
++    status = "okay";
++
++    ports {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      port@0 {
++        reg = <0>;
++        usbc0_role_sw: endpoint@0 {
++          remote-endpoint = <&dwc3_0_role_switch>;
++        };
++      };
++    };
++
++    usb_con: connector {
++      compatible = "usb-c-connector";
++      label = "USB-C";
++      data-role = "dual";
++      power-role = "dual";
++      try-power-role = "sink";
++      op-sink-microwatt = <1000000>;
++            sink-pdos =
++                <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)
++          PDO_FIXED(9000, 3000, PDO_FIXED_USB_COMM)
++          PDO_FIXED(20000, 2500, PDO_FIXED_USB_COMM)>;
++            source-pdos =
++                <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
++
++      altmodes {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        altmode@0 {
++          reg = <0>;
++          svid = <0xff01>;
++          vdo = <0xffffffff>;
++        };
++      };
++
++    };
++  };
++
++	sc8886: sc8886@6b {
++    status = "okay";
++    compatible = "ti,bq25703";
++    reg = <0x6b>;
++    ti,usb-charger-detection = <&usbc0>;
++
++    interrupt-parent = <&gpio0>;
++    interrupts = <RK_PD5 IRQ_TYPE_LEVEL_LOW>;
++    otg-mode-en-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
++    pinctrl-names = "default";
++    pinctrl-0 = <&charger_ok>;
++    extcon = <&usbc0>;
++    ti,charge-current = <2500000>;
++    ti,max-input-voltage = <20000000>;
++    ti,max-input-current = <5000000>;
++    ti,max-charge-voltage = <13200000>;
++    ti,input-current = <3000000>;
++    ti,input-current-sdp = <3000000>;
++    ti,input-current-dcp = <3000000>;
++    ti,input-current-cdp = <3000000>;
++    ti,minimum-sys-voltage = <9216000>;
++    ti,otg-voltage = <5000000>;
++    ti,otg-current = <3000000>;
++    pd-charge-only = <0>;
++    regulators {
++        vbus5v0_typec: vbus5v0-typec {
++        regulator-compatible = "otg-vbus";
++        regulator-name = "vbus5v0_typec";
++    		};
++    };
++  };
++};
++
++&u2phy0 {
++  status = "okay";
++};
++
++&u2phy0_otg {
++  status = "okay";
++  rockchip,typec-vbus-det;
++};
++
++&usbdrd3_0 {
++  status = "okay";
++};
++
++&usbdrd_dwc3_0 {
++  status = "okay";
++  dr_mode = "otg";
++  usb-role-switch;
++  port {
++    #address-cells = <1>;
++    #size-cells = <0>;
++    dwc3_0_role_switch: endpoint@0 {
++      reg = <0>;
++      remote-endpoint = <&usbc0_role_sw>;
++    };
++  };
++};
++
++&usbhost_dwc3_0 {
++  status = "disabled";
++};
++
++&usbhost3_0 {
++  status = "okay";
++};
++
++&i2c5 {
++  status = "okay";
++  pinctrl-names = "default";
++  pinctrl-0 = <&i2c5m3_xfer>;
++  battery: sbs-battery@b {
++    status = "okay";
++    compatible = "sbs,sbs-battery";
++    reg = <0x0b>;
++    sbs,i2c-retry-count = <100>;
++  };
++};
++
++&pinctrl {
++  charger {
++    charger_ok: charger_ok {
++      rockchip,pins = <0 RK_PD5 RK_FUNC_GPIO &pcfg_pull_up>,
++                      <4 RK_PA6 RK_FUNC_GPIO &pcfg_pull_none>;
++    };
++  };
++
++	usb-typec {
++    usbc0_int: usbc0-int {
++      rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
++    };
++	};
++};
+diff --git a/arch/arm/dts/rk3588s-fydetab-duo.dts b/arch/arm/dts/rk3588s-fydetab-duo.dts
+index aa028d261d..be5b056bba 100644
+--- a/arch/arm/dts/rk3588s-fydetab-duo.dts
++++ b/arch/arm/dts/rk3588s-fydetab-duo.dts
+@@ -6,6 +6,7 @@
+ /dts-v1/;
+ #include "rk3588.dtsi"
+ #include "rk3588-u-boot.dtsi"
++#include "rk3588s-fydetab-charge.dtsi"
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/media/rockchip_mipi_dsi.h>
+ 
+diff --git a/configs/rk3588s_fydetab_duo_defconfig b/configs/rk3588s_fydetab_duo_defconfig
+index f047365eb1..e9021b62a8 100644
+--- a/configs/rk3588s_fydetab_duo_defconfig
++++ b/configs/rk3588s_fydetab_duo_defconfig
+@@ -956,13 +956,7 @@ CONFIG_DM_I2C=y
+ # CONFIG_SYS_I2C_IMX_LPI2C is not set
+ CONFIG_SYS_I2C_ROCKCHIP=y
+ # CONFIG_SYS_I2C_MVTWSI is not set
+-CONFIG_I2C_MUX=y
+-# CONFIG_SPL_I2C_MUX is not set
+-# CONFIG_I2C_ARB_GPIO_CHALLENGE is not set
+-# CONFIG_I2C_MUX_PCA954x is not set
+-# CONFIG_I2C_MUX_GPIO is not set
+-CONFIG_I2C_MUX_MAX96745=y
+-CONFIG_I2C_MUX_MAX96755F=y
++# CONFIG_I2C_MUX is not set
+ CONFIG_INPUT=y
+ # CONFIG_SPL_INPUT is not set
+ # CONFIG_DM_KEYBOARD is not set
+@@ -1115,8 +1109,6 @@ CONFIG_SPL_PINMUX=y
+ CONFIG_SPL_PINCONF_RECURSIVE=y
+ # CONFIG_PINCTRL_AT91 is not set
+ # CONFIG_PINCTRL_AT91PIO4 is not set
+-CONFIG_PINCTRL_MAX96745=y
+-CONFIG_PINCTRL_MAX96755F=y
+ CONFIG_PINCTRL_ROCKCHIP=y
+ CONFIG_SPL_PINCTRL_ROCKCHIP=y
+ # CONFIG_PINCTRL_SINGLE is not set
+@@ -1430,12 +1422,11 @@ CONFIG_DISPLAY=y
+ CONFIG_DRM_ROCKCHIP=y
+ CONFIG_DRM_MEM_RESERVED_SIZE_MBYTES=32
+ CONFIG_DRM_DP_HELPER=y
+-CONFIG_DRM_MAXIM_MAX96745=y
+-CONFIG_DRM_MAXIM_MAX96755F=y
++# CONFIG_DRM_MAXIM_MAX96745 is not set
++# CONFIG_DRM_MAXIM_MAX96755F is not set
+ # CONFIG_DRM_PANEL_ROHM_BU18RL82 is not set
+ # CONFIG_DRM_PANEL_MAXIM_MAX96752F is not set
+ CONFIG_DRM_ROCKCHIP_PANEL=y
+-CONFIG_DRM_ROHM_BU18XL82=y
+ # CONFIG_DRM_ROCKCHIP_DW_HDMI is not set
+ CONFIG_DRM_ROCKCHIP_DW_HDMI_QP=y
+ # CONFIG_DRM_ROCKCHIP_INNO_HDMI is not set
+@@ -1582,3 +1573,4 @@ CONFIG_OPTEE_SECURITY_LEVEL=0
+ # CONFIG_UNIT_TEST is not set
+ CONFIG_TEST_ROCKCHIP=y
+ # CONFIG_LAVA_INFO is not set
++CONFIG_POWER_FG_SBS=y
+diff --git a/drivers/power/charge/bq25700_charger.c b/drivers/power/charge/bq25700_charger.c
+index 382be6be86..71731c51d1 100644
+--- a/drivers/power/charge/bq25700_charger.c
++++ b/drivers/power/charge/bq25700_charger.c
+@@ -256,6 +256,7 @@ static void bq25703_charger_current_init(struct bq25700 *charger)
+ 	int pd_inputvol,  pd_inputcurrent;
+ 	u16 vol_idx = 0, cur_idx;
+ 	u16 temp;
++  bool charge_state;
+ 
+ 	temp = bq25700_read(charger, BQ25703_CHARGEOPTION0_REG);
+ 	temp &= (~WATCHDOG_ENSABLE);
+@@ -290,11 +291,13 @@ static void bq25703_charger_current_init(struct bq25700 *charger)
+ 		else
+ 			bq25700_write(charger, BQ25703_INPUTCURREN_REG,
+ 				      sdp_inputcurrent);
++    printf("no pd output, usb_type:%d\n", bq25700_get_usb_type());
+ 	}
+-
+-	if (bq25703_charger_status(charger))
++  charge_state = bq25703_charger_status(charger);
++	if (charge_state)
+ 		bq25700_write(charger, BQ25703_CHARGECURREN_REG,
+ 			      charge_current);
++  printf("%s, charge_state:%d\n", __func__, charge_state);
+ }
+ 
+ static int bq25700_ofdata_to_platdata(struct udevice *dev)
+diff --git a/drivers/power/charge_animation.c b/drivers/power/charge_animation.c
+index 89c5db231f..acc95bb55c 100644
+--- a/drivers/power/charge_animation.c
++++ b/drivers/power/charge_animation.c
+@@ -3,7 +3,7 @@
+  *
+  * SPDX-License-Identifier:     GPL-2.0+
+  */
+-
++#define DEBUG
+ #include <asm/io.h>
+ #include <common.h>
+ #include <boot_rkimg.h>
+@@ -73,13 +73,13 @@ struct charge_animation_priv {
+  * 2. You must set the failed image as last one and soc = -1 !!!
+  */
+ static const struct charge_image image[] = {
+-	{ .name = "battery_0.bmp", .soc = 5, .period = 600 },
+-	{ .name = "battery_1.bmp", .soc = 20, .period = 600 },
+-	{ .name = "battery_2.bmp", .soc = 40, .period = 600 },
+-	{ .name = "battery_3.bmp", .soc = 60, .period = 600 },
+-	{ .name = "battery_4.bmp", .soc = 80, .period = 600 },
+-	{ .name = "battery_5.bmp", .soc = 100, .period = 600 },
+-	{ .name = "battery_fail.bmp", .soc = -1, .period = 1000 },
++	{ .name = "fydetab_batt1.bmp", .soc = 5, .period = 600 },
++	{ .name = "fydetab_batt2.bmp", .soc = 20, .period = 600 },
++	{ .name = "fydetab_batt1.bmp", .soc = 40, .period = 600 },
++	{ .name = "fydetab_batt2.bmp", .soc = 60, .period = 600 },
++	{ .name = "fydetab_batt1.bmp", .soc = 80, .period = 600 },
++	{ .name = "fydetab_batt2.bmp", .soc = 100, .period = 600 },
++	{ .name = "fydetab_batt_fail.bmp", .soc = -1, .period = 1000 },
+ };
+ 
+ static int regulators_parse_assigned_mem_state(struct udevice *dev)
+@@ -235,7 +235,7 @@ static int charge_animation_ofdata_to_platdata(struct udevice *dev)
+ 	}
+ 
+ 	debug("mode: uboot=%d, android=%d; exit: soc=%d%%, voltage=%dmv;\n"
+-	      "lp_voltage=%d%%, screen_on=%dmv\n",
++	      "lp_voltage=%dmv, screen_on=%dmv\n",
+ 	      pdata->uboot_charge, pdata->android_charge,
+ 	      pdata->exit_charge_level, pdata->exit_charge_voltage,
+ 	      pdata->low_power_voltage, pdata->screen_on_voltage);
+@@ -1057,6 +1057,11 @@ static int fg_charger_get_device(struct udevice **fuel_gauge,
+ 		}
+ 	}
+ 
++  debug("fuel:%p, charger:%p\n", *fuel_gauge, *charger);
++  if (*charger) {
++    debug("charge online:%d, voltage:%d\n", fuel_gauge_get_chrg_online(*charger), fuel_gauge_get_voltage(*charger));
++  }
++
+ 	return (*fuel_gauge) ? 0 : -ENODEV;
+ }
+ 
+diff --git a/drivers/power/fuel_gauge/Kconfig b/drivers/power/fuel_gauge/Kconfig
+index 9d1264f093..c47172b1a6 100644
+--- a/drivers/power/fuel_gauge/Kconfig
++++ b/drivers/power/fuel_gauge/Kconfig
+@@ -58,6 +58,12 @@ config POWER_FG_RK816
+ 	help
+ 	  This adds support for RK816 fuel gauge support.
+ 
++config POWER_FG_SBS
++  bool "sbs battery support"
++  depends on DM_FUEL_GAUGE && DM_I2C
++  help
++    This adds support for SBS battery support.
++
+ config SPL_POWER_FG_RK816
+ 	bool "RK816 Fuel gauge support"
+ 	depends on DM_FUEL_GAUGE && PMIC_RK8XX
+diff --git a/drivers/power/fuel_gauge/Makefile b/drivers/power/fuel_gauge/Makefile
+index 70fd313b65..4bb820e34d 100644
+--- a/drivers/power/fuel_gauge/Makefile
++++ b/drivers/power/fuel_gauge/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_POWER_FG_CW221X) += fg_cw221x.o
+ obj-$(CONFIG_POWER_FG_MAX17042) += fg_max17042.o
+ obj-$(CONFIG_POWER_FG_RK818) += fg_rk818.o
+ obj-$(CONFIG_POWER_FG_RK816) += fg_rk816.o
++obj-$(CONFIG_POWER_FG_SBS) += fg_sbs-battery.o
+ 
+ ifdef CONFIG_SPL_BUILD
+ obj-$(CONFIG_SPL_POWER_FG_RK817) += spl_fg_rk817.o
+diff --git a/drivers/power/fuel_gauge/fg_sbs-battery.c b/drivers/power/fuel_gauge/fg_sbs-battery.c
+new file mode 100644
+index 0000000000..4aaf45c77c
+--- /dev/null
++++ b/drivers/power/fuel_gauge/fg_sbs-battery.c
+@@ -0,0 +1,190 @@
++// Copyright 2024 The FydeOS Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++// Author: Yang Tsao<yang@fydeos.io>
++#define DEBUG 1
++#include <common.h>
++#include <dm.h>
++#include <errno.h>
++#include <i2c.h>
++#include <power/fuel_gauge.h>
++#include <power/pmic.h>
++
++DECLARE_GLOBAL_DATA_PTR;
++
++#if DEBUG
++#define SBS_DBG(args...) \
++  do { \
++     printf(args); \
++  } while (0)
++#else
++#define SBS_DBG(args...)
++#endif
++
++/* battery status value bits */
++#define BATTERY_INITIALIZED   0x80
++#define BATTERY_DISCHARGING   0x40
++#define BATTERY_FULL_CHARGED    0x20
++#define BATTERY_FULL_DISCHARGED   0x10
++
++#define SBS_CURRENT_REG 0x0A
++#define SBS_VOLTAGE_REG 0x09
++#define SBS_CAPACITY_REG 0x0D
++#define SBS_TEMP_REG 0x08
++#define SBS_STATUS_REG 0x16
++
++struct sbs_info {
++  struct udevice *dev;
++  u16 i2c_retry_count;
++};
++
++static int sbs_read_int(struct sbs_info *sbs, u8 reg)
++{
++  u16 val;
++  int ret = 0;
++	int retries = sbs->i2c_retry_count;
++  while (retries >0) {
++  	ret = dm_i2c_read(sbs->dev, reg, (u8 *)&val, 2);
++		if (!ret)
++			break;
++		retries--;
++  }
++  if (ret) {
++    SBS_DBG("faile to read dev:%p, reg:%#x, ret:%d\n", sbs->dev, reg, ret);
++    return -EINVAL;
++  }
++  return val;
++}
++
++static int sbs_get_current(struct sbs_info *sbs)
++{
++	return sbs_read_int(sbs, SBS_CURRENT_REG);
++}
++
++static int sbs_update_get_current(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++
++  return sbs_get_current(sbs);
++}
++
++static bool sbs_check_charge(struct sbs_info *sbs)
++{
++  int type = sbs_read_int(sbs, SBS_STATUS_REG);
++	int current;
++	if (type < 0)
++		return false;
++	if (type & BATTERY_DISCHARGING)
++		return false;
++	current = sbs_read_int(sbs, SBS_CURRENT_REG);
++  if (current < 0)
++		return false;
++	if (current == 0 && (type & BATTERY_FULL_CHARGED))
++		return false;
++  return true;
++}
++
++static bool sbs_update_get_chrg_online(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++
++  return sbs_check_charge(sbs);
++}
++
++static int sbs_get_vol(struct sbs_info *sbs)
++{
++	return sbs_read_int(sbs, SBS_VOLTAGE_REG);
++}
++
++static int sbs_update_get_voltage(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++
++  return sbs_get_vol(sbs);
++}
++
++static int sbs_get_temperature(struct udevice *dev, int *temp)
++{
++	struct sbs_info *sbs = dev_get_priv(dev);
++  int bat_tmp = sbs_read_int(sbs, SBS_TEMP_REG);
++	if (bat_tmp == -EINVAL)
++		return bat_tmp;
++	bat_tmp = bat_tmp * 10 - 273;
++  SBS_DBG("sbs temp:%d in CEL\n", bat_tmp);
++  *temp = bat_tmp;
++	return 0;
++}
++
++static int sbs_get_soc(struct sbs_info *sbs)
++{
++	return sbs_read_int(sbs, SBS_CAPACITY_REG);
++}
++
++static int sbs_update_get_soc(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++
++  return sbs_get_soc(sbs);
++}
++
++static int sbs_capability(struct udevice *dev)
++{
++  return FG_CAP_FUEL_GAUGE;
++}
++
++static const struct udevice_id sbs_ids[] = {
++  { .compatible = "sbs,sbs-battery" },
++  { }
++};
++
++static struct dm_fuel_gauge_ops sbs_fg_ops = {
++  .capability = sbs_capability,
++  .get_soc = sbs_update_get_soc,
++  .get_voltage = sbs_update_get_voltage,
++  .get_current = sbs_update_get_current,
++  .get_temperature = sbs_get_temperature,
++  .get_chrg_online = sbs_update_get_chrg_online,
++};
++
++static int sbs_init(struct sbs_info *sbs)
++{
++	int ret = sbs_read_int(sbs, SBS_STATUS_REG);
++	if (ret < 0) {
++		SBS_DBG("battery not present\n");
++		return 0;
++	}
++	sbs_get_temperature(sbs->dev, &ret);
++  if (ret < -100 || ret > 100)
++		SBS_DBG("invalid temp:%d\n", ret);
++	return 0;
++}
++
++static int sbs_fg_probe(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++
++  sbs->dev = dev;
++  printf("sbs driver version-20240712");
++  sbs_init(sbs);
++  printf("sbs vol: %d, soc: %d\n",
++         sbs_get_vol(sbs), sbs_get_soc(sbs));
++
++  return 0;
++}
++
++static int sbs_ofdata_to_platdata(struct udevice *dev)
++{
++  struct sbs_info *sbs = dev_get_priv(dev);
++	sbs->i2c_retry_count = (u16) dev_read_u32_default(dev, "sbs,i2c-retry-count", 10);
++	return 0;
++}
++
++U_BOOT_DRIVER(sbs_fg) = {
++  .name = "sbs-battery_fg",
++  .id = UCLASS_FG,
++  .of_match = sbs_ids,
++  .probe = sbs_fg_probe,
++  .ofdata_to_platdata = sbs_ofdata_to_platdata,
++  .ops = &sbs_fg_ops,
++  .priv_auto_alloc_size = sizeof(struct sbs_info),
++};
+diff --git a/drivers/power/power_delivery/tcpci_husb311.c b/drivers/power/power_delivery/tcpci_husb311.c
+index cb2a5145ec..ed35ed6831 100644
+--- a/drivers/power/power_delivery/tcpci_husb311.c
++++ b/drivers/power/power_delivery/tcpci_husb311.c
+@@ -160,9 +160,10 @@ static int husb311_probe(struct udevice *dev)
+ 
+ 	chip->data.init = husb311_init;
+ 	chip->tcpci = tcpci_register_port(chip->udev, &chip->data);
+-	if (IS_ERR(chip->tcpci))
++	if (IS_ERR(chip->tcpci)) {
++    printf("%s, fail to register port ret:%ld\n", __func__, PTR_ERR(chip->tcpci));
+ 		return PTR_ERR(chip->tcpci);
+-
++  }
+ 	return 0;
+ }
+ 
+diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
+new file mode 100644
+index 0000000000..e6526b1381
+--- /dev/null
++++ b/include/dt-bindings/usb/pd.h
+@@ -0,0 +1,468 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DT_POWER_DELIVERY_H
++#define __DT_POWER_DELIVERY_H
++
++/* Power delivery Power Data Object definitions */
++#define PDO_TYPE_FIXED		0
++#define PDO_TYPE_BATT		1
++#define PDO_TYPE_VAR		2
++#define PDO_TYPE_APDO		3
++
++#define PDO_TYPE_SHIFT		30
++#define PDO_TYPE_MASK		0x3
++
++#define PDO_TYPE(t)	((t) << PDO_TYPE_SHIFT)
++
++#define PDO_VOLT_MASK		0x3ff
++#define PDO_CURR_MASK		0x3ff
++#define PDO_PWR_MASK		0x3ff
++
++#define PDO_FIXED_DUAL_ROLE	(1 << 29) /* Power role swap supported */
++#define PDO_FIXED_SUSPEND	(1 << 28) /* USB Suspend supported (Source) */
++#define PDO_FIXED_HIGHER_CAP	(1 << 28) /* Requires more than vSafe5V (Sink) */
++#define PDO_FIXED_EXTPOWER	(1 << 27) /* Externally powered */
++#define PDO_FIXED_USB_COMM	(1 << 26) /* USB communications capable */
++#define PDO_FIXED_DATA_SWAP	(1 << 25) /* Data role swap supported */
++#define PDO_FIXED_VOLT_SHIFT	10	/* 50mV units */
++#define PDO_FIXED_CURR_SHIFT	0	/* 10mA units */
++
++#define PDO_FIXED_VOLT(mv)	((((mv) / 50) & PDO_VOLT_MASK) << PDO_FIXED_VOLT_SHIFT)
++#define PDO_FIXED_CURR(ma)	((((ma) / 10) & PDO_CURR_MASK) << PDO_FIXED_CURR_SHIFT)
++
++#define PDO_FIXED(mv, ma, flags)			\
++	(PDO_TYPE(PDO_TYPE_FIXED) | (flags) |		\
++	 PDO_FIXED_VOLT(mv) | PDO_FIXED_CURR(ma))
++
++#define VSAFE5V 5000 /* mv units */
++
++#define PDO_BATT_MAX_VOLT_SHIFT	20	/* 50mV units */
++#define PDO_BATT_MIN_VOLT_SHIFT	10	/* 50mV units */
++#define PDO_BATT_MAX_PWR_SHIFT	0	/* 250mW units */
++
++#define PDO_BATT_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MIN_VOLT_SHIFT)
++#define PDO_BATT_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_BATT_MAX_VOLT_SHIFT)
++#define PDO_BATT_MAX_POWER(mw) ((((mw) / 250) & PDO_PWR_MASK) << PDO_BATT_MAX_PWR_SHIFT)
++
++#define PDO_BATT(min_mv, max_mv, max_mw)			\
++	(PDO_TYPE(PDO_TYPE_BATT) | PDO_BATT_MIN_VOLT(min_mv) |	\
++	 PDO_BATT_MAX_VOLT(max_mv) | PDO_BATT_MAX_POWER(max_mw))
++
++#define PDO_VAR_MAX_VOLT_SHIFT	20	/* 50mV units */
++#define PDO_VAR_MIN_VOLT_SHIFT	10	/* 50mV units */
++#define PDO_VAR_MAX_CURR_SHIFT	0	/* 10mA units */
++
++#define PDO_VAR_MIN_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MIN_VOLT_SHIFT)
++#define PDO_VAR_MAX_VOLT(mv) ((((mv) / 50) & PDO_VOLT_MASK) << PDO_VAR_MAX_VOLT_SHIFT)
++#define PDO_VAR_MAX_CURR(ma) ((((ma) / 10) & PDO_CURR_MASK) << PDO_VAR_MAX_CURR_SHIFT)
++
++#define PDO_VAR(min_mv, max_mv, max_ma)				\
++	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
++	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
++
++#define APDO_TYPE_PPS		0
++
++#define PDO_APDO_TYPE_SHIFT	28	/* Only valid value currently is 0x0 - PPS */
++#define PDO_APDO_TYPE_MASK	0x3
++
++#define PDO_APDO_TYPE(t)	((t) << PDO_APDO_TYPE_SHIFT)
++
++#define PDO_PPS_APDO_MAX_VOLT_SHIFT	17	/* 100mV units */
++#define PDO_PPS_APDO_MIN_VOLT_SHIFT	8	/* 100mV units */
++#define PDO_PPS_APDO_MAX_CURR_SHIFT	0	/* 50mA units */
++
++#define PDO_PPS_APDO_VOLT_MASK	0xff
++#define PDO_PPS_APDO_CURR_MASK	0x7f
++
++#define PDO_PPS_APDO_MIN_VOLT(mv)	\
++	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MIN_VOLT_SHIFT)
++#define PDO_PPS_APDO_MAX_VOLT(mv)	\
++	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MAX_VOLT_SHIFT)
++#define PDO_PPS_APDO_MAX_CURR(ma)	\
++	((((ma) / 50) & PDO_PPS_APDO_CURR_MASK) << PDO_PPS_APDO_MAX_CURR_SHIFT)
++
++#define PDO_PPS_APDO(min_mv, max_mv, max_ma)					\
++	(PDO_TYPE(PDO_TYPE_APDO) | PDO_APDO_TYPE(APDO_TYPE_PPS) |		\
++	 PDO_PPS_APDO_MIN_VOLT(min_mv) | PDO_PPS_APDO_MAX_VOLT(max_mv) |	\
++	 PDO_PPS_APDO_MAX_CURR(max_ma))
++
++ /*
++  * Based on "Table 6-14 Fixed Supply PDO - Sink" of "USB Power Delivery Specification Revision 3.0,
++  * Version 1.2"
++  * Initial current capability of the new source when vSafe5V is applied.
++  */
++#define FRS_DEFAULT_POWER      1
++#define FRS_5V_1P5A            2
++#define FRS_5V_3A              3
++
++/*
++ * SVDM Identity Header
++ * --------------------
++ * <31>     :: data capable as a USB host
++ * <30>     :: data capable as a USB device
++ * <29:27>  :: product type (UFP / Cable / VPD)
++ * <26>     :: modal operation supported (1b == yes)
++ * <25:23>  :: product type (DFP) (SVDM version 2.0+ only; set to zero in version 1.0)
++ * <22:21>  :: connector type (SVDM version 2.0+ only; set to zero in version 1.0)
++ * <20:16>  :: Reserved, Shall be set to zero
++ * <15:0>   :: USB-IF assigned VID for this cable vendor
++ */
++
++/* PD Rev2.0 definition */
++#define IDH_PTYPE_UNDEF		0
++
++/* SOP Product Type (UFP) */
++#define IDH_PTYPE_NOT_UFP       0
++#define IDH_PTYPE_HUB           1
++#define IDH_PTYPE_PERIPH        2
++#define IDH_PTYPE_PSD           3
++#define IDH_PTYPE_AMA           5
++
++/* SOP' Product Type (Cable Plug / VPD) */
++#define IDH_PTYPE_NOT_CABLE     0
++#define IDH_PTYPE_PCABLE        3
++#define IDH_PTYPE_ACABLE        4
++#define IDH_PTYPE_VPD           6
++
++/* SOP Product Type (DFP) */
++#define IDH_PTYPE_NOT_DFP       0
++#define IDH_PTYPE_DFP_HUB       1
++#define IDH_PTYPE_DFP_HOST      2
++#define IDH_PTYPE_DFP_PB        3
++
++#define VDO_IDH(usbh, usbd, ufp_cable, is_modal, dfp, conn, vid)                \
++	((usbh) << 31 | (usbd) << 30 | ((ufp_cable) & 0x7) << 27                \
++	 | (is_modal) << 26 | ((dfp) & 0x7) << 23 | ((conn) & 0x3) << 21        \
++	 | ((vid) & 0xffff))
++
++/*
++ * Cert Stat VDO
++ * -------------
++ * <31:0>  : USB-IF assigned XID for this cable
++ */
++#define VDO_CERT(xid)		((xid) & 0xffffffff)
++
++/*
++ * Product VDO
++ * -----------
++ * <31:16> : USB Product ID
++ * <15:0>  : USB bcdDevice
++ */
++#define VDO_PRODUCT(pid, bcd)   (((pid) & 0xffff) << 16 | ((bcd) & 0xffff))
++
++/*
++ * UFP VDO (PD Revision 3.0+ only)
++ * --------
++ * <31:29> :: UFP VDO version
++ * <28>    :: Reserved
++ * <27:24> :: Device capability
++ * <23:22> :: Connector type (10b == receptacle, 11b == captive plug)
++ * <21:11> :: Reserved
++ * <10:8>  :: Vconn power (AMA only)
++ * <7>     :: Vconn required (AMA only, 0b == no, 1b == yes)
++ * <6>     :: Vbus required (AMA only, 0b == yes, 1b == no)
++ * <5:3>   :: Alternate modes
++ * <2:0>   :: USB highest speed
++ */
++/* UFP VDO Version */
++#define UFP_VDO_VER1_2		2
++
++/* Device Capability */
++#define DEV_USB2_CAPABLE	(1 << 0)
++#define DEV_USB2_BILLBOARD	(1 << 1)
++#define DEV_USB3_CAPABLE	(1 << 2)
++#define DEV_USB4_CAPABLE	(1 << 3)
++
++/* Connector Type */
++#define UFP_RECEPTACLE		2
++#define UFP_CAPTIVE		3
++
++/* Vconn Power (AMA only, set to AMA_VCONN_NOT_REQ if Vconn is not required) */
++#define AMA_VCONN_PWR_1W	0
++#define AMA_VCONN_PWR_1W5	1
++#define AMA_VCONN_PWR_2W	2
++#define AMA_VCONN_PWR_3W	3
++#define AMA_VCONN_PWR_4W	4
++#define AMA_VCONN_PWR_5W	5
++#define AMA_VCONN_PWR_6W	6
++
++/* Vconn Required (AMA only) */
++#define AMA_VCONN_NOT_REQ	0
++#define AMA_VCONN_REQ		1
++
++/* Vbus Required (AMA only) */
++#define AMA_VBUS_REQ		0
++#define AMA_VBUS_NOT_REQ	1
++
++/* Alternate Modes */
++#define UFP_ALTMODE_NOT_SUPP	0
++#define UFP_ALTMODE_TBT3	(1 << 0)
++#define UFP_ALTMODE_RECFG	(1 << 1)
++#define UFP_ALTMODE_NO_RECFG	(1 << 2)
++
++/* USB Highest Speed */
++#define UFP_USB2_ONLY		0
++#define UFP_USB32_GEN1		1
++#define UFP_USB32_4_GEN2	2
++#define UFP_USB4_GEN3		3
++
++#define VDO_UFP(ver, cap, conn, vcpwr, vcr, vbr, alt, spd)			\
++	(((ver) & 0x7) << 29 | ((cap) & 0xf) << 24 | ((conn) & 0x3) << 22	\
++	 | ((vcpwr) & 0x7) << 8 | (vcr) << 7 | (vbr) << 6 | ((alt) & 0x7) << 3	\
++	 | ((spd) & 0x7))
++
++/*
++ * DFP VDO (PD Revision 3.0+ only)
++ * --------
++ * <31:29> :: DFP VDO version
++ * <28:27> :: Reserved
++ * <26:24> :: Host capability
++ * <23:22> :: Connector type (10b == receptacle, 11b == captive plug)
++ * <21:5>  :: Reserved
++ * <4:0>   :: Port number
++ */
++#define DFP_VDO_VER1_1		1
++#define HOST_USB2_CAPABLE	(1 << 0)
++#define HOST_USB3_CAPABLE	(1 << 1)
++#define HOST_USB4_CAPABLE	(1 << 2)
++#define DFP_RECEPTACLE		2
++#define DFP_CAPTIVE		3
++
++#define VDO_DFP(ver, cap, conn, pnum)						\
++	(((ver) & 0x7) << 29 | ((cap) & 0x7) << 24 | ((conn) & 0x3) << 22	\
++	 | ((pnum) & 0x1f))
++
++/*
++ * Cable VDO (for both Passive and Active Cable VDO in PD Rev2.0)
++ * ---------
++ * <31:28> :: Cable HW version
++ * <27:24> :: Cable FW version
++ * <23:20> :: Reserved, Shall be set to zero
++ * <19:18> :: type-C to Type-A/B/C/Captive (00b == A, 01 == B, 10 == C, 11 == Captive)
++ * <17>    :: Reserved, Shall be set to zero
++ * <16:13> :: cable latency (0001 == <10ns(~1m length))
++ * <12:11> :: cable termination type (11b == both ends active VCONN req)
++ * <10>    :: SSTX1 Directionality support (0b == fixed, 1b == cfgable)
++ * <9>     :: SSTX2 Directionality support
++ * <8>     :: SSRX1 Directionality support
++ * <7>     :: SSRX2 Directionality support
++ * <6:5>   :: Vbus current handling capability (01b == 3A, 10b == 5A)
++ * <4>     :: Vbus through cable (0b == no, 1b == yes)
++ * <3>     :: SOP" controller present? (0b == no, 1b == yes)
++ * <2:0>   :: USB SS Signaling support
++ *
++ * Passive Cable VDO (PD Rev3.0+)
++ * ---------
++ * <31:28> :: Cable HW version
++ * <27:24> :: Cable FW version
++ * <23:21> :: VDO version
++ * <20>    :: Reserved, Shall be set to zero
++ * <19:18> :: Type-C to Type-C/Captive (10b == C, 11b == Captive)
++ * <17>    :: Reserved, Shall be set to zero
++ * <16:13> :: cable latency (0001 == <10ns(~1m length))
++ * <12:11> :: cable termination type (10b == Vconn not req, 01b == Vconn req)
++ * <10:9>  :: Maximum Vbus voltage (00b == 20V, 01b == 30V, 10b == 40V, 11b == 50V)
++ * <8:7>   :: Reserved, Shall be set to zero
++ * <6:5>   :: Vbus current handling capability (01b == 3A, 10b == 5A)
++ * <4:3>   :: Reserved, Shall be set to zero
++ * <2:0>   :: USB highest speed
++ *
++ * Active Cable VDO 1 (PD Rev3.0+)
++ * ---------
++ * <31:28> :: Cable HW version
++ * <27:24> :: Cable FW version
++ * <23:21> :: VDO version
++ * <20>    :: Reserved, Shall be set to zero
++ * <19:18> :: Connector type (10b == C, 11b == Captive)
++ * <17>    :: Reserved, Shall be set to zero
++ * <16:13> :: cable latency (0001 == <10ns(~1m length))
++ * <12:11> :: cable termination type (10b == one end active, 11b == both ends active VCONN req)
++ * <10:9>  :: Maximum Vbus voltage (00b == 20V, 01b == 30V, 10b == 40V, 11b == 50V)
++ * <8>     :: SBU supported (0b == supported, 1b == not supported)
++ * <7>     :: SBU type (0b == passive, 1b == active)
++ * <6:5>   :: Vbus current handling capability (01b == 3A, 10b == 5A)
++ * <4>     :: Vbus through cable (0b == no, 1b == yes)
++ * <3>     :: SOP" controller present? (0b == no, 1b == yes)
++ * <2:0>   :: USB highest speed
++ */
++/* Cable VDO Version */
++#define CABLE_VDO_VER1_0	0
++#define CABLE_VDO_VER1_3	3
++
++/* Connector Type (_ATYPE and _BTYPE are for PD Rev2.0 only) */
++#define CABLE_ATYPE		0
++#define CABLE_BTYPE		1
++#define CABLE_CTYPE		2
++#define CABLE_CAPTIVE		3
++
++/* Cable Latency */
++#define CABLE_LATENCY_1M	1
++#define CABLE_LATENCY_2M	2
++#define CABLE_LATENCY_3M	3
++#define CABLE_LATENCY_4M	4
++#define CABLE_LATENCY_5M	5
++#define CABLE_LATENCY_6M	6
++#define CABLE_LATENCY_7M	7
++#define CABLE_LATENCY_7M_PLUS	8
++
++/* Cable Termination Type */
++#define PCABLE_VCONN_NOT_REQ	0
++#define PCABLE_VCONN_REQ	1
++#define ACABLE_ONE_END		2
++#define ACABLE_BOTH_END		3
++
++/* Maximum Vbus Voltage */
++#define CABLE_MAX_VBUS_20V	0
++#define CABLE_MAX_VBUS_30V	1
++#define CABLE_MAX_VBUS_40V	2
++#define CABLE_MAX_VBUS_50V	3
++
++/* Active Cable SBU Supported/Type */
++#define ACABLE_SBU_SUPP		0
++#define ACABLE_SBU_NOT_SUPP	1
++#define ACABLE_SBU_PASSIVE	0
++#define ACABLE_SBU_ACTIVE	1
++
++/* Vbus Current Handling Capability */
++#define CABLE_CURR_DEF		0
++#define CABLE_CURR_3A		1
++#define CABLE_CURR_5A		2
++
++/* USB SuperSpeed Signaling Support (PD Rev2.0) */
++#define CABLE_USBSS_U2_ONLY	0
++#define CABLE_USBSS_U31_GEN1	1
++#define CABLE_USBSS_U31_GEN2	2
++
++/* USB Highest Speed */
++#define CABLE_USB2_ONLY		0
++#define CABLE_USB32_GEN1	1
++#define CABLE_USB32_4_GEN2	2
++#define CABLE_USB4_GEN3		3
++
++#define VDO_CABLE(hw, fw, cbl, lat, term, tx1d, tx2d, rx1d, rx2d, cur, vps, sopp, usbss) \
++	(((hw) & 0x7) << 28 | ((fw) & 0x7) << 24 | ((cbl) & 0x3) << 18		\
++	 | ((lat) & 0x7) << 13 | ((term) & 0x3) << 11 | (tx1d) << 10		\
++	 | (tx2d) << 9 | (rx1d) << 8 | (rx2d) << 7 | ((cur) & 0x3) << 5		\
++	 | (vps) << 4 | (sopp) << 3 | ((usbss) & 0x7))
++#define VDO_PCABLE(hw, fw, ver, conn, lat, term, vbm, cur, spd)			\
++	(((hw) & 0xf) << 28 | ((fw) & 0xf) << 24 | ((ver) & 0x7) << 21		\
++	 | ((conn) & 0x3) << 18 | ((lat) & 0xf) << 13 | ((term) & 0x3) << 11	\
++	 | ((vbm) & 0x3) << 9 | ((cur) & 0x3) << 5 | ((spd) & 0x7))
++#define VDO_ACABLE1(hw, fw, ver, conn, lat, term, vbm, sbu, sbut, cur, vbt, sopp, spd) \
++	(((hw) & 0xf) << 28 | ((fw) & 0xf) << 24 | ((ver) & 0x7) << 21		\
++	 | ((conn) & 0x3) << 18	| ((lat) & 0xf) << 13 | ((term) & 0x3) << 11	\
++	 | ((vbm) & 0x3) << 9 | (sbu) << 8 | (sbut) << 7 | ((cur) & 0x3) << 5	\
++	 | (vbt) << 4 | (sopp) << 3 | ((spd) & 0x7))
++
++/*
++ * Active Cable VDO 2
++ * ---------
++ * <31:24> :: Maximum operating temperature
++ * <23:16> :: Shutdown temperature
++ * <15>    :: Reserved, Shall be set to zero
++ * <14:12> :: U3/CLd power
++ * <11>    :: U3 to U0 transition mode (0b == direct, 1b == through U3S)
++ * <10>    :: Physical connection (0b == copper, 1b == optical)
++ * <9>     :: Active element (0b == redriver, 1b == retimer)
++ * <8>     :: USB4 supported (0b == yes, 1b == no)
++ * <7:6>   :: USB2 hub hops consumed
++ * <5>     :: USB2 supported (0b == yes, 1b == no)
++ * <4>     :: USB3.2 supported (0b == yes, 1b == no)
++ * <3>     :: USB lanes supported (0b == one lane, 1b == two lanes)
++ * <2>     :: Optically isolated active cable (0b == no, 1b == yes)
++ * <1>     :: Reserved, Shall be set to zero
++ * <0>     :: USB gen (0b == gen1, 1b == gen2+)
++ */
++/* U3/CLd Power*/
++#define ACAB2_U3_CLD_10MW_PLUS	0
++#define ACAB2_U3_CLD_10MW	1
++#define ACAB2_U3_CLD_5MW	2
++#define ACAB2_U3_CLD_1MW	3
++#define ACAB2_U3_CLD_500UW	4
++#define ACAB2_U3_CLD_200UW	5
++#define ACAB2_U3_CLD_50UW	6
++
++/* Other Active Cable VDO 2 Fields */
++#define ACAB2_U3U0_DIRECT	0
++#define ACAB2_U3U0_U3S		1
++#define ACAB2_PHY_COPPER	0
++#define ACAB2_PHY_OPTICAL	1
++#define ACAB2_REDRIVER		0
++#define ACAB2_RETIMER		1
++#define ACAB2_USB4_SUPP		0
++#define ACAB2_USB4_NOT_SUPP	1
++#define ACAB2_USB2_SUPP		0
++#define ACAB2_USB2_NOT_SUPP	1
++#define ACAB2_USB32_SUPP	0
++#define ACAB2_USB32_NOT_SUPP	1
++#define ACAB2_LANES_ONE		0
++#define ACAB2_LANES_TWO		1
++#define ACAB2_OPT_ISO_NO	0
++#define ACAB2_OPT_ISO_YES	1
++#define ACAB2_GEN_1		0
++#define ACAB2_GEN_2_PLUS	1
++
++#define VDO_ACABLE2(mtemp, stemp, u3p, trans, phy, ele, u4, hops, u2, u32, lane, iso, gen)	\
++	(((mtemp) & 0xff) << 24 | ((stemp) & 0xff) << 16 | ((u3p) & 0x7) << 12	\
++	 | (trans) << 11 | (phy) << 10 | (ele) << 9 | (u4) << 8			\
++	 | ((hops) & 0x3) << 6 | (u2) << 5 | (u32) << 4 | (lane) << 3		\
++	 | (iso) << 2 | (gen))
++
++/*
++ * AMA VDO (PD Rev2.0)
++ * ---------
++ * <31:28> :: Cable HW version
++ * <27:24> :: Cable FW version
++ * <23:12> :: Reserved, Shall be set to zero
++ * <11>    :: SSTX1 Directionality support (0b == fixed, 1b == cfgable)
++ * <10>    :: SSTX2 Directionality support
++ * <9>     :: SSRX1 Directionality support
++ * <8>     :: SSRX2 Directionality support
++ * <7:5>   :: Vconn power
++ * <4>     :: Vconn power required
++ * <3>     :: Vbus power required
++ * <2:0>   :: USB SS Signaling support
++ */
++#define VDO_AMA(hw, fw, tx1d, tx2d, rx1d, rx2d, vcpwr, vcr, vbr, usbss) \
++	(((hw) & 0x7) << 28 | ((fw) & 0x7) << 24			\
++	 | (tx1d) << 11 | (tx2d) << 10 | (rx1d) << 9 | (rx2d) << 8	\
++	 | ((vcpwr) & 0x7) << 5 | (vcr) << 4 | (vbr) << 3		\
++	 | ((usbss) & 0x7))
++
++#define PD_VDO_AMA_VCONN_REQ(vdo)	(((vdo) >> 4) & 1)
++#define PD_VDO_AMA_VBUS_REQ(vdo)	(((vdo) >> 3) & 1)
++
++#define AMA_USBSS_U2_ONLY	0
++#define AMA_USBSS_U31_GEN1	1
++#define AMA_USBSS_U31_GEN2	2
++#define AMA_USBSS_BBONLY	3
++
++/*
++ * VPD VDO
++ * ---------
++ * <31:28> :: HW version
++ * <27:24> :: FW version
++ * <23:21> :: VDO version
++ * <20:17> :: Reserved, Shall be set to zero
++ * <16:15> :: Maximum Vbus voltage (00b == 20V, 01b == 30V, 10b == 40V, 11b == 50V)
++ * <14>    :: Charge through current support (0b == 3A, 1b == 5A)
++ * <13>    :: Reserved, Shall be set to zero
++ * <12:7>  :: Vbus impedance
++ * <6:1>   :: Ground impedance
++ * <0>     :: Charge through support (0b == no, 1b == yes)
++ */
++#define VPD_VDO_VER1_0		0
++#define VPD_MAX_VBUS_20V	0
++#define VPD_MAX_VBUS_30V	1
++#define VPD_MAX_VBUS_40V	2
++#define VPD_MAX_VBUS_50V	3
++#define VPDCT_CURR_3A		0
++#define VPDCT_CURR_5A		1
++#define VPDCT_NOT_SUPP		0
++#define VPDCT_SUPP		1
++
++#define VDO_VPD(hw, fw, ver, vbm, curr, vbi, gi, ct)			\
++	(((hw) & 0xf) << 28 | ((fw) & 0xf) << 24 | ((ver) & 0x7) << 21	\
++	 | ((vbm) & 0x3) << 15 | (curr) << 14 | ((vbi) & 0x3f) << 7	\
++	 | ((gi) & 0x3f) << 1 | (ct))
++
++#endif /* __DT_POWER_DELIVERY_H */

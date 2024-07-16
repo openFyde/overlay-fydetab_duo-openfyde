@@ -1,0 +1,96 @@
+commit fea122760f700dfb58d7200021b22b924bb0ba1a
+Author: yang <yang@fydeos.io>
+Date:   Tue Jul 16 12:15:59 2024 +0800
+
+    set lowpower to 3% soc, remove debug log
+
+diff --git a/arch/arm/dts/rk3588s-fydetab-charge.dtsi b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+index 3e6257eb22..ced0cd5903 100644
+--- a/arch/arm/dts/rk3588s-fydetab-charge.dtsi
++++ b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+@@ -28,8 +28,8 @@
+ 		rockchip,uboot-charge-on = <1>;
+ 		rockchip,uboot-exit-charge-auto = <1>;
+ 		rockchip,uboot-exit-charge-level = <8>;
+-		rockchip,uboot-low-power-voltage = <12000>;
+-		rockchip,screen-on-voltage = <12200>;
++		rockchip,uboot-low-power-voltage = <10825>;
++		rockchip,screen-on-voltage = <10837>;
+ 	};
+ 
+ };
+diff --git a/arch/arm/mach-rockchip/boot_mode.c b/arch/arm/mach-rockchip/boot_mode.c
+index 6f4858bbad..331d16e2ff 100644
+--- a/arch/arm/mach-rockchip/boot_mode.c
++++ b/arch/arm/mach-rockchip/boot_mode.c
+@@ -116,7 +116,10 @@ int rockchip_get_boot_mode(void)
+ 		} else if (!strcmp(env_reboot_mode, "normal")) {
+ 			printf("boot mode: normal(env)\n");
+ 			return BOOT_MODE_NORMAL;
+-		}
++		} else if (!strcmp(env_reboot_mode, "charge")) {
++      printf("boot mode: charging\n");
++      return BOOT_MODE_CHARGING;
++    }
+ 	}
+ 
+ 	/*
+diff --git a/drivers/power/charge_animation.c b/drivers/power/charge_animation.c
+index acc95bb55c..5a27c08eb4 100644
+--- a/drivers/power/charge_animation.c
++++ b/drivers/power/charge_animation.c
+@@ -3,7 +3,6 @@
+  *
+  * SPDX-License-Identifier:     GPL-2.0+
+  */
+-#define DEBUG
+ #include <asm/io.h>
+ #include <common.h>
+ #include <boot_rkimg.h>
+@@ -408,6 +407,7 @@ static void autowakeup_timer_uninit(void)
+ #ifdef CONFIG_DRM_ROCKCHIP
+ static void charge_show_bmp(const char *name)
+ {
++  printf("%s, bmp:%s\n", __func__, name);
+ 	rockchip_show_bmp(name);
+ }
+ 
+@@ -439,6 +439,7 @@ static int leds_update(struct udevice *dev, int soc)
+ 			       (ledst == LEDST_ON) ? "ON" : "OFF", ret);
+ 			return ret;
+ 		}
++    printf("set charging led %s\n", (ledst == LEDST_ON) ? "ON" : "OFF");
+ 	}
+ 
+ 	if (priv->led_full) {
+@@ -449,6 +450,7 @@ static int leds_update(struct udevice *dev, int soc)
+ 			       ledst == LEDST_ON ? "ON" : "OFF", ret);
+ 			return ret;
+ 		}
++    printf("set full led %s\n", (ledst == LEDST_ON) ? "ON" : "OFF");
+ 	}
+ 
+ 	return 0;
+@@ -516,8 +518,8 @@ static int charge_extrem_low_power(struct udevice *dev)
+ 		/* Check charger online */
+ 		charging = fg_charger_get_chrg_online(dev);
+ 		if (charging <= 0) {
+-			printf("%s: Not charging, online=%d. Shutdown...\n",
+-			       __func__, charging);
++			printf("%s: Not charging, online=%d. vol:%d, low_power:%d, Shutdown...\n",
++			       __func__, charging, voltage, pdata->low_power_voltage + 50);
+ 			sys_shutdown(dev);
+ 			continue;
+ 		}
+diff --git a/drivers/power/fuel_gauge/fg_sbs-battery.c b/drivers/power/fuel_gauge/fg_sbs-battery.c
+index 4aaf45c77c..91fc09f808 100644
+--- a/drivers/power/fuel_gauge/fg_sbs-battery.c
++++ b/drivers/power/fuel_gauge/fg_sbs-battery.c
+@@ -2,7 +2,6 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ // Author: Yang Tsao<yang@fydeos.io>
+-#define DEBUG 1
+ #include <common.h>
+ #include <dm.h>
+ #include <errno.h>

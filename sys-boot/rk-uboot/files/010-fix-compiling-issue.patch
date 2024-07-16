@@ -1,0 +1,19 @@
+commit ec689d041e96c7dcd68beb5e199252f4e46704ae
+Author: yang <yang@fydeos.io>
+Date:   Tue Jul 16 12:21:00 2024 +0800
+
+    fix the issue of compiling
+
+diff --git a/drivers/power/fuel_gauge/fg_sbs-battery.c b/drivers/power/fuel_gauge/fg_sbs-battery.c
+index 91fc09f808..7494390461 100644
+--- a/drivers/power/fuel_gauge/fg_sbs-battery.c
++++ b/drivers/power/fuel_gauge/fg_sbs-battery.c
+@@ -154,7 +154,7 @@ static int sbs_init(struct sbs_info *sbs)
+ 	}
+ 	sbs_get_temperature(sbs->dev, &ret);
+   if (ret < -100 || ret > 100)
+-		SBS_DBG("invalid temp:%d\n", ret);
++		printf("invalid temp:%d\n", ret);
+ 	return 0;
+ }
+ 

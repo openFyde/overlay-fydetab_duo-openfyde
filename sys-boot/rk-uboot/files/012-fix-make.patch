@@ -1,0 +1,99 @@
+diff --git a/arch/arm/mach-rockchip/decode_bl31.py b/arch/arm/mach-rockchip/decode_bl31.py
+index 301bd15375..37c7306661 100755
+--- a/arch/arm/mach-rockchip/decode_bl31.py
++++ b/arch/arm/mach-rockchip/decode_bl31.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Copyright (C) 2020 Rockchip Electronics Co., Ltd
+ #
+diff --git a/arch/arm/mach-rockchip/make_fit_atf.py b/arch/arm/mach-rockchip/make_fit_atf.py
+index 27b6ef7597..0551d95ec1 100755
+--- a/arch/arm/mach-rockchip/make_fit_atf.py
++++ b/arch/arm/mach-rockchip/make_fit_atf.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ """
+ A script to generate FIT image source for rockchip boards
+ with ARM Trusted Firmware
+diff --git a/make.sh b/make.sh
+index 5c5901f632..857ff251a3 100755
+--- a/make.sh
++++ b/make.sh
+@@ -11,9 +11,9 @@ SUPPORT_LIST=`ls configs/*[r,p][x,v,k][0-9][0-9]*_defconfig`
+ CMD_ARGS=$1
+ 
+ ########################################### User can modify #############################################
+-RKBIN_TOOLS=../rkbin/tools
+-CROSS_COMPILE_ARM32=../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+-CROSS_COMPILE_ARM64=../prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
++RKBIN_TOOLS=${RKBIN_TOOLS:-../rkbin/tools}
++CROSS_COMPILE_ARM32=${CROSS_COMPILE_ARM32:-../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-}
++CROSS_COMPILE_ARM64=${CROSS_COMPILE_ARM64:-../prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-}
+ ########################################### User not touch #############################################
+ # Declare global INI file searching index name for every chip, update in select_chip_info()
+ RKCHIP=
+@@ -277,9 +277,9 @@ function select_toolchain()
+ 			CROSS_COMPILE_ARM64=`cat ${CC_FILE}`
+ 		else
+ 			if grep -q '^CONFIG_ARM64=y' .config ; then
+-				CROSS_COMPILE_ARM64=$(cd `dirname ${CROSS_COMPILE_ARM64}`; pwd)"/aarch64-none-linux-gnu-"
++				[ -z "$CROSS_COMPILE_ARM64" ] && CROSS_COMPILE_ARM64=$(cd `dirname ${CROSS_COMPILE_ARM64}`; pwd)"/aarch64-none-linux-gnu-"
+ 			else
+-				CROSS_COMPILE_ARM32=$(cd `dirname ${CROSS_COMPILE_ARM32}`; pwd)"/arm-linux-gnueabihf-"
++				[ -z "$CROSS_COMPILE_ARM32" ] && CROSS_COMPILE_ARM32=$(cd `dirname ${CROSS_COMPILE_ARM32}`; pwd)"/arm-linux-gnueabihf-"
+ 			fi
+ 		fi
+ 	fi
+@@ -734,8 +734,8 @@ function pack_fit_image()
+ 		echo "ERROR: No 'dtc', please: apt-get install device-tree-compiler"
+ 		exit 1
+ 	elif [ "${ARM64_TRUSTZONE}" == "y" ]; then
+-		if ! which python2 >/dev/null 2>&1 ; then
+-			echo "ERROR: No python2"
++		if ! which python >/dev/null 2>&1 ; then
++			echo "ERROR: No python"
+ 			exit 1
+ 		fi
+ 	fi
+@@ -801,7 +801,7 @@ select_ini_file
+ handle_args_late
+ sub_commands
+ clean_files
+-make PYTHON=python2 ${ARG_SPL_FWVER} ${ARG_FWVER} CROSS_COMPILE=${TOOLCHAIN} all --jobs=${JOB}
++make PYTHON=python ${ARG_SPL_FWVER} ${ARG_FWVER} CROSS_COMPILE=${TOOLCHAIN} all --jobs=${JOB}
+ pack_images
+ finish
+ echo ${TOOLCHAIN}
+diff --git a/scripts/dtc/pylibfdt/setup.py b/scripts/dtc/pylibfdt/setup.py
+index 4f7cf042bf..daf1089425 100755
+--- a/scripts/dtc/pylibfdt/setup.py
++++ b/scripts/dtc/pylibfdt/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ 
+ """
+ setup.py file for SWIG libfdt
+diff --git a/scripts/fill_scrapyard.py b/scripts/fill_scrapyard.py
+index 9a94354941..3593af92c8 100755
+--- a/scripts/fill_scrapyard.py
++++ b/scripts/fill_scrapyard.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Author: Masahiro Yamada <yamada.m@jp.panasonic.com>
+ #
+diff --git a/scripts/mailmapper b/scripts/mailmapper
+index 78b23d152d..922ada6f5f 100755
+--- a/scripts/mailmapper
++++ b/scripts/mailmapper
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Copyright (C) 2014, Masahiro Yamada <yamada.m@jp.panasonic.com>
+ #

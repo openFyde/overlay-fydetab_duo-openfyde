@@ -1,0 +1,71 @@
+commit 1829e7aa029ce2aee45654701463fcb97d211ae9
+Author: Yunhao Tian <t123yh@outlook.com>
+Date:   Fri May 12 11:12:53 2023 +0800
+
+    Add support for avdd and avee in rockchip_panel
+
+diff --git a/drivers/video/drm/rockchip_panel.c b/drivers/video/drm/rockchip_panel.c
+index 9ddb4d8196..e26d6d7244 100644
+--- a/drivers/video/drm/rockchip_panel.c
++++ b/drivers/video/drm/rockchip_panel.c
+@@ -73,6 +73,9 @@ struct rockchip_panel_priv {
+ 	struct gpio_desc spi_sdi_gpio;
+ 	struct gpio_desc spi_scl_gpio;
+ 	struct gpio_desc spi_cs_gpio;
++
++	struct gpio_desc avdd_gpio;
++	struct gpio_desc avee_gpio;
+ };
+ 
+ static inline int get_panel_cmd_type(const char *s)
+@@ -311,6 +314,16 @@ static void panel_simple_prepare(struct rockchip_panel *panel)
+ 	if (plat->delay.prepare)
+ 		mdelay(plat->delay.prepare);
+ 
++	if (dm_gpio_is_valid(&priv->avdd_gpio)) {
++		dm_gpio_set_value(&priv->avdd_gpio, 1);
++		mdelay(2);
++	}
++
++	if (dm_gpio_is_valid(&priv->avee_gpio)) {
++		dm_gpio_set_value(&priv->avee_gpio, 1);
++		mdelay(2);
++	}
++
+ 	if (dm_gpio_is_valid(&priv->reset_gpio))
+ 		dm_gpio_set_value(&priv->reset_gpio, 1);
+ 
+@@ -368,6 +381,12 @@ static void panel_simple_unprepare(struct rockchip_panel *panel)
+ 	if (dm_gpio_is_valid(&priv->enable_gpio))
+ 		dm_gpio_set_value(&priv->enable_gpio, 0);
+ 
++	if (dm_gpio_is_valid(&priv->avdd_gpio))
++		dm_gpio_set_value(&priv->avdd_gpio, 0);
++
++	if (dm_gpio_is_valid(&priv->avee_gpio))
++		dm_gpio_set_value(&priv->avee_gpio, 0);
++
+ 	if (priv->power_supply)
+ 		regulator_set_enable(priv->power_supply, plat->power_invert);
+ 
+@@ -497,6 +516,20 @@ static int rockchip_panel_probe(struct udevice *dev)
+ 		return ret;
+ 	}
+ 
++	ret = gpio_request_by_name(dev, "avdd-gpios", 0,
++				   &priv->avdd_gpio, GPIOD_IS_OUT);
++	if (ret && ret != -ENOENT) {
++		printf("%s: Cannot get AVDD GPIO: %d\n", __func__, ret);
++		return ret;
++	}
++
++	ret = gpio_request_by_name(dev, "avee-gpios", 0,
++				   &priv->avee_gpio, GPIOD_IS_OUT);
++	if (ret && ret != -ENOENT) {
++		printf("%s: Cannot get AVEE GPIO: %d\n", __func__, ret);
++		return ret;
++	}
++
+ 	ret = uclass_get_device_by_phandle(UCLASS_PANEL_BACKLIGHT, dev,
+ 					   "backlight", &priv->backlight);
+ 	if (ret && ret != -ENOENT) {

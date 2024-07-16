@@ -1,0 +1,63 @@
+commit 2428ba1fe52b0d69c55fe2b73080a775449a320c
+Author: yang <yang@fydeos.io>
+Date:   Tue Jul 16 12:41:09 2024 +0800
+
+    reduce uboot image; fix battery temp
+
+diff --git a/configs/rk3588s_fydetab_duo_defconfig b/configs/rk3588s_fydetab_duo_defconfig
+index e9021b62a8..a46b487eb5 100644
+--- a/configs/rk3588s_fydetab_duo_defconfig
++++ b/configs/rk3588s_fydetab_duo_defconfig
+@@ -276,7 +276,7 @@ CONFIG_PHYS_64BIT=y
+ #
+ # Boot images
+ #
+-# CONFIG_IMAGE_GZIP is not set
++CONFIG_IMAGE_GZIP=y
+ CONFIG_ANDROID_BOOT_IMAGE=y
+ CONFIG_FIT=y
+ CONFIG_FIT_ENABLE_SHA256_SUPPORT=y
+@@ -1126,6 +1126,7 @@ CONFIG_DM_FUEL_GAUGE=y
+ # CONFIG_SPL_DM_FUEL_GAUGE is not set
+ # CONFIG_POWER_FG_CW201X is not set
+ # CONFIG_POWER_FG_CW221X is not set
++CONFIG_POWER_FG_SBS=y
+ 
+ #
+ # IO Domain Support
+@@ -1573,4 +1574,3 @@ CONFIG_OPTEE_SECURITY_LEVEL=0
+ # CONFIG_UNIT_TEST is not set
+ CONFIG_TEST_ROCKCHIP=y
+ # CONFIG_LAVA_INFO is not set
+-CONFIG_POWER_FG_SBS=y
+diff --git a/drivers/power/fuel_gauge/fg_sbs-battery.c b/drivers/power/fuel_gauge/fg_sbs-battery.c
+index 7494390461..c2546439e6 100644
+--- a/drivers/power/fuel_gauge/fg_sbs-battery.c
++++ b/drivers/power/fuel_gauge/fg_sbs-battery.c
+@@ -108,7 +108,7 @@ static int sbs_get_temperature(struct udevice *dev, int *temp)
+   int bat_tmp = sbs_read_int(sbs, SBS_TEMP_REG);
+ 	if (bat_tmp == -EINVAL)
+ 		return bat_tmp;
+-	bat_tmp = bat_tmp * 10 - 273;
++	bat_tmp = bat_tmp / 10 - 273;
+   SBS_DBG("sbs temp:%d in CEL\n", bat_tmp);
+   *temp = bat_tmp;
+ 	return 0;
+@@ -155,6 +155,8 @@ static int sbs_init(struct sbs_info *sbs)
+ 	sbs_get_temperature(sbs->dev, &ret);
+   if (ret < -100 || ret > 100)
+ 		printf("invalid temp:%d\n", ret);
++  else
++    printf("battery temp:%d\n", ret);
+ 	return 0;
+ }
+ 
+@@ -163,7 +165,7 @@ static int sbs_fg_probe(struct udevice *dev)
+   struct sbs_info *sbs = dev_get_priv(dev);
+ 
+   sbs->dev = dev;
+-  printf("sbs driver version-20240712");
++  printf("sbs driver version-20240712\n");
+   sbs_init(sbs);
+   printf("sbs vol: %d, soc: %d\n",
+          sbs_get_vol(sbs), sbs_get_soc(sbs));
