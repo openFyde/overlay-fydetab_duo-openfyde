@@ -34,9 +34,11 @@ src_compile() {
   export CROSS_COMPILE_ARM64=/usr/bin/aarch64-cros-linux-gnu-
   echo "/usr/bin/aarch64-cros-linux-gnu-" > .cc
   ./make.sh rk3588s_fydetab_duo
+  echo $PV > .uboot_version
 }
 
 src_install() {
   insinto /boot
   doins uboot.img
+  doins .uboot_version
 }

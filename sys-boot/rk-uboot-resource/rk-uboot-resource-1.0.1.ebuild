@@ -26,9 +26,11 @@ src_prepare() {
 src_compile() {
   PACK_TOOL=${ROOT}/build/rkbin/tools/resource_tool
   ${PACK_TOOL} *.bmp
+  echo ${PV} > .resource_version
 }
 
 src_install() {
   insinto /boot
   doins resource.img
+  doins .resource_version
 }
