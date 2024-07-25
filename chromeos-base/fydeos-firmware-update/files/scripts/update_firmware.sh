@@ -4,6 +4,7 @@ SCRIPT_ROOT_DIR="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" >/dev/null 
 readonly SCRIPT_ROOT_DIR
 
 source "$SCRIPT_ROOT_DIR"/lib/camera.sh
+source "$SCRIPT_ROOT_DIR"/lib/uboot.sh
 
 set -o errexit
 set -o nounset
@@ -11,8 +12,12 @@ set -o pipefail
 
 list_upgradable_devices() {
   local result=""
+  local cameras=""
   cameras="$(list_upgradable_camera_devices)"
   result="$cameras"
+  local uboot=""
+  uboot="$(list_upgradable_uboot)"
+  result="$(printf "%s\n%s" "$result" "$uboot")"
 
   # append other types of supported devices here
  
@@ -20,19 +25,24 @@ list_upgradable_devices() {
 }
 
 upgrade_device() {
+  local target_id="$1"
   local id=""
   local find=0
   for id in "${SUPPORTED_CAMERA_DEVICE_IDS[@]}"; do
-    if [[ "$id" == "$1" ]]; then
+    if [[ "$id" == "$target_id" ]]; then
       find=1
-      update_camera_firmware "$1"
+      update_camera_firmware "$target_id"
       break
     fi
   done
   # append other types of supported devices here
-  ##
+  if [[ "$target_id" == "$UBOOT_PHONY_DEVICE_ID" ]]; then
+    find=1
+    update_uboot
+  fi
+
   if ! (( find )); then
-    error "Unsupported device ID: $1"
+    error "Unsupported device ID: $target_id"
   fi
 }
 

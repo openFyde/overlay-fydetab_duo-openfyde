@@ -1,0 +1,1 @@
+fydeos-firmware-update-0.0.1.ebuild
