@@ -31,7 +31,7 @@ count_chars() {
 update_serial_number() {
 	local serial=$1
   vpd -i RO_VPD  \
-    -p "$(count_chars "$serial")" -s "serial_number=${serial}"
+    -s "serial_number=${serial}"
   dump_vpd_log --force
 }
 
