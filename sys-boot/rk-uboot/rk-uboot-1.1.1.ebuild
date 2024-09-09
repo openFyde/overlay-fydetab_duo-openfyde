@@ -35,10 +35,12 @@ src_compile() {
   echo "/usr/bin/aarch64-cros-linux-gnu-" > .cc
   ./make.sh rk3588s_fydetab_duo
   echo $PV > .uboot_version
+  ./make.sh --spl
 }
 
 src_install() {
   insinto /boot
   doins uboot.img
   doins .uboot_version
+  doins rk3588_spl_loader_v1.*.bin
 }
