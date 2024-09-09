@@ -36,6 +36,9 @@ src_compile() {
   ./make.sh rk3588s_fydetab_duo
   echo $PV > .uboot_version
   ./make.sh --spl
+  ARG_SPL_BIN=spl/u-boot-spl.bin \
+  ARG_TPL_BIN=`ls ${RKBIN_TOOLS}/../bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_*.bin` \
+  ./make.sh --idblock
 }
 
 src_install() {
@@ -43,4 +46,5 @@ src_install() {
   doins uboot.img
   doins .uboot_version
   doins rk3588_spl_loader_v1.*.bin
+  doins idblock.bin
 }

@@ -16,6 +16,7 @@ RDEPEND="
   chromeos-base/chromeos-bsp-inaugural-openfyde
   chromeos-base/chromeos-bsp-fydetab_duo-openfyde
   chromeos-base/fydeos-firmware-update
+  sys-boot/update-spl-loader
 "
 
 DEPEND="${RDEPEND}"
