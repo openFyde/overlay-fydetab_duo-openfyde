@@ -5,6 +5,7 @@ readonly SCRIPT_ROOT_DIR
 
 source "$SCRIPT_ROOT_DIR"/lib/camera.sh
 source "$SCRIPT_ROOT_DIR"/lib/uboot.sh
+source "$SCRIPT_ROOT_DIR"/lib/spl_loader.sh
 
 set -o errexit
 set -o nounset
@@ -18,7 +19,9 @@ list_upgradable_devices() {
   local uboot=""
   uboot="$(list_upgradable_uboot)"
   result="$(printf "%s\n%s" "$result" "$uboot")"
-
+  local spl_loader=""
+  spl_loader="$(list_upgradable_spl_loader)"
+  result="$(printf "%s\n%s" "$result" "$spl_loader")"
   # append other types of supported devices here
  
   print_raw_txt_list_as_json "$result"
@@ -35,11 +38,15 @@ upgrade_device() {
       break
     fi
   done
-  # append other types of supported devices here
   if [[ "$target_id" == "$UBOOT_PHONY_DEVICE_ID" ]]; then
     find=1
     update_uboot
   fi
+  if [[ "$target_id" == "$SPL_LOADER_PHONY_DEVICE_ID" ]]; then
+    find=1
+    update_spl_loader
+  fi
+  # append other types of supported devices here
 
   if ! (( find )); then
     error "Unsupported device ID: $target_id"
