@@ -1,0 +1,68 @@
+commit 8e502ca551a5f2d4e8633998ef237c65e7704cd0
+Author: Yunhao Tian <t123yh@outlook.com>
+Date:   Wed May 17 15:27:41 2023 +0800
+
+    Enable sdcard
+
+diff --git a/arch/arm/dts/rk3588s-fydetab-duo.dts b/arch/arm/dts/rk3588s-fydetab-duo.dts
+index c76bd86ee0..ff1a4eec3f 100644
+--- a/arch/arm/dts/rk3588s-fydetab-duo.dts
++++ b/arch/arm/dts/rk3588s-fydetab-duo.dts
+@@ -64,6 +64,17 @@
+ 		pinctrl-0 = <&vcc_lcd_en_pin>;
+ 		vin-supply = <&vcc_5v0>;
+ 	};
++	
++	vcc_sd: vcc-sd-power {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_sd";
++		enable-active-high;
++		regulator-always-on;
++		regulator-boot-on;
++		gpio = <&gpio4 RK_PB4 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vcc_sd_en_pin>;
++	};
+ 
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+@@ -545,6 +556,11 @@
+ 	};
+ };
+ 
++&sdmmc {
++	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vcc_sd>;
++};
++
+ &pinctrl {
+ 	pwr {
+ 		vcc_5v0_en: vcc_5v0_en {
+@@ -570,6 +586,12 @@
+ 		};
+ 	};
+ 
++	sdcard {
++		vcc_sd_en_pin: vcc-sd-en-pin {
++			rockchip,pins = <4 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	hdmi {
+ 		hdmim0_tx0_cec: hdmim0-tx0-cec {
+ 			rockchip,pins =
+diff --git a/arch/arm/mach-rockchip/rk3588/rk3588.c b/arch/arm/mach-rockchip/rk3588/rk3588.c
+index 78ae302f23..c045517464 100644
+--- a/arch/arm/mach-rockchip/rk3588/rk3588.c
++++ b/arch/arm/mach-rockchip/rk3588/rk3588.c
+@@ -1052,6 +1052,10 @@ int arch_cpu_init(void)
+ 	 */
+ 	writel(QOS_PRIORITY_LEVEL(3, 3), VOP_M0_PRIORITY_REG);
+ 	writel(QOS_PRIORITY_LEVEL(3, 3), VOP_M1_PRIORITY_REG);
++
++	/* Disable force_jtag flag in GRF to enable 4-bit sdcard */
++	writel(0x40000000, SYS_GRF_BASE + SYS_GRF_SOC_CON6);
++
+ #endif
+ 
+ 	/* Select usb otg0 phy status to 0 that make rockusb can work at high-speed */

@@ -1,0 +1,90 @@
+commit ac1ffdf7e3f6c29a0b2515d3298ab58a95c722f3
+Author: Yunhao Tian <t123yh@outlook.com>
+Date:   Wed May 17 17:30:25 2023 +0800
+
+    Display logo on loader mode; do not display otherwise
+
+diff --git a/arch/arm/mach-rockchip/boot_rkimg.c b/arch/arm/mach-rockchip/boot_rkimg.c
+index 3e133fbc72..40c91a6ac3 100644
+--- a/arch/arm/mach-rockchip/boot_rkimg.c
++++ b/arch/arm/mach-rockchip/boot_rkimg.c
+@@ -37,6 +37,7 @@
+ #include <u-boot/sha1.h>
+ #include <u-boot/sha256.h>
+ #include <linux/usb/phy-rockchip-usb2.h>
++#include <video_rockchip.h>
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+@@ -324,6 +325,8 @@ __weak int rockchip_dnl_key_pressed(void)
+ 	return 0;
+ }
+ 
++int rockchip_show_loader_logo(void);
++
+ void setup_download_mode(void)
+ {
+ 	int vbus = 1; /* Assumed 1 in case of no rockusb */
+@@ -340,6 +343,7 @@ void setup_download_mode(void)
+ 			printf("%sentering download mode...\n",
+ 			       IS_ENABLED(CONFIG_CMD_ROCKUSB) ?
+ 			       "" : "no rockusb, ");
++			rockchip_show_loader_logo();
+ 
+ 			/* try rockusb download and brom download */
+ 			run_command("download", 0);
+diff --git a/drivers/video/drm/rockchip_display.c b/drivers/video/drm/rockchip_display.c
+index 989c063679..6c5b3adb9f 100644
+--- a/drivers/video/drm/rockchip_display.c
++++ b/drivers/video/drm/rockchip_display.c
+@@ -933,6 +933,7 @@ static int display_enable(struct display_state *state)
+ 	return 0;
+ }
+ 
++/*
+ static int display_disable(struct display_state *state)
+ {
+ 	struct crtc_state *crtc_state = &state->crtc_state;
+@@ -957,6 +958,7 @@ static int display_disable(struct display_state *state)
+ 
+ 	return 0;
+ }
++*/
+ 
+ static int display_check(struct display_state *state)
+ {
+@@ -1545,26 +1547,17 @@ void rockchip_show_fbbase(ulong fbbase)
+ 
+ int rockchip_show_bmp(const char *bmp)
+ {
+-	struct display_state *s;
+-	int ret = 0;
+-
+-	if (!bmp) {
+-		list_for_each_entry(s, &rockchip_display_list, head)
+-			display_disable(s);
+-		return -ENOENT;
+-	}
+-
+-	list_for_each_entry(s, &rockchip_display_list, head) {
+-		s->logo.mode = s->charge_logo_mode;
+-		if (load_bmp_logo(&s->logo, bmp))
+-			continue;
+-		ret = display_logo(s);
+-	}
+-
+-	return ret;
++	printf("Warning: logo %s is not shown due to display bug\n", bmp);
++	return 0;
+ }
+ 
+ int rockchip_show_logo(void)
++{
++	printf("Warning: uboot logo is not shown due to display bug\n");
++	return 0;
++}
++
++int rockchip_show_loader_logo(void)
+ {
+ 	struct display_state *s;
+ 	struct display_state *ms = NULL;

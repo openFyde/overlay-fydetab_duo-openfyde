@@ -1,0 +1,87 @@
+commit 94c766fa6f79602fb65534b0038687c127080e8c
+Author: Yunhao Tian <t123yh@outlook.com>
+Date:   Wed May 17 15:23:08 2023 +0800
+
+    match display config with kernel
+
+diff --git a/arch/arm/dts/rk3588s-fydetab-duo.dts b/arch/arm/dts/rk3588s-fydetab-duo.dts
+index 466e5ef9b7..c76bd86ee0 100644
+--- a/arch/arm/dts/rk3588s-fydetab-duo.dts
++++ b/arch/arm/dts/rk3588s-fydetab-duo.dts
+@@ -9,6 +9,19 @@
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/media/rockchip_mipi_dsi.h>
+ 
++
++#define	ROCKCHIP_VOP2_CLUSTER0	0
++#define	ROCKCHIP_VOP2_CLUSTER1	1
++#define	ROCKCHIP_VOP2_ESMART0	2
++#define	ROCKCHIP_VOP2_ESMART1	3
++#define	ROCKCHIP_VOP2_SMART0	4
++#define	ROCKCHIP_VOP2_SMART1	5
++#define	ROCKCHIP_VOP2_CLUSTER2	6
++#define	ROCKCHIP_VOP2_CLUSTER3	7
++#define	ROCKCHIP_VOP2_ESMART2	8
++#define	ROCKCHIP_VOP2_ESMART3	9
++
++
+ / {
+ 	model = "Fydetab Duo";
+ 	compatible = "fydeos,fydetab-duo", "rockchip,rk3588";
+@@ -159,6 +172,7 @@
+ 		rockchip,vo1-grf = <&vo1_grf>;
+ 		rockchip,pmu = <&pmu>;
+ 
++		disable-win-move;
+ 		status = "okay";
+ 
+ 		vop_out: ports {
+@@ -166,6 +180,9 @@
+ 			#size-cells = <0>;
+ 
+ 			vp0: port@0 {
++				cursor-win-id=<ROCKCHIP_VOP2_ESMART0>;
++				rockchip,plane-mask = <(1 << ROCKCHIP_VOP2_CLUSTER0 | 1 << ROCKCHIP_VOP2_ESMART0)>;
++				rockchip,primary-plane = <ROCKCHIP_VOP2_CLUSTER0>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <0>;
+@@ -184,6 +201,9 @@
+ 			};
+ 
+ 			vp1: port@1 {
++				cursor-win-id=<ROCKCHIP_VOP2_ESMART1>;
++				rockchip,plane-mask = <(1 << ROCKCHIP_VOP2_CLUSTER1 | 1 << ROCKCHIP_VOP2_ESMART1)>;
++				rockchip,primary-plane = <ROCKCHIP_VOP2_CLUSTER1>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <1>;
+@@ -202,6 +222,9 @@
+ 			};
+ 
+ 			vp2: port@2 {
++				cursor-win-id=<ROCKCHIP_VOP2_ESMART2>;
++				rockchip,plane-mask = <(1 << ROCKCHIP_VOP2_CLUSTER2 | 1 << ROCKCHIP_VOP2_ESMART2)>;
++				rockchip,primary-plane = <ROCKCHIP_VOP2_CLUSTER2>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <2>;
+@@ -232,6 +255,9 @@
+ 			};
+ 
+ 			vp3: port@3 {
++				cursor-win-id=<ROCKCHIP_VOP2_ESMART3>;
++				rockchip,plane-mask = <(1 << ROCKCHIP_VOP2_CLUSTER3 | 1 << ROCKCHIP_VOP2_ESMART3)>;
++				rockchip,primary-plane = <ROCKCHIP_VOP2_CLUSTER3>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				reg = <3>;
+@@ -482,7 +508,7 @@
+ 				vactive = <2560>;
+ 				hfront-porch = <60>;
+ 				hsync-len = <20>;
+-				hback-porch = <40>;
++				hback-porch = <20>;
+ 				vfront-porch = <112>;
+ 				vsync-len = <4>;
+ 				vback-porch = <18>;

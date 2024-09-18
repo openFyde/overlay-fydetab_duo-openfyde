@@ -1,0 +1,99 @@
+Index: u-boot/arch/arm/mach-rockchip/decode_bl31.py
+===================================================================
+--- u-boot.orig/arch/arm/mach-rockchip/decode_bl31.py
++++ u-boot/arch/arm/mach-rockchip/decode_bl31.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Copyright (C) 2020 Rockchip Electronics Co., Ltd
+ #
+Index: u-boot/arch/arm/mach-rockchip/make_fit_atf.py
+===================================================================
+--- u-boot.orig/arch/arm/mach-rockchip/make_fit_atf.py
++++ u-boot/arch/arm/mach-rockchip/make_fit_atf.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ """
+ A script to generate FIT image source for rockchip boards
+ with ARM Trusted Firmware
+Index: u-boot/make.sh
+===================================================================
+--- u-boot.orig/make.sh
++++ u-boot/make.sh
+@@ -11,9 +11,9 @@ SUPPORT_LIST=`ls configs/*[r,p][x,v,k][0
+ CMD_ARGS=$1
+ 
+ ########################################### User can modify #############################################
+-RKBIN_TOOLS=../rkbin/tools
+-CROSS_COMPILE_ARM32=../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+-CROSS_COMPILE_ARM64=../prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
++RKBIN_TOOLS=${RKBIN_TOOLS:-../rkbin/tools}
++CROSS_COMPILE_ARM32=${CROSS_COMPILE_ARM32:-../prebuilts/gcc/linux-x86/arm/gcc-linaro-6.3.1-2017.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-}
++CROSS_COMPILE_ARM64=${CROSS_COMPILE_ARM64:-`realpath ../prebuilts/gcc/linux-x86/aarch64/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu`/bin/aarch64-none-linux-gnu-}
+ ########################################### User not touch #############################################
+ # Declare global INI file searching index name for every chip, update in select_chip_info()
+ RKCHIP=
+@@ -269,9 +269,9 @@ function select_toolchain()
+ 			CROSS_COMPILE_ARM64=`cat ${CC_FILE}`
+ 		else
+ 			if grep -q '^CONFIG_ARM64=y' .config ; then
+-				CROSS_COMPILE_ARM64=$(cd `dirname ${CROSS_COMPILE_ARM64}`; pwd)"/aarch64-none-linux-gnu-"
++				[ -z "$CROSS_COMPILE_ARM64" ] && CROSS_COMPILE_ARM64=$(cd `dirname ${CROSS_COMPILE_ARM64}`; pwd)"/aarch64-none-linux-gnu-"
+ 			else
+-				CROSS_COMPILE_ARM32=$(cd `dirname ${CROSS_COMPILE_ARM32}`; pwd)"/arm-linux-gnueabihf-"
++				[ -z "$CROSS_COMPILE_ARM32" ] && CROSS_COMPILE_ARM32=$(cd `dirname ${CROSS_COMPILE_ARM32}`; pwd)"/arm-linux-gnueabihf-"
+ 			fi
+ 		fi
+ 	fi
+@@ -722,8 +722,8 @@ function pack_fit_image()
+ 		echo "ERROR: No 'dtc', please: apt-get install device-tree-compiler"
+ 		exit 1
+ 	elif [ "${ARM64_TRUSTZONE}" == "y" ]; then
+-		if ! which python2 >/dev/null 2>&1 ; then
+-			echo "ERROR: No python2"
++		if ! which python >/dev/null 2>&1 ; then
++			echo "ERROR: No python"
+ 			exit 1
+ 		fi
+ 	fi
+@@ -789,7 +789,7 @@ select_ini_file
+ handle_args_late
+ sub_commands
+ clean_files
+-make PYTHON=python2 CROSS_COMPILE=${TOOLCHAIN} all --jobs=${JOB}
++make PYTHON=python CROSS_COMPILE=${TOOLCHAIN} all --jobs=${JOB}
+ pack_images
+ finish
+ echo ${TOOLCHAIN}
+Index: u-boot/scripts/dtc/pylibfdt/setup.py
+===================================================================
+--- u-boot.orig/scripts/dtc/pylibfdt/setup.py
++++ u-boot/scripts/dtc/pylibfdt/setup.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ 
+ """
+ setup.py file for SWIG libfdt
+Index: u-boot/scripts/fill_scrapyard.py
+===================================================================
+--- u-boot.orig/scripts/fill_scrapyard.py
++++ u-boot/scripts/fill_scrapyard.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Author: Masahiro Yamada <yamada.m@jp.panasonic.com>
+ #
+Index: u-boot/scripts/mailmapper
+===================================================================
+--- u-boot.orig/scripts/mailmapper
++++ u-boot/scripts/mailmapper
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python2
++#!/usr/bin/env python
+ #
+ # Copyright (C) 2014, Masahiro Yamada <yamada.m@jp.panasonic.com>
+ #

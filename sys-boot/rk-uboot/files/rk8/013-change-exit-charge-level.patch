@@ -1,0 +1,13 @@
+diff --git a/arch/arm/dts/rk3588s-fydetab-charge.dtsi b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+index ced0cd5903..1716bb7704 100644
+--- a/arch/arm/dts/rk3588s-fydetab-charge.dtsi
++++ b/arch/arm/dts/rk3588s-fydetab-charge.dtsi
+@@ -27,7 +27,7 @@
+ 		compatible = "rockchip,uboot-charge";
+ 		rockchip,uboot-charge-on = <1>;
+ 		rockchip,uboot-exit-charge-auto = <1>;
+-		rockchip,uboot-exit-charge-level = <8>;
++		rockchip,uboot-exit-charge-level = <12>;
+ 		rockchip,uboot-low-power-voltage = <10825>;
+ 		rockchip,screen-on-voltage = <10837>;
+ 	};

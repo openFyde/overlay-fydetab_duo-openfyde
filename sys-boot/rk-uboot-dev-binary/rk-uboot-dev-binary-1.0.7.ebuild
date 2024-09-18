@@ -4,7 +4,7 @@
 EAPI="7"
 
 EGIT_REPO_URI="https://github.com/rockchip-linux/rkbin.git"
-EGIT_BRANCH="master"
+EGIT_COMMIT="390cc30aca9d493250e4f9d1e3e030a95602a369"
 
 inherit git-r3
 DESCRIPTION="rockchip rkbin git repo"

@@ -4,7 +4,7 @@
 EAPI="7"
 
 EGIT_REPO_URI="https://github.com/rockchip-linux/u-boot.git"
-EGIT_BRANCH="next-dev"
+#EGIT_BRANCH="linux-5.10-gen-rkr8"
 EGIT_COMMIT="63c55618fbdc36333db4cf12f7d6a28f0a178017"
 
 inherit git-r3
@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="*"
 IUSE=""
 
-RDEPEND=""
+RDEPEND="sys-boot/rk-uboot-resource"
 
 DEPEND="${RDEPEND}
   sys-boot/rk-uboot-dev-binary
@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
   default
-  eapply ${FILESDIR}/*.patch
+  eapply ${FILESDIR}/rk8/*.patch
 }
 
 src_compile() {
@@ -37,7 +37,7 @@ src_compile() {
   echo $PV > .uboot_version
   ./make.sh --spl
   ARG_SPL_BIN=spl/u-boot-spl.bin \
-  ARG_TPL_BIN=`ls ${RKBIN_TOOLS}/../bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_*.bin` \
+  ARG_TPL_BIN=`ls ${RKBIN_TOOLS}/../bin/rk35/rk3588_ddr_lp4*.bin` \
   ./make.sh --idblock
 }
 
@@ -45,6 +45,8 @@ src_install() {
   insinto /boot
   doins uboot.img
   doins .uboot_version
-  doins rk3588_spl_loader_v1.*.bin
-  doins idblock.bin
+  newins rk3588_spl_loader_v1.07.111.bin rk3588_spl_loader_v1.07.111.bin-r8
+  newins idblock.bin idblock.bin-r8
+  doins ${FILESDIR}/rk3588_spl_loader_v1.*.bin
+  doins ${FILESDIR}/idblock.bin
 }
