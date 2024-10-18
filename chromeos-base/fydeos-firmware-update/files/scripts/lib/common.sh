@@ -93,9 +93,9 @@ get_device_name() {
   local id="$1"
   local name=""
   name=$(lsusb -d "$id" | cut -d' ' -f7- || echo "")
-  if [[ -z "$name" ]]; then
-    name="$id"
-  fi
+  # if [[ -z "$name" ]]; then
+  #   name="$id"
+  # fi
   echo "$name"
 }
 

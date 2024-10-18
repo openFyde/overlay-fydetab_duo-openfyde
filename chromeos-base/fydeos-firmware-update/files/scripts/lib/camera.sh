@@ -102,7 +102,9 @@ list_upgradable_camera_devices() {
   for id in "${SUPPORTED_CAMERA_DEVICE_IDS[@]}"; do
     if result=$(_local_check_for_update "$id" 2> /dev/null); then
       name=$(get_device_name "$id")
-      combine_print_id_name_and_detail "$id" "$name" "$result"
+      if [[ -n "$name" ]]; then
+        combine_print_id_name_and_detail "$id" "$name" "$result"
+      fi
     fi
   done
 }
