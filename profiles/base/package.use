@@ -1,3 +1,2 @@
 chromeos-base/chromeos-fpmcu-unittests fuzzer
 chromeos-base/chromeos-chrome -iioservice
-app-emulation/archero archero-arm64-force archero-mali
