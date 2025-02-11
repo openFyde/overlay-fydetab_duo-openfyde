@@ -45,8 +45,6 @@ src_install() {
   insinto /boot
   doins uboot.img
   doins .uboot_version
-  newins rk3588_spl_loader_v1.07.111.bin rk3588_spl_loader_v1.07.111.bin-r8
-  newins idblock.bin idblock.bin-r8
-  doins ${FILESDIR}/rk3588_spl_loader_v1.*.bin
-  doins ${FILESDIR}/idblock.bin
+  doins rk3588_spl_loader_v1.07.111.bin
+  doins idblock.bin
 }
