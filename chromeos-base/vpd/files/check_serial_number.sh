@@ -9,7 +9,12 @@ die() {
 }
 
 get_serial_number() {
-  grep 'Serial' /proc/cpuinfo  | awk '{print $3}' | tr -d ' '
+  local sn=""
+  sn=$(grep 'Serial' /proc/cpuinfo  | awk '{print $3}' | tr -d ' ')
+  if [[ -z "$sn" ]] || [[ "$sn" = "0000000000000000" ]]; then
+    sn=$(cat /proc/device-tree/serial-number)
+  fi
+  echo "$sn"
 }
 
 is_booting_from_usb() {
