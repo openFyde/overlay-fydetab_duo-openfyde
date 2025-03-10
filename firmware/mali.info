@@ -1,0 +1,30 @@
+[    0.448261] mali fb000000.gpu: Kernel DDK version g21p0-01eac0
+[    0.448457] mali fb000000.gpu: Looking up mali-supply from device tree
+[    0.450004] mali fb000000.gpu: Looking up mem-supply from device tree
+[    0.450650] mali fb000000.gpu: Looking up mali-supply from device tree
+[    0.451287] mali fb000000.gpu: Failed to get specification_serial_number
+[    0.451314] mali fb000000.gpu: Failed to get specification_serial_number from gpu-opp-table
+[    0.451343] mali fb000000.gpu: Failed to get leakage from: gpu-opp-table
+[    0.451377] mali fb000000.gpu: Looking up mali-supply from device tree
+[    0.451402] debugfs: Directory 'fb000000.gpu-mali' with parent 'vdd_gpu_s0' already present!
+[    0.452984] mali fb000000.gpu: pvtm=888
+[    0.453447] mali fb000000.gpu: pvtm-volt-sel=4
+[    0.453520] mali fb000000.gpu: Looking up mali-supply from device tree
+[    0.453545] debugfs: Directory 'fb000000.gpu-mali' with parent 'vdd_gpu_s0' already present!
+[    0.453982] mali fb000000.gpu: Looking up mem-supply from device tree
+[    0.455649] mali fb000000.gpu: avs=0
+[    0.455709] W : [File] : drivers/gpu/arm/bifrost/platform/rk/mali_kbase_config_rk.c; [Line] : 144; [Func] : kbase_platform_rk_init(); power-off-delay-ms not available.
+[    0.456036] mali fb000000.gpu: Register LUT 000a0800 initialized for GPU arch 0x000a0806
+[    0.456053] mali fb000000.gpu: r0p0 status 5 not found in HW issues table;
+[    0.456059] mali fb000000.gpu: falling back to closest match: r0p0 status 0
+[    0.456064] mali fb000000.gpu: Execution proceeding normally with fallback match
+[    0.456068] mali fb000000.gpu: GPU identified as 0x7 arch 10.8.6 r0p0 status 0
+[    0.456124] mali fb000000.gpu: No priority control manager is configured
+[    0.456129] mali fb000000.gpu: Large page support was disabled at compile-time!
+[    0.456183] mali fb000000.gpu: No memory group manager is configured
+[    0.456197] mali fb000000.gpu: Protected memory allocator not available
+[    0.457078] mali fb000000.gpu: EM: created perf domain
+[    0.457315] mali fb000000.gpu: l=15000 h=85000 hyst=5000 l_limit=0 h_limit=800000000 h_table=0
+[    0.457913] mali fb000000.gpu: * MALI kbase_mmap_min_addr compiled to CONFIG_DEFAULT_MMAP_MIN_ADDR, no runtime update possible! *
+[    0.457922] mali fb000000.gpu: Probed as mali0
+[    2.150655] ERROR chromeos_startup: [platform.cc(1296)] Failed to normalize link /var/log/ui/ui.LATEST: No such file or directory (2)
