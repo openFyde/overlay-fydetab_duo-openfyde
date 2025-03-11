@@ -2,8 +2,7 @@
 # Distributed under the license specified in the root directory of this project.
 
 cros_post_src_install_openfyde_patches_fydetab() {
-  # make sure this hook runs after the one in project-openfyde-patches
-  # to override the default check_serial_number.sh
+  # check_serial_number.sh will source serial_number_helper.sh
   insinto /usr/share/cros/init
-  doins ${FYDETAB_DUO_OPENFYDE_BASHRC_FILEPATH}/check_serial_number.sh
+  doins ${FYDETAB_DUO_OPENFYDE_BASHRC_FILEPATH}/serial_number_helper.sh
 }
