@@ -16,3 +16,5 @@ fydetab_duo-device-config: &fydetab_duo_device_config
     internal-backlight-no-als-battery-brightness: "50"
   modem:
     firmware-variant: "EC25"
+  fingerprint:
+    board: "fydetab_duo"
