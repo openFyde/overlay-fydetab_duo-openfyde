@@ -1,0 +1,52 @@
+diff --git a/Android.bp b/Android.bp
+index 082af5b..52ad66b 100644
+--- a/Android.bp
++++ b/Android.bp
+@@ -89,6 +89,7 @@ cc_library_static {
+         "src/activity_log.cc",
+         "src/box_filter_interpreter.cc",
+         "src/click_wiggle_filter_interpreter.cc",
++        "src/distance_filter_interpreter.cc",
+         "src/file_util.cc",
+         "src/filter_interpreter.cc",
+         "src/finger_merge_filter_interpreter.cc",
+diff --git a/Makefile b/Makefile
+index 65eccc7..b606b43 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,6 +11,7 @@ SO_OBJECTS=\
+ 	$(OBJDIR)/activity_log.o \
+ 	$(OBJDIR)/box_filter_interpreter.o \
+ 	$(OBJDIR)/click_wiggle_filter_interpreter.o \
++	$(OBJDIR)/distance_filter_interpreter.o \
+ 	$(OBJDIR)/file_util.o \
+ 	$(OBJDIR)/filter_interpreter.o \
+ 	$(OBJDIR)/finger_merge_filter_interpreter.o \
+diff --git a/src/gestures.cc b/src/gestures.cc
+index 2907e3e..73ac141 100644
+--- a/src/gestures.cc
++++ b/src/gestures.cc
+@@ -10,6 +10,7 @@
+ #include "include/accel_filter_interpreter.h"
+ #include "include/box_filter_interpreter.h"
+ #include "include/click_wiggle_filter_interpreter.h"
++#include "include/distance_filter_interpreter.h"
+ #include "include/finger_merge_filter_interpreter.h"
+ #include "include/finger_metrics.h"
+ #include "include/fling_stop_filter_interpreter.h"
+@@ -548,6 +549,7 @@ void GestureInterpreter::InitializeTouchpad(void) {
+   temp = new IirFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+   temp = new LookaheadFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+   temp = new BoxFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
++  temp = new DistanceFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+   temp = new StationaryWiggleFilterInterpreter(prop_reg_.get(), temp,
+                                                tracer_.get());
+   temp = new SensorJumpFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+@@ -584,6 +586,7 @@ void GestureInterpreter::InitializeTouchpad2(void) {
+                                               tracer_.get());
+   temp = new LookaheadFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+   temp = new BoxFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
++  temp = new DistanceFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
+   temp = new StationaryWiggleFilterInterpreter(prop_reg_.get(), temp,
+                                                tracer_.get());
+   temp = new AccelFilterInterpreter(prop_reg_.get(), temp, tracer_.get());
