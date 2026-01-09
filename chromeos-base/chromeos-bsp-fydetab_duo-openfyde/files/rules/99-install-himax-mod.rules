@@ -1,1 +1,2 @@
 ACTION=="add", KERNEL=="mali0", SUBSYSTEM=="misc", RUN+="/sbin/initctl start --quiet --no-wait init_himax_touchscreen"
+ACTION=="add", DRIVER=="panthor", RUN+="/sbin/initctl start --quiet --no-wait init_himax_touchscreen"

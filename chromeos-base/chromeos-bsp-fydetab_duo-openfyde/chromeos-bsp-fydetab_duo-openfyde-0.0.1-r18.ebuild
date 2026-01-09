@@ -1,1 +1,0 @@
-chromeos-bsp-fydetab_duo-openfyde-0.0.1.ebuild
