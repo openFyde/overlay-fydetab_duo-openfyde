@@ -1,3 +1,4 @@
 inaugural-openfyde:base
 tablet:base
 openfyde-fingerprint:base
+fydroid:arm64/arcpp-rvc
