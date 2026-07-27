@@ -1,0 +1,9 @@
+# Keep the Fydetab Duo detachable keyboard (05ac:8502) across suspend/resume.
+#
+# CONFIG_USB_DEFAULT_PERSIST is not enabled, so the keyboard defaults to
+# persist=0. Its port loses power while suspended, which makes the kernel tear
+# the device down and re-enumerate it on resume. Chrome sees the touchpad
+# disappear and flips the UI into tablet mode until it comes back. With persist
+# enabled the kernel resets the device in place, so userspace never sees a
+# disconnect.
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="05ac", ATTRS{idProduct}=="8502", ATTR{power/persist}="1"
