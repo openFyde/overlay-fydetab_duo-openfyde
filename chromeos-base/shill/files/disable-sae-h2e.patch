@@ -1,0 +1,11 @@
+--- shill.orig/shims/wpa_supplicant.conf.in
++++ shill/shims/wpa_supplicant.conf.in
+@@ -17,7 +17,7 @@
+ # hash-to-element mechanism has received more interoperability testing.
+ # When using SAE password identifier, the hash-to-element mechanism is used
+ # regardless of the sae_pwe parameter value.
+-sae_pwe=2
++sae_pwe=0
+ 
+ # Configure P2P Interface MAC address policy by default.
+ # use random MAC address on creating the interface.
