@@ -11,6 +11,8 @@ fydetab_duo-device-config: &fydetab_duo_device_config
         flags:
           support-1080p: True
           support-autofocus: False
+  hardware-properties:
+    has-touchscreen: True
   power:
     internal-backlight-no-als-ac-brightness: "60"
     internal-backlight-no-als-battery-brightness: "50"
